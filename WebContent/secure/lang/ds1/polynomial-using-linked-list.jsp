@@ -157,9 +157,11 @@ r {
 	position: relative;
 }
 
-[contenteditable="true"] {
+.input {
 	font-weight: normal;
 	outline: medium none;
+	border: none;
+	background-color: black;
 }
 
 .output-scanf-line:empty::before {
@@ -179,23 +181,23 @@ var arr = [];
 	//	queueLinkedListReady();
 		//$('.output-scanf-line').attr({placeholder: 'Enter 2 values'});
 		
-		twoDimensionalArrayUsingArrayOfPointersReady(arr);
+		twoDimensionalArrayUsingArrayOfPointersReady();
 				
 	});
 	
 	var twoDimensionalArrayUsingArrayOfPointersReady = function() {
-		$('[contenteditable="true"]').focus();
-		$('.output-scanf-line').attr({placeholder: 'Enter 2 values'});
+		$('.input').focus();
+		$('.input').attr({placeholder: 'Enter 2 values'});
 		arr = [];
-		$('[contenteditable="true"]').addClass("blinking-orange").removeAttr('disabled').focus();;
-		$('[contenteditable="true"]').on("keydown", function(e) {
+		$('.input').addClass("blinking-orange").removeAttr('disabled').focus();;
+		$('.input').on("keydown", function(e) {
 			if ((arr.length == 2 || arr.length == 0) && e.keyCode == 32) {
 				e.preventDefault();
 			}
 			
 			if (arr.length == 1) {
 				var flag = false;
-				flag = $('[contenteditable="true"]').text().indexOf(' ')>=0;
+				flag = $('.input').val().indexOf(' ')>=0;
 				if (e.keyCode == 32 && flag) {
 					e.preventDefault();
 				}
@@ -207,14 +209,14 @@ var arr = [];
 			
 		});
 			
-		$('[contenteditable="true"]').on("keyup", function(e) {
+		$('.input').on("keyup", function(e) {
 			$('.length-error-text,.size-error').remove();
-			if ($(this).text() == "") {
+			if ($(this).val() == "") {
 				$(".introjs-nextbutton").hide();
 				$('.introjs-tooltiptext').append("<span class='ct-code-b-red length-error-text'><br/>" + 
 														"Please enter 2 values each separated by a space.</span>");
 			} 
-			var givenText = $(this).text();
+			var givenText = $(this).val();
 			var splittedText = givenText.split(" ");
 			arr = [];
 			
@@ -292,7 +294,7 @@ var arr = [];
 					</div>
 					<div class="output-console-body">
 						<div id="output1">Enter coefficient, exponent of node : 
-							<div class="output-scanf-line" id="val1" contenteditable="true" maxlength="5"></div>
+							<div id="input1"><input class="output-scanf-line input" id="val1" size="15" maxlength="5"/></div>
 						</div>
 					</div>
 				</div>
