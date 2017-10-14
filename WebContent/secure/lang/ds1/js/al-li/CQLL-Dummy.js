@@ -137,7 +137,6 @@ CircularQLL.prototype.resetLinkedListPositions = function(flag) {
 			this.cmd("Move", this.dataAddress[this.rear - 1], nextX + 25, nextY + 25);
 		} else {
 			for (let i = this.rear - 1; i >= 1; i--) {
-				
 				let nextX = (i) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X - LL_NEXT_WIDTH;
 				let nextY = Math.floor((i) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y;
 				this.cmd("Move", this.cqllData[i], nextX - LL_ELEM_SPACING, nextY);
