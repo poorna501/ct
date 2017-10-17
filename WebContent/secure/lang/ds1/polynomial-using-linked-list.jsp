@@ -331,6 +331,12 @@ var arr = [];
 										<span id="mulBtn" class="btn btn-sm btn-success">Multiplication</span>
 								</span>
 							</div>
+							
+							<div class='position  margin-left-4'>
+								<span class="input-group-addon-border" id="testDiv">
+										<span id="testBtn" class="btn btn-sm btn-success">Testing</span>
+								</span>
+							</div>
 						</div>
 
 					</div>
