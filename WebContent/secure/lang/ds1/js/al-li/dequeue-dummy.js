@@ -278,6 +278,7 @@ DeQll.prototype.display = function() {
 	this.deQueueRectID = this.nextIndex++;
 	this.deQueueId = this.nextIndex++;
 	this.dummyTmpAdd = this.nextIndex++;
+	
 	this.displayText = this.nextIndex++;
 	this.displayVal = new Array(SIZE);
 	

@@ -30,16 +30,18 @@ var LL_ELEM_SPACING = 180;
 var LL_LINE_SPACING = 70;
 
 //size of the linked list
-var SIZE = 10;
+var SIZE = 6;
 var outputSpanCount = 0;
 var randomAdd, firstAdd;
 
 var address = [], listCoeff = [], listExp = [];
+var address1 = [], listCoeff1 = [], listExp1 = [];
+var address2 = [], listCoeff2 = [], listExp2 = [];
 
 var head1 = head2 = head3 = null;
 var nodeCount = nodeCount1 = nodeCount2 = 0;
 
-var flag = true; 
+var flag = true, ch = "y"; 
 var headPos = 1;
 
 function PolynomialLL(am, w, h) {
@@ -71,9 +73,9 @@ PolynomialLL.prototype.Controls = function() {
 	this.ButtonArr.push(this.createTextField);
 	this.ButtonArr.push(this.createButton);
 	
-	this.testButton = document.getElementById('testBtn');
-	this.testButton.onclick = this.testCallBack.bind(this);
-	this.ButtonArr.push(this.testButton);
+	this.displayButton = document.getElementById('displayBtn');
+	this.displayButton.onclick = this.displayCallBack.bind(this);
+	this.ButtonArr.push(this.displayButton);
 }
 
 PolynomialLL.prototype.varDec = function() {
@@ -120,6 +122,9 @@ PolynomialLL.prototype.varDec = function() {
 	this.llCoeffVal = new Array();
 	this.llExpVal = new Array();
 	this.llNextVal = new Array();
+	//display variable
+	this.displayVal1 = new Array();
+	this.displayVal2 = new Array();
 	
 	for (var i = 0; i < SIZE; i++) {
 		this.llCoeff1[i] = this.nextIndex++;
@@ -137,7 +142,13 @@ PolynomialLL.prototype.varDec = function() {
 		this.llCoeffVal2[i] = this.nextIndex++;
 		this.llExpVal2[i] = this.nextIndex++;
 		this.llNextVal2[i] = this.nextIndex++;
+		
+		//display array initialization
+		this.displayVal1[i] = this.nextIndex++;
+		this.displayVal2[i] = this.nextIndex++;
 	}
+	
+	console.log("Display === " + this.displayVal1);
 }
 
 PolynomialLL.prototype.setUp = function() {
@@ -165,6 +176,12 @@ PolynomialLL.prototype.create = function(head) {
 	temp = {};
 	
 	if (flag) {
+		nodeCount = nodeCount1;
+		
+		address = address1.slice();
+		listCoeff = listCoeff1.slice();
+		listExp = listExp1.slice();
+
 		this.llCoeff = this.llCoeff1.slice();
 		this.llCoeffVal = this.llCoeffVal1.slice();
 		this.llExp = this.llExp1.slice();
@@ -172,9 +189,13 @@ PolynomialLL.prototype.create = function(head) {
 		this.llNext = this.llNext1.slice();
 		this.llNextVal = this.llNextVal1.slice();
 		this.addVal = this.addVal1.slice();
-		
-		console.log("if flag = " + this.llCoeff);
 	} else {
+		nodeCount = nodeCount2;
+		
+		address = address2.slice();
+		listCoeff = listCoeff2.slice();
+		listExp = listExp2.slice();
+		
 		this.llCoeff = this.llCoeff2.slice();
 		this.llCoeffVal = this.llCoeffVal2.slice();
 		this.llExp = this.llExp2.slice();
@@ -182,9 +203,7 @@ PolynomialLL.prototype.create = function(head) {
 		this.llNext = this.llNext2.slice();
 		this.llNextVal = this.llNextVal2.slice();
 		this.addVal = this.addVal2.slice();
-		console.log("else flag = " + this.llCoeff);
 	}
-	
 	//var ch, c, e;
 	temp["coeff"] = listCoeff[nodeCount] = arr[0];
 	temp["exp"] = listExp[nodeCount] = arr[1];
@@ -216,7 +235,6 @@ PolynomialLL.prototype.create = function(head) {
 	randomAdd = getRandomInt(1000, 5000);
 	address[nodeCount] = randomAdd;
 	this.cmd("CreateLabel", this.addVal[nodeCount], randomAdd, 225, 150);
-	 
 	this.cmd("Step");
 	
 	//Coefficient & exponents 
@@ -290,8 +308,12 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 		this.cmd("Step");
 		this.resetLinkedListPositions(0, nodeCount);
 		this.cmd("Step");
-		nodeIncrement();
-		//nodeCount1 = nodeCount;
+		nodeCount++;
+		if (flag) {
+			nodeCount1 = nodeCount;
+		} else {
+			nodeCount2 = nodeCount;
+		}
 		this.deleteLabels();
 		
 	} else {
@@ -312,9 +334,9 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 			this.cmd("Step");
 			let nextX = (index) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X  + POLYLL_ELE_WIDTH;
 			if (flag) {
-				var nextY = Math.floor((index) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y;
+				var nextY = Math.floor((index) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y - 20;
 			} else {
-				var nextY = Math.floor((index) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 200;				
+				var nextY = Math.floor((index) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 100;				
 			}
 			this.cmd("Step");
 			
@@ -338,11 +360,10 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 			
 			let nextX = (index - 1) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X  + POLYLL_ELE_WIDTH;
 			if (flag) {
-				var nextY = Math.floor((index - 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y;
+				var nextY = Math.floor((index - 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y - 20;
 			} else {
-				var nextY = Math.floor((index - 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 200;
+				var nextY = Math.floor((index - 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 100;
 			}
-			console.log("index = " + index)
 			this.dummyCoeff = this.nextIndex++;
 			this.cmd("CreateLabel", this.dummyCoeff, address[index], 225, 150);
 			this.cmd("Sethighlight", this.llNext[index - 1], "#ff4d4d");
@@ -355,8 +376,12 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 			this.cmd("Step");
 			this.resetLinkedListPositions(nodeCount, nodeCount);
 			this.cmd("Step");
-			nodeIncrement();
-			//nodeCount1 = nodeCount;
+			nodeCount++;
+			if (flag) {
+				nodeCount1 = nodeCount;
+			} else {
+				nodeCount2 = nodeCount;
+			}
 			this.deleteLabels();
 			
 		} else if(parseInt(p1["exp"]) == parseInt(t["exp"])) {
@@ -371,9 +396,9 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 			this.cmd("Sethighlight", this.llExp[index], "");
 			let nextX = (index) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X  + POLYLL_ELE_WIDTH;
 			if (flag) {
-				var nextY = Math.floor((index) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y;
+				var nextY = Math.floor((index) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y - 20;
 			} else {
-				var nextY = Math.floor((index) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 200;
+				var nextY = Math.floor((index) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 100;
 			}
 			this.moveValueFromOnePositionToAnother(this.dummyCoeff, temp["coeff"], POLYLL_ELE_POS_X, POLYLL_ELE_POS_Y, nextX - 22, nextY);
 			this.cmd("Step");
@@ -387,7 +412,12 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 			this.cmd("Delete", this.addVal[nodeCount]);
 			this.deleteLabels();
 			this.cmd("Step");
+			
 			if (flag) {
+				address1.splice((nodeCount), 1);
+				listCoeff1.splice((nodeCount), 1);
+				listExp1.splice((nodeCount), 1);
+				
 				this.llCoeff1.splice((nodeCount), 1);
 				this.llExp1.splice((nodeCount), 1);
 				this.llNext1.splice((nodeCount), 1);
@@ -397,6 +427,10 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 				this.llExpVal1.splice((nodeCount), 1);
 				this.llNextVal1.splice((nodeCount), 1);
 			} else {
+				address2.splice((nodeCount), 1);
+				listCoeff2.splice((nodeCount), 1);
+				listExp2.splice((nodeCount), 1);
+				
 				this.llCoeff2.splice((nodeCount), 1);
 				this.llExp2.splice((nodeCount), 1);
 				this.llNext2.splice((nodeCount), 1);
@@ -406,7 +440,7 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 				this.llExpVal2.splice((nodeCount), 1);
 				this.llNextVal2.splice((nodeCount), 1);
 			}
-			address.splice((nodeCount), 1);
+			//address.splice((nodeCount), 1);
 			this.cmd("Step");
 			index--;
 			
@@ -415,7 +449,6 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 				t["next"]= p1;
 				head = t;
 				
-				console.log("poorna");
 				this.dummyCoeff = this.nextIndex++;
 				this.cmd("CreateLabel", this.dummyCoeff, address[index], head1_POS_X + 300, POLYLL_ELE_POS_Y);
 				this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[index], head1_POS_X + 300, POLYLL_ELE_POS_Y, POLYLL_NEXT_POS_X + 45 , POLYLL_ELE_POS_Y);
@@ -449,9 +482,9 @@ PolynomialLL.prototype.addTerm = function(head, t, nodeCount) {
 				this.cmd("Step");
 				let nextX = (index - 1) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X + POLYLL_ELE_WIDTH;
 				if (flag) {
-					var nextY = Math.floor((index - 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y;
+					var nextY = Math.floor((index - 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y - 20;
 				} else {
-					var nextY = Math.floor((index - 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 200;
+					var nextY = Math.floor((index - 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 100;
 				}
 				this.cmd("CreateLabel", this.dummyCoeff, address[index], 225, 150);
 				this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[nodeCount], 225, 150, nextX + LL_ELEM_WIDTH + 20, nextY);
@@ -488,11 +521,12 @@ PolynomialLL.prototype.moveHeadToHeadPos = function() {
 }
 
 PolynomialLL.prototype.changeValues = function(index, nodeCount) {
-	
 	address.splice(index, 0, address[nodeCount]);
 	listCoeff.splice(index, 0, listCoeff[nodeCount]);
 	listExp.splice(index, 0, listExp[nodeCount]);
+	
 	if (flag) {
+		
 		this.llCoeff1.splice(index, 0, this.llCoeff[nodeCount]);
 		this.llExp1.splice(index, 0, this.llExp[nodeCount]);
 		this.llNext1.splice(index, 0, this.llNext[nodeCount]);
@@ -502,11 +536,12 @@ PolynomialLL.prototype.changeValues = function(index, nodeCount) {
 		
 		this.addVal1.splice(index, 0, this.addVal[nodeCount]);
 		
-		nodeIncrement();
-		//nodeCount1 = nodeCount;
-		address.splice((nodeCount), 1);
-		listCoeff.splice((nodeCount), 1);
-		listExp.splice((nodeCount), 1);
+		nodeCount++;
+		if (flag) {
+			nodeCount1 = nodeCount;
+		} else {
+			nodeCount2 = nodeCount;
+		}
 		
 		this.llCoeff1.splice((nodeCount), 1);
 		this.llExp1.splice((nodeCount), 1);
@@ -517,20 +552,21 @@ PolynomialLL.prototype.changeValues = function(index, nodeCount) {
 		this.addVal1.splice((nodeCount), 1);
 		
 	} else {
-		this.llCoeff1.splice(index, 0, this.llCoeff[nodeCount]);
-		this.llExp1.splice(index, 0, this.llExp[nodeCount]);
-		this.llNext1.splice(index, 0, this.llNext[nodeCount]);
-		this.llExpVal1.splice(index, 0, this.llExpVal[nodeCount]);
-		this.llCoeffVal1.splice(index, 0, this.llCoeffVal[nodeCount]);
-		this.llNextVal1.splice(index, 0, this.llNextVal[nodeCount]);
 		
-		this.addVal1.splice(index, 0, this.addVal[nodeCount]);
+		this.llCoeff2.splice(index, 0, this.llCoeff[nodeCount]);
+		this.llExp2.splice(index, 0, this.llExp[nodeCount]);
+		this.llNext2.splice(index, 0, this.llNext[nodeCount]);
+		this.llExpVal2.splice(index, 0, this.llExpVal[nodeCount]);
+		this.llCoeffVal2.splice(index, 0, this.llCoeffVal[nodeCount]);
+		this.llNextVal2.splice(index, 0, this.llNextVal[nodeCount]);
+		this.addVal2.splice(index, 0, this.addVal[nodeCount]);
 		
-		nodeIncrement();
-		//nodeCount1 = nodeCount;
-		address.splice((nodeCount), 1);
-		listCoeff.splice((nodeCount), 1);
-		listExp.splice((nodeCount), 1);
+		nodeCount++;
+		if (flag) {
+			nodeCount1 = nodeCount;
+		} else {
+			nodeCount2 = nodeCount;
+		}
 		
 		this.llCoeff2.splice((nodeCount), 1);
 		this.llExp2.splice((nodeCount), 1);
@@ -540,11 +576,26 @@ PolynomialLL.prototype.changeValues = function(index, nodeCount) {
 		this.llNextVal2.splice((nodeCount), 1);
 		this.addVal2.splice((nodeCount), 1);
 	}
+	
+	address.splice((nodeCount), 1);
+	listCoeff.splice((nodeCount), 1);
+	listExp.splice((nodeCount), 1);
+	
 	this.cmd("Step");
 	this.deleteLabels();
 }
 
 PolynomialLL.prototype.deleteLabels = function() {
+	if (flag) {
+		address1 = address.slice();
+		listCoeff1 = listCoeff.slice();
+		listExp1 = listExp.slice();
+	} else {
+		address2 = address.slice();
+		listCoeff2 = listCoeff.slice();
+		listExp2 = listExp.slice();
+	}
+	
 	this.cmd("Delete", this.tempLabel);
 	this.cmd("Delete", this.coefficient);
 	this.cmd("Delete", this.coefficientValue);
@@ -558,83 +609,180 @@ PolynomialLL.prototype.deleteLabels = function() {
 	this.cmd("Delete", this.p2Id);
 }
 
-function nodeIncrement() {
-	nodeCount++;
-	if (flag) {
-		nodeCount1 = nodeCount;
-	} else {
-		nodeCount2 = nodeCount;
+PolynomialLL.prototype.resetLinkedListPositions = function(count, nodeCount) {
+	for (let i = count; i < nodeCount; i++) {
+		let nextX = (i + 1) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X + POLYLL_ELE_WIDTH;
+		if (flag) {
+			var nextY = Math.floor((i + 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y - 20;
+		} else {
+			var nextY = Math.floor((i + 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 100;
+		}
+		
+		this.cmd("Move", this.llCoeff[i], nextX - 22, nextY);
+		this.cmd("Move", this.llExp[i], nextX + LL_ELEM_WIDTH - 25, nextY);
+		this.cmd("Move", this.llNext[i], nextX + LL_ELEM_WIDTH + 20, nextY);
+		this.cmd("Move", this.addVal[i], nextX + 25, nextY + 25);
 	}
+	
+	var nextX = (count) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X + POLYLL_ELE_WIDTH;
+	if (flag) {
+		var nextY = Math.floor((count) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y - 20;
+	} else {
+		var nextY = Math.floor((count) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 100;
+	}
+	this.cmd("Move", this.tempLabel, nextX + 25, nextY - 25);
+	this.cmd("Move", this.llCoeff[nodeCount], nextX - 22, nextY);
+	this.cmd("Move", this.llExp[nodeCount], nextX + LL_ELEM_WIDTH - 25, nextY);
+	this.cmd("Move", this.llNext[nodeCount], nextX + LL_ELEM_WIDTH + 20, nextY);
+	this.cmd("Move", this.addVal[nodeCount], nextX + 25, nextY + 25);
 }
 
 PolynomialLL.prototype.print = function(head) {
-    t = head;
-    while(t != null) {
-              console.log("%d X^ %d --->", t["coeff"], t["exp"]);
-              t = t["next"];
+    temp = head;
+    
+    this.tempLabel = this.nextIndex++;
+    this.tempRectID = this.nextIndex++;
+    this.tempId = this.nextIndex++;
+    
+    /*this.displayVal1 = new Array(SIZE);
+    this.displayVal2 = new Array(SIZE);
+    
+    for (let i = 0 ; i <= nodeCount; i++) {
+		this.displayVal1[i] = this.nextIndex++;
+		this.displayVal2[i] = this.nextIndex++;
+	}*/
+    
+    let nodeAdd = null;;
+    if (nodeCount1 != 0 || nodeCount2 != 0) {
+    	if (flag) {
+    		nodeAdd = address1[0];
+    	} else {
+    		nodeAdd = address2[0];
+    	}
+    } 
+    
+    this.cmd("CreateLabel", this.tempLabel, "temp : ", head1_LABLE_X + 360, head1_LABLE_Y);
+	this.cmd("CreateRectangle", this.tempRectID, "", head1_WIDTH, head1_HEIGHT, head1_POS_X + 365, head1_POS_Y);
+	this.cmd("CreateLabel", this.tempId, "", head1_POS_X + 365, head1_POS_Y);
+    if (flag) {
+    	this.moveValueFromOnePositionToAnother(this.tempId, nodeAdd, head1_POS_X + 5, head1_POS_Y, head1_POS_X + 365, head1_POS_Y);
+    	this.cmd("Step");
+    } else {
+    	this.moveValueFromOnePositionToAnother(this.tempId, nodeAdd, head1_POS_X + 130, head1_POS_Y, head1_POS_X + 365, head1_POS_Y);
+    	this.cmd("Step");
     }
+    console.log("Poorna");
+    
+    let index = 0;
+    while(temp != null) {
+    	if (flag) {
+    		this.cmd("Connect", this.tempRectID, this.llCoeff1[index]);
+    	} else {
+    		this.cmd("Connect", this.tempRectID, this.llCoeff2[index]);
+    	}
+        console.log("%d X^ %d --->", temp["coeff"], temp["exp"]);
+        temp = temp["next"];
+        
+        this.displayAnimation(0, 0);
+    }
+    console.log("NULL");
+    this.cmd("Step");
+//    this.cmd("Delete", this.tempLabel);
+//    this.cmd("Delete", this.tempRectID);
+//    this.cmd("Delete", this.tempId);
 }
 
-PolynomialLL.prototype.resetLinkedListPositions = function(count, nodeCount) {
-				console.log("flag ===== " + flag);
-				for (let i = count; i < nodeCount; i++) {
-					console.log("inside for-loop")
-					let nextX = (i + 1) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X + POLYLL_ELE_WIDTH;
-					if (flag) {
-						var nextY = Math.floor((i + 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y;
-					} else {
-						var nextY = Math.floor((i + 1) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 200;
-					}
-					
-					this.cmd("Move", this.llCoeff[i], nextX - 22, nextY);
-					this.cmd("Move", this.llExp[i], nextX + LL_ELEM_WIDTH - 25, nextY);
-					this.cmd("Move", this.llNext[i], nextX + LL_ELEM_WIDTH + 20, nextY);
-					this.cmd("Move", this.addVal[i], nextX + 25, nextY + 25);
-				}
-				
-				var nextX = (count) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X + POLYLL_ELE_WIDTH;
-				if (flag) {
-					var nextY = Math.floor((count) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y;
-				} else {
-					var nextY = Math.floor((count) / LL_ELEMS_PER_LINE)* LL_LINE_SPACING + LL_START_Y + 200;
-				}
-				this.cmd("Move", this.tempLabel, nextX + 25, nextY - 25);
-				this.cmd("Move", this.llCoeff[nodeCount], nextX - 22, nextY);
-				this.cmd("Move", this.llExp[nodeCount], nextX + LL_ELEM_WIDTH - 25, nextY);
-				this.cmd("Move", this.llNext[nodeCount], nextX + LL_ELEM_WIDTH + 20, nextY);
-				this.cmd("Move", this.addVal[nodeCount], nextX + 25, nextY + 25);
+PolynomialLL.prototype.displayAnimation = function(disPos, xPos) {
+	this.dummyTmpAdd1 = this.nextIndex++;
+	this.dummyTmpAdd2 = this.nextIndex++;
+	
+	let nextX = (disPos) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X  + POLYLL_ELE_WIDTH;
+	if (flag) {
+		var nextY = Math.floor((disPos) / LL_ELEMS_PER_LINE) * LL_LINE_SPACING + LL_START_Y - 20;
+	} else {
+		var nextY = Math.floor((disPos) / LL_ELEMS_PER_LINE) * LL_LINE_SPACING + LL_START_Y - 100;
+	}
+	
+	let disVal;
+	this.cmd("CreateLabel", (flag) ? this.displayVal1[disPos] : this.displayVal2[disPos], "", 30 + xPos, (flag) ? 100 : 120);
+	
+	this.cmd("Sethighlight", (flag) ? this.llCoeff1[disPos] : this.llCoeff2[disPos], "#4d4dff");
+	this.cmd("Sethighlight", (flag) ? this.llExp1[disPos] : this.llExp2[disPos], "#4d4dff");
+	disVal = (flag) ? listCoeff1[disPos]+ " X^ " + listExp1[disPos]  : listCoeff2[disPos] + " X^ " + listExp2[disPos];
+	this.cmd("CreateLabel", (flag) ? this.dummyTmpAdd1 : this.dummyTmpAdd2, disVal,  nextX - 22, nextY);
+	this.cmd("Move", (flag) ?this.dummyTmpAdd1 : this.dummyTmpAdd2, 30 + xPos, (flag) ? 100 : 120);
+	this.cmd("Step");
+	
+	this.cmd("SetText", (flag) ? this.displayVal1[disPos] : this.displayVal2[disPos], disVal);
+	
+	this.cmd("Sethighlight", (flag) ? this.llCoeff1[disPos] : this.llCoeff2[disPos], "");
+	this.cmd("Sethighlight", (flag) ? this.llExp1[disPos] : this.llExp2[disPos], "");
+	this.cmd("Delete", (flag) ? this.dummyTmpAdd1 : this.dummyTmpAdd2);
+	
+	this.tempNextToTempNode(disPos);
 }
+
+PolynomialLL.prototype.tempNextToTempNode = function(disPos) {
+
+	
+}
+
 
 PolynomialLL.prototype.createNode = function() {
 	this.commands = new Array();
+	this.dummyCoeff = this.nextIndex++;
+	
 	if (flag) {
-		head1 = this.create(head1);
-		console.log("NodeCount === " + nodeCount);
-		this.print(head1);
-	} else {
-		if (nodeCount2 == 0) {
+		if (ch == "n") {
+			head1 = address[0];
 			this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y);
 			this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y, head1_POS_X + 5, head1_POS_Y);
 			this.cmd("Step");
-			if (!flag) {
-				this.cmd("SetText", this.head1Id, address[0]);
-				//flag = true;
-		 	} else {
-		 		this.cmd("SetText", this.head2Id, address[0]);
-		 	}
+			this.cmd("SetText", this.head1Id, address[0]);
 			this.cmd("Step");
 			this.cmd("Delete", this.dummyCoeff);
 			this.cmd("Delete", this.headId);
 			this.cmd("Delete", this.headRectID);
 			this.cmd("Delete", this.headLable);
 			this.cmd("Step");
-			
-			nodeCount = 0;
+			flag = false;
+			ch = "y";
+		} else {
+			head1 = this.create(head1);
+			//this.print(head1);
 		}
-		
-		head2 = this.create(head2, nodeCount2);
-		this.print(head2);
+	} else {
+		if (ch == "y") {
+			head2 = this.create(head2);
+			//this.print(head2);
+		} else {
+			head2 = address[0];
+			this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y);
+			this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y, head1_POS_X + 130, head1_POS_Y);
+			this.cmd("Step");
+			this.cmd("SetText", this.head2Id, address[0]);
+			this.cmd("Step");
+			this.cmd("Delete", this.dummyCoeff);
+			this.cmd("Delete", this.headId);
+			this.cmd("Delete", this.headRectID);
+			this.cmd("Delete", this.headLable);
+			this.cmd("Step");
+			flag = true;
+			ch = "y";
+		}
 	}
+	return this.commands;
+}
+
+PolynomialLL.prototype.displayNodes = function() {
+	this.commands = new Array();
+	this.print(head1);
+	this.cmd("Step");
+	//flag = false;
+	//this.print(head2);
+	//flag = true;
+	
+    
 	return this.commands;
 }
 
@@ -644,18 +792,16 @@ PolynomialLL.prototype.moveValueFromOnePositionToAnother = function(id, val, pos
 	this.cmd("Move", id, pos3, pos4);
 }
 
-PolynomialLL.prototype.createCallBack = function(event) {
+PolynomialLL.prototype.createCallBack = function() {
 	this.implementAction(this.createNode.bind(this), "");
 	console.log("Create");
 }
 
-PolynomialLL.prototype.testCallBack = function() {
-	if($(".btn").is(":disabled")) {
-		return;
-	}
-	this.implementAction(this.testNode.bind(this), "");
-	console.log("Testing");
+PolynomialLL.prototype.displayCallBack = function() {
+	this.implementAction(this.displayNodes.bind(this), "");
+	console.log("Display");
 }
+
 
 function getRandomInt(min, max) {
 	min = Math.ceil(min);
