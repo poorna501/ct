@@ -232,7 +232,7 @@ var arr = [];
 			}
 			
 			if (arr.length == 2) {
-				if (arr[0].length <= 3 && arr[1].length < 3) {
+				if (arr[0].length < 3 && arr[1].length < 3) {
 					$(".introjs-nextbutton").show();
 				} else {
 					$(".introjs-nextbutton").hide();
@@ -287,18 +287,16 @@ var arr = [];
 <span id="typeDefDec">typedef struct polynomial *poly;</span>
 </pre>
 	</div>			
-			
-			<div id="outputDiv" class='col-xs-12 padding0 margin-top-20'>
-					<div class="output-console-title-bar">
-						<span class="title">Output</span>
-					</div>
-					<div class="output-console-body">
-						<div id="output1">Enter coefficient, exponent of node : 
-							<div id="input1"><input class="output-scanf-line input" id="val1" size="15" maxlength="5"/></div>
-						</div>
+		<div id="outputDiv" class='col-xs-12 padding0 margin-top-20'>
+				<div class="output-console-title-bar">
+					<span class="title">Output</span>
+				</div>
+				<div class="output-console-body">
+					<div id="output1">Enter coefficient, exponent of node : 
+						<div id="input1"><input class="output-scanf-line input" id="val1" size="15" maxlength="5"/></div>
 					</div>
 				</div>
-			
+			</div>
 			</div>
 			<div class='col-xs-9'>
 				<div class='col-xs-12 padding0 box-border text-center'
@@ -331,14 +329,7 @@ var arr = [];
 										<span id="mulBtn" class="btn btn-sm btn-success">Multiplication</span>
 								</span>
 							</div>
-							
-							<div class='position  margin-left-4'>
-								<span class="input-group-addon-border" id="testDiv">
-										<span id="testBtn" class="btn btn-sm btn-success">Testing</span>
-								</span>
-							</div>
 						</div>
-
 					</div>
 					<canvas id="canvas" width="900" height="500"></canvas>
 				</div>
