@@ -19,7 +19,7 @@
 <script type="text/javascript" src="/js/typewriting.min.js"></script>
 <script type="text/javascript" src="/js/gs/TweenMax.min.js"></script>
 <script type="text/javascript" src="/js/jquery.scrollTo.js"></script>
-<!-- <script type="text/javascript" src="js/dequeue-using-linked-list.js"></script> -->
+<script type="text/javascript" src="js/dequeue-using-linked-list.js"></script>
 
 
 <!-- Javascript for the actual visualization code -->
@@ -36,9 +36,9 @@
 <script type="text/javascript" src="js/an-li/object-manager.js"></script>
 <script type="text/javascript" src="js/an-li/animation-main.js"></script>
 <script type="text/javascript" src="js/al-li/algorithm.js"></script>
-<script type="text/javascript" src="js/al-li/dequeue-dummy.js"></script>
+<!-- <script type="text/javascript" src="js/al-li/dequeue-dummy.js"></script> -->
 
-<!-- <script type="text/javascript" src="js/al-li/dequeueLL.js"></script> -->
+<script type="text/javascript" src="js/al-li/dequeueLL.js"></script>
 
 <style type="text/css">
 .ct-demo-heading {

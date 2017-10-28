@@ -788,6 +788,11 @@ PolynomialLL.prototype.print = function(head) {
     
     let index = xPos = 0;
     var disVal;
+    if (temp == null) {
+    	this.cmd("CreateLabel", (flag) ? this.dummyNull1 : this.dummyNull2, "",  110 + xPos, (flag) ? 100 : 120);
+		this.cmd("Step");
+		this.cmd("SetText", (flag) ? this.dummyNull1 : this.dummyNull2, "NULL");
+    }
     while(temp != null) {
     	console.log("%d X^ %d --->", temp["coeff"], temp["exp"]);
     	temp = temp["next"];
@@ -892,22 +897,26 @@ PolynomialLL.prototype.createTempararyNodes = function(operation) {
 PolynomialLL.prototype.storeT1AndT2 = function() {
 	this.dummyCoeff = this.nextIndex++;
 	
-	this.cmd("CreateLabel", this.dummyCoeff, address1[0], head1_POS_X + 5, head1_POS_Y);
-	this.moveValueFromOnePositionToAnother(this.dummyCoeff, address1[0], head1_POS_X + 5, head1_POS_Y, head1_POS_X + 5, 120);
+	this.cmd("CreateLabel", this.dummyCoeff, (address1.length != 0) ? address1[0] : null, head1_POS_X + 5, head1_POS_Y);
+	this.moveValueFromOnePositionToAnother(this.dummyCoeff, (address1.length != 0) ? address1[0] : null, head1_POS_X + 5, head1_POS_Y, head1_POS_X + 5, 120);
 	this.cmd("Step");
-	this.cmd("SetText", this.t1Id, address1[0]);
+	this.cmd("SetText", this.t1Id, (address1.length != 0) ? address1[0] : null);
 	this.cmd("Delete", this.dummyCoeff);
 	this.cmd("Step");
-	this.cmd("Connect", this.t1RectId, this.llCoeff1[0]);
+	if (address1.length != 0) {
+		this.cmd("Connect", this.t1RectId, this.llCoeff1[0]);
+	}
 	
 	this.cmd("Step");
-	this.cmd("CreateLabel", this.dummyCoeff, address2[0], head1_POS_X + 125, head1_POS_Y);
-	this.moveValueFromOnePositionToAnother(this.dummyCoeff, address2[0], head1_POS_X + 125, head1_POS_Y, head1_POS_X + 95, 120);
+	this.cmd("CreateLabel", this.dummyCoeff, (address2.length != 0) ? address2[0] : null, head1_POS_X + 125, head1_POS_Y);
+	this.moveValueFromOnePositionToAnother(this.dummyCoeff, (address2.length != 0) ? address2[0] : null, head1_POS_X + 125, head1_POS_Y, head1_POS_X + 95, 120);
 	this.cmd("Step");
-	this.cmd("SetText", this.t2Id, address2[0]);
+	this.cmd("SetText", this.t2Id, (address2.length != 0) ? address2[0] : null);
 	this.cmd("Delete", this.dummyCoeff);
 	this.cmd("Step");
-	this.cmd("Connect", this.t2RectId, this.llCoeff2[0]);
+	if (address2.length != 0) {
+		this.cmd("Connect", this.t2RectId, this.llCoeff2[0]);
+	}
 	this.cmd("Step");
 }
 
@@ -945,6 +954,7 @@ PolynomialLL.prototype.addition = function(head1, head2, operation) {
 	this.cmd("Step");
 	this.idChange();
 	var index1 = index2 = index3 =  0;
+	
 	while(t1 != null && t2 != null) {
 		t3 = {};
 		if(parseInt(t1["exp"]) == parseInt(t2["exp"])) {
@@ -986,10 +996,10 @@ PolynomialLL.prototype.addition = function(head1, head2, operation) {
 
 PolynomialLL.prototype.commanCodeForAddSubAndMul = function() {
 	this.cmd("Step");
-	this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 195, 120);
-	this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 195, 120, head1_POS_X + 255, head1_POS_Y);
+	this.cmd("CreateLabel", this.dummyCoeff, (address.length != 0) ? address[0] : null, head1_POS_X + 195, 120);
+	this.moveValueFromOnePositionToAnother(this.dummyCoeff, (address.length != 0) ? address[0] : null, head1_POS_X + 195, 120, head1_POS_X + 255, head1_POS_Y);
 	this.cmd("Step");
-	this.cmd("SetText", this.head3Id, address[0]);
+	this.cmd("SetText", this.head3Id, (address.length != 0) ? address[0] : null);
 	this.cmd("Delete", this.dummyCoeff);
 	
 	this.cmd("Delete", this.t1RectId);
@@ -1551,39 +1561,45 @@ PolynomialLL.prototype.multiplicationAnimation = function() {
 
 PolynomialLL.prototype.assignT1Value = function() {
 	this.dummyCoeff = this.nextIndex++;
-	this.cmd("CreateLabel", this.dummyCoeff, address1[0], head1_POS_X + 5, head1_POS_Y);
-	this.moveValueFromOnePositionToAnother(this.dummyCoeff, address1[0], head1_POS_X + 5, head1_POS_Y, head1_POS_X + 5, 120);
+	this.cmd("CreateLabel", this.dummyCoeff, (address1.length != 0) ? address1[0] : null, head1_POS_X + 5, head1_POS_Y);
+	this.moveValueFromOnePositionToAnother(this.dummyCoeff, (address1.length != 0) ? address1[0] : null, head1_POS_X + 5, head1_POS_Y, head1_POS_X + 5, 120);
 	this.cmd("Step");
-	this.cmd("SetText", this.t1Id, address1[0]);
+	this.cmd("SetText", this.t1Id, (address1.length != 0) ? address1[0] : null);
 	this.cmd("Delete", this.dummyCoeff);
 	this.cmd("Step");
-	this.cmd("Connect", this.t1RectId, this.llCoeff1[0]);
+	if (address1.length != 0) {
+		this.cmd("Connect", this.t1RectId, this.llCoeff1[0]);
+	}
 }
 
 PolynomialLL.prototype.assignT3ToHead3 = function() {
 	this.cmd("Step");
-	this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 490, POLYLL_ELE_POS_Y);
-	this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 490, POLYLL_ELE_POS_Y, head1_POS_X + 195, 120);
+	this.cmd("CreateLabel", this.dummyCoeff, (address.length != 0) ? address[0] : null, head1_POS_X + 490, POLYLL_ELE_POS_Y);
+	this.moveValueFromOnePositionToAnother(this.dummyCoeff, (address.length != 0) ? address[0] : null, head1_POS_X + 490, POLYLL_ELE_POS_Y, head1_POS_X + 195, 120);
 	this.cmd("Step");
-	this.cmd("SetText", this.sumId, address[0]);
+	this.cmd("SetText", this.sumId, (address.length != 0) ? address[0] : null);
 	this.cmd("Delete",  this.dummyCoeff);
 	this.cmd("Delete", this.headRectID);
 	this.cmd("Delete", this.headLable);
 	this.cmd("Delete", this.headId);
-	this.cmd("Connect", this.sumId, this.llCoeff3[0]);
+	if (address1.length != 0) {
+		this.cmd("Connect", this.sumId, this.llCoeff3[0]);
+	}
 	this.cmd("Step");
 }
 
 PolynomialLL.prototype.assignT2Value = function() {
 	indexM2 = 0;
 	this.dummyCoeff = this.nextIndex++;
-	this.cmd("CreateLabel", this.dummyCoeff, address2[0], head1_POS_X + 125, head1_POS_Y);
-	this.moveValueFromOnePositionToAnother(this.dummyCoeff, address2[0], head1_POS_X + 125, head1_POS_Y, head1_POS_X + 95, 120);
+	this.cmd("CreateLabel", this.dummyCoeff, (address2.length != 0) ? address2[0] : null, head1_POS_X + 125, head1_POS_Y);
+	this.moveValueFromOnePositionToAnother(this.dummyCoeff, (address2.length != 0) ? address2[0] : null, head1_POS_X + 125, head1_POS_Y, head1_POS_X + 95, 120);
 	this.cmd("Step");
-	this.cmd("SetText", this.t2Id, address2[0]);
+	this.cmd("SetText", this.t2Id, (address2.length != 0) ? address2[0] : null);
 	this.cmd("Delete", this.dummyCoeff);
 	this.cmd("Step");
-	this.cmd("Connect", this.t2RectId, this.llCoeff2[0]);
+	if (address1.length != 0) {
+		this.cmd("Connect", this.t2RectId, this.llCoeff2[0]);
+	}
 	this.cmd("Step");
 }
 

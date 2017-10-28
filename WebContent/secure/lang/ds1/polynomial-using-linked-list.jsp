@@ -20,7 +20,7 @@
 <script type="text/javascript" src="/js/typewriting.min.js"></script>
 <script type="text/javascript" src="/js/gs/TweenMax.min.js"></script>
 <script type="text/javascript" src="/js/jquery.scrollTo.js"></script>
-<!-- <script type="text/javascript" src="js/polynomial-using-linked-list.js"></script> -->
+<script type="text/javascript" src="js/polynomial-using-linked-list.js"></script>
 
 <!-- Javascript for the actual visualization code -->
 
@@ -38,9 +38,9 @@
 <script type="text/javascript" src="js/an-li/animation-main.js"></script>
 <script type="text/javascript" src="js/al-li/algorithm.js"></script>
  
-<script type="text/javascript" src="js/al-li/poly-dummy.js"></script>
+<!-- <script type="text/javascript" src="js/al-li/poly-dummy.js"></script> -->
 
-<!-- <script type="text/javascript" src="js/al-li/polynomial-LL.js"></script> -->
+<script type="text/javascript" src="js/al-li/polynomial-LL.js"></script>
 
 <style type="text/css">
 .ct-demo-heading {
@@ -113,7 +113,7 @@
 
 #outputDiv {
 	position: relative;
-	z-index: 9999999;
+	/* z-index: 9999999; */
 }
 
 .btn-sm, .btn-group-sm>.btn {
@@ -131,7 +131,7 @@
 	padding: 0;
 }
 
-y, r {
+y, r, .b {
 	font-family: monospace;
 	font-weight: bold;
 }
@@ -143,6 +143,11 @@ y {
 r {
 	color: red;
 }
+
+.b {
+	color: blue;
+}
+
 
 .user-btn {
 	background-color: green;
@@ -182,6 +187,8 @@ var arr = [];
 		//$('.output-scanf-line').attr({placeholder: 'Enter 2 values'});
 		
 		twoDimensionalArrayUsingArrayOfPointersReady();
+		
+		polynomialUsingLinkedList();
 				
 	});
 	
@@ -270,15 +277,17 @@ var arr = [];
 </head>
 <body onload='init()' class="VisualizationMainPage">
 	<div id="container">
-		<div class='col-xs-12 text-center' style="margin-top: 20px;">
-			<h1 class='label label-default ct-demo-heading'>Polynomial using Linked List</h1>
+		<div class='col-xs-12 text-center' style="margin-top: 20px";>
+			<div>
+				<h1 class='label label-default ct-demo-heading' id="title">Polynomial using Linked List</h1>
+			</div>
 		</div>
 
 		<div id="mainContent" class='col-xs-12 margin-top-20 padding0'>
 		
 			<div class='col-xs-3'>
 				<div class='col-xs-12 box-border'>
-					<pre class='creampretab4' id='queueInit' style="margin-top: 10px;"><span id="strcutSpan">struct polynomial {
+					<pre class='creampretab4' id='polyInit' style="margin-top: 10px;"><span id="strcutSpan">struct polynomial {
 	int coeff;
 	int exp;
 	struct polynomial * next;
@@ -286,14 +295,25 @@ var arr = [];
 
 <span id="typeDefDec">typedef struct polynomial *poly;</span>
 </pre>
-	</div>			
+	</div>
+<div class="col-xs-12 mainDiv margin-top-20 padding0" id="mainDiv">
+	<pre id ="preMain" class="creampretab4 hide"></pre>
+</div>
+<div class="col-xs-12 tempDiv padding0 " id="tempDiv" >
+	<pre id="preTemp" class="creampretab4 hide"></pre>
+</div>
+<div class="col-xs-12 addTermDiv padding0" id="addTermDiv">
+	<pre class="creampretab4 hide" id="preAddTerm"></pre>
+</div>
+	
 		<div id="outputDiv" class='col-xs-12 padding0 margin-top-20'>
 				<div class="output-console-title-bar">
 					<span class="title">Output</span>
 				</div>
 				<div class="output-console-body">
-					<div id="output1">Enter coefficient, exponent of node : 
-						<div id="input1"><input class="output-scanf-line input" id="val1" size="15" maxlength="5"/></div>
+					<div id="text1" class="opacity00">Enter 1st polynomial: </div>
+					<div id="output1" class = "opacity00">Enter coefficient, exponent of node : 
+						<div id="input1"><input class="output-scanf-line input opacity00" id="val1" size="15" maxlength="5"/></div>
 					</div>
 				</div>
 			</div>
@@ -302,7 +322,7 @@ var arr = [];
 				<div class='col-xs-12 padding0 box-border text-center'
 					id='animationDiv'>
 					<div class='col-xs-12 padding0 margin-top-20 text-center'>
-						<div class='col-xs-offset-2 col-xs-8 padding0' id='btnsDiv'>
+						<div class='col-xs-offset-2 col-xs-8 padding0 opacity00' id='btnsDiv'>
 							<div class='position'>
 								<span class="input-group-addon-border" id="createDiv">
 									<!-- <input class="form-control input-sm" id="createText" size="4" name="create" type="text" /> --> 
@@ -331,7 +351,7 @@ var arr = [];
 							</div>
 						</div>
 					</div>
-					<canvas id="canvas" width="900" height="500"></canvas>
+					<canvas class="opacity00" id="canvas" width="900" height="500"></canvas>
 				</div>
 			</div>
 			<div id="generalAnimationControlSection">
