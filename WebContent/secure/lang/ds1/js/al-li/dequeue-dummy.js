@@ -741,13 +741,13 @@ DeQll.prototype.clearCallBack = function() {
 	this.implementAction(this.clearAll.bind(this), "");
 }
 
-DeQll.prototype.disableBtn = function() {
+DeQll.prototype.disableUI = function() {
 	for (var i = 0; i < this.Controls.length; i++) {
 		this.Controls[i].disabled = true;
 	}
 }
 
-DeQll.prototype.enableBtn = function() {
+DeQll.prototype.enableUI = function() {
 	for (var i = 0; i < this.Controls.length; i++) {
 		this.Controls[i].enabled = false;
 	}

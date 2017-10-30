@@ -179,20 +179,13 @@ r {
 
 <script type="text/javascript">
 var arr = [];
+//var size = ["2", "2"];
 
 	$(document).ready(function() {
-		/* $('#output' + outputSpanCount).append('<span id="output'+ outputSpanCount +'">Enter coefficient, exponent of node : <div class="position" id="val'+ 
-				outputSpanCount +'" contenteditable="true", maxlength="5">0</div></span>'); */
-	//	queueLinkedListReady();
-		//$('.output-scanf-line').attr({placeholder: 'Enter 2 values'});
-		
-		twoDimensionalArrayUsingArrayOfPointersReady();
-		
 		polynomialUsingLinkedList();
-				
 	});
 	
-	var twoDimensionalArrayUsingArrayOfPointersReady = function() {
+	var readCoeffAndExpValuesFromConsole = function() {
 		$('.input').focus();
 		$('.input').attr({placeholder: 'Enter 2 values'});
 		arr = [];
@@ -211,7 +204,7 @@ var arr = [];
 			}
 			
 		 	if ($('.introjs-nextbutton[style="display: inline-block;"]').length == 1 && e.keyCode == 13) {
-				intro.nextStep();
+				introjs.nextStep();
 			}
 			
 		});
@@ -239,34 +232,13 @@ var arr = [];
 			}
 			
 			if (arr.length == 2) {
-				if (arr[0].length < 3 && arr[1].length < 3) {
+				if (arr[0].length <= 3 && arr[1].length <= 3) {
 					$(".introjs-nextbutton").show();
 				} else {
 					$(".introjs-nextbutton").hide();
 					$('.introjs-tooltiptext').append("<span class='ct-code-b-red size-error length-error-text'>"
 							+"</br>size should be 1 to 3(inclusive)</span>");
 				}
-				
-				/* var a0 = $.isNumeric(parseInt(arr[0]));
-				var a1 = $.isNumeric(parseInt(arr[1]));
-				var aFirst = parseInt(arr[0]).toString();
-				var aSecond = parseInt(arr[1]).toString();
-				var dot = arr[1].indexOf(".") == -1;
-				var dot1 = arr[0].indexOf(".") == -1;
-				if (a0 && a1 && dot && dot1) {
-					if ($.inArray(aFirst, size) !== -1 && $.inArray(aSecond, size) !== -1) {
-						$(".introjs-nextbutton").show();
-					} else {
-						if ($('.size-error').length == 0 ) {
-							$(".introjs-nextbutton").hide();
-							$('.introjs-tooltiptext').append("<span class='ct-code-b-red size-error length-error-text'></br>size should be 1 to 3(inclusive)</span>");
-						}
-					}
-				  } else {
-				  	$(".introjs-nextbutton").hide();
-				  	$('.introjs-tooltiptext').append("<span class='ct-code-b-red length-error-text'> "
-							+"<br/> Please follow the above format.</br>size must be in numbers.</span>");
-				  }  */
 			} else {
 				$(".introjs-nextbutton").hide();
 			}
@@ -312,9 +284,9 @@ var arr = [];
 				</div>
 				<div class="output-console-body">
 					<div id="text1" class="opacity00">Enter 1st polynomial: </div>
-					<div id="output1" class = "opacity00">Enter coefficient, exponent of node : 
+					<!-- <div id="output1" class = "opacity00">Enter coefficient, exponent of node : 
 						<div id="input1"><input class="output-scanf-line input opacity00" id="val1" size="15" maxlength="5"/></div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			</div>
@@ -349,6 +321,7 @@ var arr = [];
 										<span id="mulBtn" class="btn btn-sm btn-success">Multiplication</span>
 								</span>
 							</div>
+							<span id="testBtn" class="btn btn-sm btn-success hide">Multiplication</span>
 						</div>
 					</div>
 					<canvas class="opacity00" id="canvas" width="900" height="500"></canvas>
