@@ -179,37 +179,30 @@ r {
 
 <script type="text/javascript">
 var arr = [];
+var ch
 //var size = ["2", "2"];
 
 	$(document).ready(function() {
 		polynomialUsingLinkedList();
 	});
 	
-	var readCoeffAndExpValuesFromConsole = function() {
-		$('.input').focus();
-		$('.input').attr({placeholder: 'Enter 2 values'});
-		arr = [];
-		$('.input').addClass("blinking-orange").removeAttr('disabled').focus();;
-		$('.input').on("keydown", function(e) {
-			if ((arr.length == 2 || arr.length == 0) && e.keyCode == 32) {
+	var readCoeffAndExpValuesFromConsole = function(selector) {
+		$(selector).focus();
+		$(selector).attr({placeholder: 'Enter 2 values'});
+		$(selector).addClass("blinking-orange").removeAttr('disabled').focus();;
+		$(selector).on("keydown", function(e) {
+			if ((arr.length == 2 || arr.length == 0) && e.keyCode == 32 ) {
 				e.preventDefault();
 			}
-			
 			if (arr.length == 1) {
-				var flag = false;
-				flag = $('.input').val().indexOf(' ')>=0;
-				if (e.keyCode == 32 && flag) {
+				var test = false;
+				test = $(selector).val().indexOf(' ') >= 0;
+				if (e.keyCode == 32 && test) {
 					e.preventDefault();
 				}
 			}
-			
-		 	if ($('.introjs-nextbutton[style="display: inline-block;"]').length == 1 && e.keyCode == 13) {
-				introjs.nextStep();
-			}
-			
 		});
-			
-		$('.input').on("keyup", function(e) {
+		$(selector).on("keyup", function(e) {
 			$('.length-error-text,.size-error').remove();
 			if ($(this).val() == "") {
 				$(".introjs-nextbutton").hide();
@@ -219,29 +212,60 @@ var arr = [];
 			var givenText = $(this).val();
 			var splittedText = givenText.split(" ");
 			arr = [];
-			
 			$.each(splittedText, function(idx, val) {
 				if (val != '') {
 					arr.push(val);
 				}
 			});
-			
 			if (arr.length == 1 && e.keyCode == 8 && $('.backspace-error').length == 0 ) {
 				$('.introjs-tooltiptext').append("<span class='ct-code-b-red backspace-error length-error-text'>"
 						+"</br>Enter two numbers separated by space.</span>");
 			}
+			var a0 = $.isNumeric(arr[0]);		
+			var a1 = $.isNumeric(arr[1]);
 			
-			if (arr.length == 2) {
-				if (arr[0].length <= 3 && arr[1].length <= 3) {
+			if (a0 && a1) {
+				if ((arr.length == 2) && (arr[0].length <= 3 && arr[1].length <= 3)) {
 					$(".introjs-nextbutton").show();
+					
 				} else {
 					$(".introjs-nextbutton").hide();
 					$('.introjs-tooltiptext').append("<span class='ct-code-b-red size-error length-error-text'>"
 							+"</br>size should be 1 to 3(inclusive)</span>");
 				}
 			} else {
+				$('.introjs-tooltiptext').append("<span class='ct-code-b-red size-error length-error-text'>"
+						+"</br>Please enter integers only.</span>");
 				$(".introjs-nextbutton").hide();
 			}
+		});
+	}
+	
+	function readYesOrNoFromConsole(selector) {
+		$(selector).focus();
+		$(selector).attr({placeholder: 'Enter (y/n)'});
+		$(selector).addClass("blinking-orange").removeAttr('disabled').focus();;
+		$(selector).on("keydown", function(e) {
+			$('.length-error-text').remove();
+			var max = $(this).attr("maxlength");
+			if ($.inArray(e.keyCode, [46, 8, 9, 27, 37, 39]) !== -1) {
+				return;
+			}
+			if ($(this).val().length > max-1) {
+				$('.introjs-tooltiptext').append("<span class='ct-code-b-red length-error-text'><br/>String length to 2.</span>");
+				e.preventDefault();
+			}
+		});
+		$(selector).on("keyup", function(e) {
+			if (($(this).val() != "") && (($(this).val().toLowerCase() == "y") || ($(this).val().toLowerCase() == "n"))) {
+				ch = $(this).val().toLowerCase();
+				$(".introjs-nextbutton").show();
+			} else {
+				$('.length-error-text').remove();
+				$('.introjs-tooltiptext').append("<span class='ct-code-b-red length-error-text'><br/>Please enter (y/n (or) Y/N).</span>");
+				$(".introjs-nextbutton").hide();
+			}
+			introjs.refresh();
 		});
 	}
 	

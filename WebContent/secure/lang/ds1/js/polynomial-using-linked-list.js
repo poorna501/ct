@@ -1,4 +1,4 @@
-var lang;
+var lang, fromId;
 var callCount = buttonName = outputCount = 1; 
 
 var polynomialUsingLinkedList = function() {
@@ -116,10 +116,15 @@ function initIntroJS() {
 						case "memoryAllocation" :
 						case "StoreValues" :
 						case "addTermMethod" :
+						case "tempToHead" :
 							$("#createinitTemp , #temp, #console1, #readConsole1").removeClass("background-color-yellow");
 							if (ch != 'n' && animateStep == "StoreValues") {
 								$('#testBtn').click();
 							} 
+							if (nodeCount != 0 && animateStep == "memoryAllocation") {
+								$('.btn').attr("disabled", false);
+								$('#createBtn').click();
+							}
 							doPlayPause();
 						break;
 						
@@ -166,8 +171,21 @@ function initIntroJS() {
 										+ "by a <y>space</y>.";
 							typing(".introjs-tooltiptext", text, function() {
 								introNextSteps("#storeCoeffNdExp", "", "");
-								readCoeffAndExpValuesFromConsole();
+								readCoeffAndExpValuesFromConsole("#val" + outputCount);
 							});
+						break;
+						case "enterYesOrNo" :
+							$('.output-console-body').append('<div id="yesOrNoText'+ outputCount +'">Do u want another node(y/n): '
+									+ ' <div class="position" id="yesOrNotDiv'+ outputCount +'"><input class="output-scanf-line input" '
+									+ 'id="yesOrNoVal'+ outputCount +'" size="15" maxlength="2"/></div></div>');
+							$('#yesOrNoVal' + outputCount).focus();
+							$(".introjs-tooltip").removeClass('hide');
+							var text = "Enter <y>y/n</y> (or) <y>Y/N</y> to continue to insert node into the list.";
+							typing(".introjs-tooltiptext", text, function() {
+								introNextSteps("#doWhileLoop", "", "right");
+								readYesOrNoFromConsole('#yesOrNoVal' + outputCount);
+								outputCount++;
+							});	
 						break;
 					}
 				});
@@ -210,7 +228,7 @@ function initIntroJS() {
 									var text = "Here, we are declaring a <y>character</y> variable <y>ch</y> and"
 										+" <y>two</y> integer variables <y>coeff</y> and <y>exp</y>. ";
 									typing(".introjs-tooltiptext ul li:last", text, function() {
-										$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' onclick='allocateMemory()'>Next &#8594;</a>");
+										$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' onclick='allocateMemory(1)'>Next &#8594;</a>");
 									});
 								});
 							});
@@ -251,9 +269,9 @@ function initIntroJS() {
 			case "callAddTerm" :
 				$("#tCoeff, #tExp, #tNext").removeClass("background-color-yellow");
 				$(".introjs-helperLayer").one("transitionend", function() {
-					flip("#aHead", (address.length != 1) ? address[0] : "null", function() {
-						flip("#aTemp", address[0], function() {
-							arrow("#tNext", "#callAddTerm", function() {
+					arrow("#tNext", "#callAddTerm", function() {
+						flip("#aHead", (address.length != 1) ? address[0] : "null", function() {
+							flip("#aTemp", address[0], function() {
 								$(".introjs-tooltip").removeClass("hide");
 								$("#callAddTerm").addClass("background-color-yellow");
 								$('.introjs-tooltiptext').append("<ul><li></li></ul>");
@@ -265,14 +283,104 @@ function initIntroJS() {
 										+ "null" +"</y>) and <y>temp</y> (<y>"+ address[0] +"</y>)";
 								}
 								typing(".introjs-tooltiptext ul li:last", text, function() {
-									
-									//introNextSteps("#animationDiv", "addTermMethod", "");
-									
+									$("#preMain").hide();
+									addTermMethodFun();
+									$("#preAddTerm").empty().addClass("opacity00");
+									introjs.refresh();
+									arrow("#callAddTerm", "#callAddTerm");
+									introNextSteps("#preAddTerm", "", "right");
 									$('.introjs-nextbutton').show();
 								});
 							});
 						});
 					})
+				});
+			break;
+			case "preAddTerm" :
+				$(".introjs-helperLayer").one("transitionend", function() {
+					$("#preAddTerm").removeClass("opacity00");
+					$(".introjs-tooltip").removeClass('hide');
+					arrow("#addTermFunName", "#addTermFunName", function() {
+						$("#aCallHndT").addClass("background-color-yellow");
+						var text = "Here, store <y>null</y> to the <y>head</y> and <y>"+ address[0] +"</y> to <y>temp</y>.";
+						$('.introjs-tooltiptext').append("<ul><li></li></ul>");
+						typing(".introjs-tooltiptext ul li:last", text, function() {
+							arrow("#addTermFunName", "#p1ndp2Dec", function() {
+								$("#p1ndp2Dec, #p1NdP2Init").addClass("background-color-yellow");
+								arrow("#p1ndp2Dec", "#p1NdP2Init", function() {
+									var text = "Here, we are declaring <y>two pointer</y> variables <y>p1</y> and <y>p2</y> and initialize"
+												+" with <y>head</y> value (<y>null</y>).";
+									$('.introjs-tooltiptext ul').append("<li></li>");
+									typing(".introjs-tooltiptext ul li:last", text, function() {
+										introNextSteps("#animationDiv", "addTermMethod", "");
+										$('.introjs-nextbutton').show();
+									});
+								});
+							});
+						});
+					});
+				});
+			break;
+			case "addTermLogic" :
+				$("#aCallHndT, #p1NdP2Init, #p1ndp2Dec").removeClass("background-color-yellow");
+				$(".introjs-helperLayer").one("transitionend", function() {
+					arrow("#p1NdP2Init", "#ifp1EqNullBefore", function() {
+						$(".introjs-tooltip").removeClass('hide');
+						$(".introjs-tooltiptext").append("<ul></ul>");
+						$(".introjs-tooltiptext ul li *").removeAttr("id");
+						$(".introjs-tooltiptext ul").append("<li>" 
+								+ "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+								+ "<span  id='tooltipFront'>p1</span> == NULL</span></li>");
+						travel("#ifp1EqNullBefore", $(".introjs-tooltiptext ul li:last-child span"), function () {
+							flip("#tooltipFront", address.length == 1 ? "NULL" : address[0], function() {
+								var text = "";
+								if (address.length == 1) {
+									text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
+								} else {
+									text = "Since it evaluates to <r>false</r>."
+								}
+								$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+								typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+									if (address.length == 1) {
+										fromId = "#rtnHead";
+										$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' onclick='createIfBlock()'>Next &#8594;</a>")
+									} else {
+										fromId = "#injectRearNextInit"
+										$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' onclick='createElseBlockWhile()'>Next &#8594;</a>")
+									}
+								});
+							});
+						});
+					});
+				});
+			break;
+			case "rtnHead" :
+				$("#ifp1EqNullBefore, #tmpToHead").removeClass("background-color-yellow");
+				$(".introjs-helperLayer").one("transitionend", function() {
+					arrow(fromId, "#rtnHead", function() {
+						introNextSteps("#yesOrNoQus", "addTermMethod", "");
+						setTimeout(function() {
+							introjs.nextStep();
+						},800);
+					});
+				});
+			break;
+			case "yesOrNoQus" :
+				$("#preAddTerm").addClass("hide");
+				$("#callAddTerm").removeClass("background-color-yellow");
+				$(".introjs-helperLayer").one("transitionend", function() {
+					arrow(fromId, "#rtnHead", function() {
+						introNextSteps("#outputDiv", "enterYesOrNo", "");
+						setTimeout(function() {
+							introjs.nextStep();
+						},800);
+					});
+				});
+			break;
+			case "doWhileLoop" :
+				$(".introjs-helperLayer").one("transitionend", function() {
+					$(".introjs-tooltip").removeClass('hide');
+					allocateMemory(2);
 				});
 			break;
 		}
@@ -314,9 +422,9 @@ function createMethodDef() {
 	         + '\t\t<span id="tExp">temp -> exp = exp;</span>\n'
 	         + '\t\t<span id="tNext">temp -> next = NULL;</span></span>\n'
 	         + '\t\t<span id="callAddTerm">head = addterm(<span id="aHead" class="position">head</span>, '
-	         + '<Span id="aTemp" class="position">temp</span>);</span>\n'
-	         + '\t\t<span id="console1">printf("Do u want another node(y/n): \\n");</span>\n'
-	         + '\t\t<span id="readConsole2">scanf("  %c", &ch);</span>\n'
+	         + '<span id="aTemp" class="position">temp</span>);</span>\n'
+	         + '\t\t<span id="yesOrNoQus"><span id="console1">printf("Do u want another node(y/n): \\n");</span>\n'
+	         + '\t\t<span id="readConsole2">scanf("  %c", &ch);</span></span>\n'
 	         + '\t} while(ch != \'n\');</span>\n'
 	         + '\treturn head;\n'
 	         + '}\n');
@@ -326,33 +434,36 @@ function addTermMethodFun() {
 	$("#preAddTerm").append('<span id="addTermFunName">poly addterm(<span id="aCallHndT">poly head, poly temp</span>) {</span>\n'
 			+ '\t<span id="p1ndp2Dec">poly p1,p2;</span>\n'
 			+ '\t<Span id="p1NdP2Init">p1 = p2 = head;</span>\n'
-			+ '\t<span id="ifp1EqNull">if(p1 == NULL) {</span>\n'
+			+ '\t<span id="addTermLogic"><span id="ifp1EqNullBefore">if(p1 == NULL) {</span>\n'
 			+ '\t\t<span id="tmpToHead">head = temp;</span>\n'
 			+ '\t} else {\n'
-			+ '\t\twhile(p1 != NULL && p1 -> exp > t -> exp) {\n'
-			+ '\t\t\tp2 = p1;\n'
-			+ '\t\t\tp1 = p1 -> next;\n'
+			+ '\t\t<span id="whileP1NotNull">while(p1 != NULL && p1 -> exp > t -> exp) {</span>\n'
+			+ '\t\t\t<span id="p1ToP2">p2 = p1;</span>\n'
+			+ '\t\t\t<span id="p1NxtTop1">p1 = p1 -> next;</span>\n'
 			+ '\t\t}\n'
-			+ '\t\tif(p1 == NULL) {\n'
-			+ '\t\t\tp2 -> next = t;\n'
-			+ '\t\t} else if(p1 -> exp == t -> exp) {\n'
-			+ '\t\t\tp1 -> coeff = p1 -> coeff + t -> coeff;\n'
-			+ '\t\t} else if(p1 -> exp < t -> exp) {\n'
-			+ '\t\t\tif(p2 == p1) {\n'
-			+ '\t\t\tt -> next = p1;\n'
-			+ '\t\t\thead = t;\n'
-			+ '\t\t} else {\n'
-			+ '\t\t\tt -> next = p1;\n'
-			+ '\t\t\tp2 -> next = t;\n'
-			+ '\t\t}\n'
-			+ '\t\t}\n'
-			+ '\t}\n'
-			+ '\treturn head;\n'
-			+ '}\n')
+			+ '\t\t<span id="addTermIfLogic"><span id="ifp1EqNullAfter">if(p1 == NULL) {</span>\n'
+			+ '\t\t\t<span id="tempTpNxtP2">p2 -> next = temp;</span>\n'
+			+ '\t\t<span id="p1EqTemp">} else if(p1 -> exp == temp -> exp) {</span>\n'
+			+ '\t\t\t<span id="p1PlsTemp">p1 -> coeff = p1 -> coeff + temp -> coeff;</span>\n'
+			+ '\t\t<span id="p1LessTemp">} else if(p1 -> exp < temp -> exp) {</span>\n'
+			+ '\t\t\t<span id="p2EqP1">if(p2 == p1) {</span>\n'
+			+ '\t\t\t\t<span id="p1ToTmpNxt">temp -> next = p1;</span>\n'
+			+ '\t\t\t\t<span id="tmpToHead">head = temp</span>;\n'
+			+ '\t\t\t} else {\n'
+			+ '\t\t\t\t<span id="p1ToTmpNxt">temp -> next = p1;</span>\n'
+			+ '\t\t\t\t<span id="tmpToP2Nxt">p2 -> next = temp;</span>\n'
+			+ '\t\t\t}\n'
+			+ '\t\t}</span>\n'
+			+ '\t}</span>\n'
+			+ '\t<span id="rtnHead">return head;</span>\n'
+			+ '}\n');
 }
 
-function allocateMemory() {
+function allocateMemory(num) {
 	$(".user-btn").remove();
+	if(num != 1) {
+		$(".introjs-tooltiptext").append("<ul></ul>");
+	}
 	$("#createHead, #ch, #coeffExp").removeClass("background-color-yellow");
 	arrow("#coeffExp", "#createinitTemp", function() {
 		$("#createinitTemp , #temp").addClass("background-color-yellow");
@@ -379,6 +490,25 @@ function allocateMemory() {
 	});
 }
 
+function createIfBlock() {
+	$(".user-btn").remove();
+	$("#ifp1EqNullBefore").removeAttr("style");
+	arrow("#ifp1EqNullBefore", "#tmpToHead", function() {
+		$("#tmpToHead").addClass("background-color-yellow");
+		$(".introjs-tooltiptext ul").append("<li></li>");
+		var text = "The <y>address</y> contained in <y>temp</y> (<y>"+ address[0] +"</y>) is assigned to <y>head</y> node";
+		typing($(".introjs-tooltiptext ul li:last"), text, function() {
+			introNextSteps("#animationDiv", "tempToHead", "");
+			$(".introjs-nextbutton").removeClass("introjs-disabled").show();
+		});
+	});
+}
+
+function createElseBlockWhile() {
+	$(".user-btn").remove();
+	
+	
+}
 
 
 
