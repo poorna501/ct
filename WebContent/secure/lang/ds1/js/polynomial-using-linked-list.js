@@ -1,4 +1,4 @@
-var lang, fromId;
+var lang, fromId, test =  true;
 var callCount = buttonName = outputCount = 1;
 
 var polynomialUsingLinkedList = function() {
@@ -108,7 +108,7 @@ function initIntroJS() {
 								setTimeout(function() {
 									introjs.nextStep();
 								}, 1500);
-								introNextSteps("#btnsDiv", "", "");
+								introNextSteps("#btnsDiv", "", "left");
 							break;
 							case "head1Null":
 							case "memoryAllocation":
@@ -119,13 +119,21 @@ function initIntroJS() {
 							case "ifP1EqualToNull":
 							case "ifP1ExpAndTempExpSame":
 							case "ifP1EqP2":
+							case "returnHead":
+							case "callBtnDiv":
 								$("#createinitTemp , #temp, #console1, #readConsole1").removeClass("background-color-yellow");
 								if (ch != 'n'&& animateStep == "StoreValues") {
 									$('#testBtn').click();
 								}
-								if (nodeCount != 0 && animateStep == "memoryAllocation") {
+								if ((nodeCount != 0 && animateStep == "memoryAllocation")) {
 									$('.btn').attr("disabled", false);
 									$('#createBtn').click();
+								}
+								if (animateStep == "returnHead" || animateStep == "callBtnDiv") {
+									setTimeout(function() {
+										$('.btn').attr("disabled", false);
+										$('#createBtn').click();
+									}, 3000);
 								}
 								doPlayPause();
 							break;
@@ -139,6 +147,10 @@ function initIntroJS() {
 						typing(".introjs-tooltiptext", text, function() {
 							$('#btnsDiv').removeClass("opacity00");
 							$("#btnsDiv, .btn").removeAttr("disabled");
+							if (!test) {
+								callCount = 1;
+								createButtonFlag = false;
+							}
 						});
 					});
 					break;
@@ -146,10 +158,10 @@ function initIntroJS() {
 					$(".introjs-helperLayer").one("transitionend", function() {
 						doPlayPause();
 					});
-					break;
-				case "print1":
+				break;
+				case "print"+callCount:
 					$(".introjs-helperLayer").one("transitionend", function() {
-						introNextSteps("#outputDiv", "text1", "");
+						introNextSteps("#outputDiv", "text" + callCount, "");
 						setTimeout(function() {
 							introjs.nextStep();
 						}, 1500);
@@ -160,8 +172,10 @@ function initIntroJS() {
 						var animateStep = introjs._introItems[introjs._currentStep].animateStep;
 						switch (animateStep) {
 							case "text" + callCount:
-								$('#text' + callCount).removeClass("opacity00");
-								introNextSteps("#head1Null", "call"+ callCount, "");
+								$(".output-console-body").append('<div id="text'+ callCount +'">Enter '+ callCount +'st polynomial: </div>');
+								//$('#text' + callCount).removeClass("opacity00");
+								$('.output-console-body').scrollTo($('.output-console-body div:last'), 500);
+								introNextSteps("#head"+ callCount +"Null", "call"+ callCount, "");
 								setTimeout(function() {
 									introjs.nextStep();
 								}, 1500);
@@ -194,7 +208,7 @@ function initIntroJS() {
 							break;
 						}
 					});
-					break;
+				break;
 				case "head" + callCount + "Null":
 					$(".introjs-helperLayer").one("transitionend", function() {
 						var animateStep = introjs._introItems[introjs._currentStep].animateStep;
@@ -225,7 +239,7 @@ function initIntroJS() {
 							arrow("#methodName", "#methodName", function() {
 								$(".introjs-tooltip").removeClass("hide");
 								$('.introjs-tooltiptext').append('<ul><li></li></ul>');
-								var text = "Here, store, the <y>head1</y> value (<y>NULL</y>) to the <y>head</y>.";
+								var text = "Here, store, the <y>head"+ callCount +"</y> value (<y>NULL</y>) to the <y>head</y>.";
 								typing(".introjs-tooltiptext ul li:last",text,function() {
 									arrow("#methodName","#coeffExp",function() {
 										$("#ch, #coeffExp").addClass("background-color-yellow");
@@ -276,14 +290,14 @@ function initIntroJS() {
 					$("#tCoeff, #tExp, #tNext").removeClass("background-color-yellow");
 					$(".introjs-helperLayer").one("transitionend", function() {
 						arrow("#tNext","#callAddTerm",function() {
-							flip("#aHead", (address.length != 1) ? address[0] : "null", function() {
-								flip("#aTemp", (address.length == 1) ? address[0] : address[1], function() {
+							flip("#aHead", (address.length != 1) ? firstAdd : "null", function() {
+								flip("#aTemp", randomAdd, function() {
 									$(".introjs-tooltip").removeClass("hide");
 									$("#callAddTerm").addClass("background-color-yellow");
 									$('.introjs-tooltiptext').append("<ul><li></li></ul>");
 									if (address.length != 1) {
 										var text = "Here, we are calling <y>addTrem()</y> method and passing <y>two</y> variables <y>head</y> (<y>"
-												+ address[0] + "</y>) and <y>temp</y> (<y>" + address[0] + "</y>)";
+												+ firstAdd + "</y>) and <y>temp</y> (<y>" + randomAdd + "</y>)";
 									} else {
 										var text = "Here, we are calling <y>addTrem()</y> method and passing <y>two</y> variables <y>head</y> (<y>"
 												+ "null</y>) and <y>temp</y> (<y>" + address[0] + "</y>)";
@@ -308,14 +322,24 @@ function initIntroJS() {
 						$(".introjs-tooltip").removeClass('hide');
 						arrow("#addTermFunName", "#addTermFunName", function() {
 							$("#aCallHndT").addClass("background-color-yellow");
-							var text = "Here, store <y>null</y> to the <y>head</y> and <y>" + address[0] + "</y> to <y>temp</y>.";
+							if (address.length != 1) {
+								var text = "Here, store <y>"+ firstAdd +"</y> to the <y>head</y> and <y>" + randomAdd + "</y> to <y>temp</y>.";
+							} else {
+								var text = "Here, store <y>null</y> to the <y>head</y> and <y>" + address[0] + "</y> to <y>temp</y>.";
+							}
 							$('.introjs-tooltiptext').append("<ul><li></li></ul>");
 							typing(".introjs-tooltiptext ul li:last", text, function() {
 								arrow("#addTermFunName", "#p1ndp2Dec", function() {
 									$("#p1ndp2Dec, #p1NdP2Init").addClass("background-color-yellow");
 									arrow("#p1ndp2Dec", "#p1NdP2Init", function() {
-										var text = "Here, we are declaring <y>two pointer</y> variables <y>p1</y> and <y>p2</y> and initialize"
-													+ " with <y>head</y> value (<y>null</y>).";
+										if (address.length != 1) {
+											var text = "Here, we are declaring <y>two pointer</y> variables <y>p1</y> and <y>p2</y> and initialize"
+												+ " with <y>head</y> value (<y>"+ firstAdd +"</y>).";
+										} else {
+											var text = "Here, we are declaring <y>two pointer</y> variables <y>p1</y> and <y>p2</y> and initialize"
+												+ " with <y>head</y> value (<y>null</y>).";
+											
+										}
 										$('.introjs-tooltiptext ul').append("<li></li>");
 										typing(".introjs-tooltiptext ul li:last", text, function() {
 											introNextSteps("#animationDiv", "addTermMethod", "");
@@ -338,7 +362,7 @@ function initIntroJS() {
 										+ "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
 										+ "<span  id='tooltipFront'>p1</span> == NULL</span></li>");
 							travel("#ifp1EqNullBefore", $(".introjs-tooltiptext ul li:last-child span"), function() {
-								flip("#tooltipFront",address.length == 1 ? "NULL": address[0],function() {
+								flip("#tooltipFront",address.length == 1 ? "NULL": firstAdd,function() {
 									var text = "";
 									if (address.length == 1) {
 										text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
@@ -391,26 +415,38 @@ function initIntroJS() {
 						if (ch != "n") {
 							allocateMemory(2);
 						} else {
-							$("#whileChNotEqN").css("color","red");
+							$("#whileChNotEqN").addClass("blinkingRed");
 							var text = 'Here, the condition <y>ch != "n"</y> will evaluates to <y>false</y>.';
 							typing(".introjs-tooltiptext", text, function() {
 								console.log("entered no in the console.");
-								introNextSteps("#returnHead", "", "");
+								introNextSteps("#returnHead", "return", "");
 								$(".introjs-nextbutton").show();
 							});
 						}
 					});
 				break;
 				case "returnHead":
+					$("#whileChNotEqN").removeClass("blinkingRed");
 					$(".introjs-helperLayer").one("transitionend", function() {
-						introNextSteps("#animationDiv", "ifP1EqP2", "");
-						setTimeout(function() {
-							$('.btn').attr("disabled", false);
-							$('#createBtn').click();
-							introjs.nextStep();
-						}, 800);
+						if (test) {
+							test = false;
+							introNextSteps("#animationDiv", "returnHead", "");
+							setTimeout(function() {
+								$("#preMain").removeClass("hide");
+								callCount++;
+								$('.btn').attr("disabled", false);
+								$('#createBtn').click();
+								introjs.nextStep();
+								
+							}, 800);
+						} else {
+							introNextSteps("#animationDiv", "callBtnDiv", "");
+							setTimeout(function() {
+								introjs.nextStep();
+							},500);
+						}
 					});
-					break;
+				break;
 				case "addTermIfLogic":
 					$("#whileP1NotNull, #p1ToP2, #p1NxtTop1").removeAttr(
 							"style").removeClass("background-color-yellow");
@@ -485,9 +521,9 @@ function displayAddTermMethod() {
 			+ '\t\t<span id="p1LessTemp">} else if(p1 -> exp < temp -> exp) {</span>\n'
 			+ '\t\t\t<span id="p2EqP1">if(p2 == p1) {</span>\n'
 			+ '\t\t\t\t<span id="p1ToTmpNxt">temp -> next = p1;</span>\n'
-			+ '\t\t\t\t<span id="tmpToHead">head = temp</span>;\n'
+			+ '\t\t\t\t<span id="tmpToHead1">head = temp</span>;\n'
 			+ '\t\t\t} else {\n'
-			+ '\t\t\t\t<span id="p1ToTmpNxt">temp -> next = p1;</span>\n'
+			+ '\t\t\t\t<span id="p1ToTmpNxt1">temp -> next = p1;</span>\n'
 			+ '\t\t\t\t<span id="tmpToP2Nxt">p2 -> next = temp;</span>\n'
 			+ '\t\t\t}\n'
 			+ '\t\t}</span>\n'
@@ -534,7 +570,7 @@ function createIfBlock() {
 		$("#tmpToHead").addClass("background-color-yellow");
 		$(".introjs-tooltiptext ul").append("<li></li>");
 		var text = "The <y>address</y> contained in <y>temp</y> (<y>"
-				+ address[0] + "</y>) is assigned to <y>head</y> node";
+				+ randomAdd + "</y>) is assigned to <y>head</y> node";
 		typing($(".introjs-tooltiptext ul li:last"), text, function() {
 			introNextSteps("#animationDiv", "tempToHead", "");
 			$(".introjs-nextbutton").removeClass("introjs-disabled").show();
@@ -554,7 +590,7 @@ function createElseBlockWhile() {
 				+ "<span  id='tooltipFront'>p1</span>!== NULL && <span id='p1Exp' class='position'>p1 -> exp</span> &gt;"
 				+ " <span id='tempExp' class='position'>temp -> exp</span></span></li>");
 		travel("#whileP1NotNull", $(".introjs-tooltiptext ul li:last span"), function() {
-			flip("#tooltipFront", address.length == 1 ? "NULL" : address[0], function() {
+			flip("#tooltipFront", address.length == 1 ? "NULL" : firstAdd, function() {
 				flip("#p1Exp", p1Value["exp"], function() {
 					flip("#tempExp", temp["exp"], function() {
 						$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
@@ -589,7 +625,7 @@ function secondP1EqNull() {
 			+ "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
 			+ "<span  id='tooltipFront'>p1</span> == NULL</span></li>");
 		travel("#ifp1EqNullAfter", $(".introjs-tooltiptext ul li:last-child span"), function() {
-			flip("#tooltipFront", address.length == 1 ? "NULL" : address[0], function() {
+			flip("#tooltipFront", (p1 == null) ? "NULL" : firstAdd, function() {
 				$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 				if (p1 == null) {
 					text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
@@ -670,6 +706,7 @@ function ifP1ExpNdTempExpLessThan() {
 						typing($(".introjs-tooltiptext ul li:last-child div").last(),text,function() {
 							$("#p1LessTemp").removeClass("background-color-yellow").removeAttr("style");
 							arrow("#p1LessTemp","#p2EqP1",function() {
+								$("#p2EqP1").addClass("background-color-yellow");
 								$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
 									+ "onclick='ifP1EqP2()'>Next &#8594;</a>");
 							});
@@ -702,8 +739,9 @@ function ifP1EqP2() {
 				if (p1 == p2) {
 					text = "Since it evaluates to <y>true</y>, so control enters into <y>if-block</y>.";
 					typing($(".introjs-tooltiptext ul li:last-child div").last(), text,function() {
-						$("#p1LessTemp").removeClass("background-color-yellow").removeAttr("style");
-						arrow("#p1LessTemp", "#p2EqP1", function() {
+						$("#p2EqP1").removeClass("background-color-yellow").removeAttr("style");
+						arrow("#p2EqP1", "#tmpToHead1", function() {
+							$("#p1ToTmpNxt, #tmpToHead1").addClass("background-color-yellow");
 							introNextSteps("#animationDiv", "ifP1EqP2", "");
 							$(".introjs-nextbutton").removeClass("introjs-disabled").show();
 							
@@ -715,7 +753,8 @@ function ifP1EqP2() {
 					text = "Since it evaluates to <r>false</r> , so control enters into <y>else-block</y>."
 					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
 						$("#p2EqP1").removeClass("background-color-yellow").removeAttr("style");
-						arrow("#p2EqP1", "#p1ToTmpNxt", function() {
+						arrow("#p2EqP1", "#tmpToP2Nxt", function() {
+							$("#p1ToTmpNxt1, #tmpToP2Nxt").addClass("background-color-yellow");
 							introNextSteps("#animationDiv", "ifP1EqP2", "");
 							$(".introjs-nextbutton").removeClass("introjs-disabled").show();
 						});

@@ -41,10 +41,10 @@ var address3 = [], listCoeff3 = [], listExp3 = [];
 var ButtonArr = [];
 
 var head1 = head2 = head3 = sum = null;
-var nodeCount = nodeCount1 = nodeCount2 = nodeCount3 = 0;
+var nodeCount = nodeCount1 = nodeCount2 = nodeCount3 = createClickCount = 0;
 var indexM1 = indexM2 = indexM3 = 0 
 
-var flag = manikanta = true, ch = "y", name; 
+var flag = manikanta = createButtonFlag = true, ch = "y", name; 
 var headPos = 1, p1NdP2Val, p1Value;
 
 function PolynomialLL(am, w, h) {
@@ -109,6 +109,7 @@ PolynomialLL.prototype.createCallBack = function() {
 	if($(".btn").is(":disabled")) {
 		return;
 	}
+	createClickCount++;
 	$('.btn').attr("disabled", true);
 	this.implementAction(this.createNode.bind(this), "");
 	console.log("Create");
@@ -435,6 +436,7 @@ PolynomialLL.prototype.addTerm = function(head, t) {
 	this.cmd("Step");
 	this.introNextStep("#addTermLogic", "right", "hide");
 	this.cmd("Step");
+	
 	if(p1 == null) {
 		head = t;
 		if (flag == "addition") { 
@@ -677,6 +679,7 @@ PolynomialLL.prototype.moveHeadToHeadPos = function() {
 	this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y);
 	this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y, head1_POS_X + 5, head1_POS_Y);
 	this.cmd("Step");
+	//headPos = address[0];
 	if (flag == true) {
 		this.cmd("SetText", this.head1Id, address[0]);
 		flag = false;
@@ -1339,7 +1342,7 @@ function subtraction(head1, head2) {
 }
 
 function addterm(head, t) {
-	p1 = p2 = head;
+	p1 = p2 = p1Value = head;
 	if(p1 == null) {
 		head = t;
 	} else {
@@ -1397,90 +1400,140 @@ function mul(head1, head2) {
 PolynomialLL.prototype.createNode = function() {
 	this.commands = new Array();
 	this.dummyCoeff = this.nextIndex++;
-	if (manikanta) {
-		$('#preMain').append('\n\n<div id="createInMain"><span id="print1">printf("Enter 1st polynomial: ");\n</span>' +
-				'<span id="head1Null">head1 = NULL;\n'+
-				'<span id="createCall1">head1 = create(<span id="head1Name" class="position">head1</span>);</span></span>\n'+
-				'<span id="print2">printf("Enter 2nd polynomial: ");\n'+
-				'<span id="head2Null">head2 = NULL;\n'+
-				'<span id="createCall2">head2 = create(<span id="head2Name" class="position">head2</span>);</span></span>\n</div>');
-		this.introNextStep("#createInMain", "bottom", "hide");
-		if (lang == "cpp") {
-			$('#print1').text('cout << "Enter 1st polynomial: ";');
-			$('#print2').text('cout << "Enter 2nd polynomial: ";');
+	
+	if (!createButtonFlag) {
+		console.log("Hello poorna")
+		//empty Animation bord
+		for (let i = 0; i < nodeCount1; i++) {
+			this.cmd("Delete", this.llCoeff1[i]);
+			this.cmd("Delete", this.llExp1[i]);
+			this.cmd("Delete", this.llNext1[i]);
+			this.cmd("Delete", this.addVal1[i]);
+			
+			this.llCoeff1[i] = this.nextIndex++;
+			this.llExp1[i] = this.nextIndex++;
+			this.llNext1[i] = this.nextIndex++;
+			this.addVal1[i] = this.nextIndex++;
 		}
-		this.cmd("Step");
-		this.introNextStep("#print1", "bottom", "hide");
-		this.cmd("Step");
 		
-		this.cmd("Sethighlight", this.head1RectID, "#2eb82e");
-		this.cmd("SetText", this.head1Id, null);
-		this.cmd("Step");
-		this.cmd("Sethighlight", this.head1RectID, "");
-		this.cmd("Step");
-		$('#preTemp').removeClass("hide").addClass("opacity00");
-		if (lang == "cpp") {
-			$("#console1").text('cout << "Enter coeff, exp of node : "');
-			$("#readConsole1").text("cin >> coeff >> exp;");
-			$("#console2").text('cout << "Do u want another node(y/n):"');
-			$("#readConsole2").text("cin >> ch;");
+		for (let i = 0; i < nodeCount2; i++) {
+			this.cmd("Delete", this.llCoeff2[i]);
+			this.cmd("Delete", this.llExp2[i]);
+			this.cmd("Delete", this.llNext2[i]);
+			this.cmd("Delete", this.addVal2[i]);
+			
+			this.llCoeff2[i] = this.nextIndex++;
+			this.llExp2[i] = this.nextIndex++;
+			this.llNext2[i] = this.nextIndex++;
+			this.addVal2[i] = this.nextIndex++;
 		}
-		$("#polyInit").parent().addClass("hide");
-		this.introNextStep("#preTemp", "right", "hide");
-		this.cmd("Step");
-		if (flag) {
-			head1 = this.create(head1);
+			
+		this.cmd("SetText", this.head1Id, null);
+		this.cmd("SetText", this.head2Id, null);
+		head1 = head2 = head3 = null;
+		nodeCount1 = nodeCount2 = 0;
+		this.cmd("step");
+		$('.btn').attr("disabled", false);
+		createButtonFlag = true;
+		$('#createBtn').click();
+		this.cmd("step")
+		doPlayPause();
+		
+	} else {
+		if (manikanta) {
+			$('#preMain').removeAttr("style").empty().append('\n\n<div id="createInMain"><span id="print1">printf("Enter 1st polynomial: ");\n</span>' +
+					'<span id="head1Null">head1 = NULL;\n'+
+					'<span id="createCall1">head1 = create(<span id="head1Name" class="position">head1</span>);</span></span>\n'+
+					'<span id="print2">printf("Enter 2nd polynomial: ");</span>\n'+
+					'<span id="head2Null">head2 = NULL;\n'+
+					'<span id="createCall2">head2 = create(<span id="head2Name" class="position">head2</span>);</span></span>\n</div>');
+			this.cmd("Step");
+			this.cmd("Step");
+			this.introNextStep("#createInMain", "bottom", "hide");
+			if (lang == "cpp") {
+				$('#print1').text('cout << "Enter 1st polynomial: ";');
+				$('#print2').text('cout << "Enter 2nd polynomial: ";');
+			}
+			this.cmd("Step");
+			this.introNextStep("#print"+ callCount, "bottom", "hide");
+			this.cmd("Step");
+			if (flag) {
+				this.cmd("Sethighlight", this.head1RectID, "#2eb82e");
+				this.cmd("SetText", this.head1Id, null);
+				this.cmd("Step");
+				this.cmd("Sethighlight", this.head1RectID, "");
+			} else {
+				this.cmd("Sethighlight", this.head2RectID, "#2eb82e");
+				this.cmd("SetText", this.head2Id, null);
+				this.cmd("Step");
+				this.cmd("Sethighlight", this.head2RectID, "");
+			}
+			this.cmd("Step");
+			$('#preTemp').removeClass("hide").addClass("opacity00");
+			if (lang == "cpp") {
+				$("#console1").text('cout << "Enter coeff, exp of node : "');
+				$("#readConsole1").text("cin >> coeff >> exp;");
+				$("#console2").text('cout << "Do u want another node(y/n):"');
+				$("#readConsole2").text("cin >> ch;");
+			}
+			$("#polyInit").parent().addClass("hide");
+			this.introNextStep("#preTemp", "right", "hide");
+			this.cmd("Step");
+			if (flag) {
+				head1 = this.create(head1);
+			} else {
+				head2 = this.create(head2);
+			}
 			manikanta = false;
 		} else {
-			head2 = this.create(head2);
-		}
-	} else {
-		if (flag) {
-			if (ch == "n") {
-				this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y);
-				this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y, head1_POS_X + 5, head1_POS_Y);
-				this.cmd("Step");
-				this.cmd("SetText", this.head1Id, address[0]);
-				this.cmd("Step");
-				this.cmd("Delete", this.dummyCoeff);
-				this.cmd("Delete", this.headId);
-				this.cmd("Delete", this.headRectID);
-				this.cmd("Delete", this.headLable);
-				this.cmd("Step");
-				
-				for (let i = 0; i < nodeCount; i++) {
-					this.llCoeff[i] = this.nextIndex++;
-					this.llExp[i] = this.nextIndex++;
-					this.llNext[i] = this.nextIndex++;
+			if (flag) {
+				if (ch == "n") {
+					this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y);
+					this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y, head1_POS_X + 5, head1_POS_Y);
+					this.cmd("Step");
+					this.cmd("SetText", this.head1Id, address[0]);
+					this.cmd("Step");
+					this.cmd("Delete", this.dummyCoeff);
+					this.cmd("Delete", this.headId);
+					this.cmd("Delete", this.headRectID);
+					this.cmd("Delete", this.headLable);
+					this.cmd("Step");
+					
+					for (let i = 0; i < nodeCount; i++) {
+						this.llCoeff[i] = this.nextIndex++;
+						this.llExp[i] = this.nextIndex++;
+						this.llNext[i] = this.nextIndex++;
+					}
+					flag = false;
+					manikanta = true;
+					ch = "y";
+					this.cmd("step");
+					this.cmd("step");
+					$("#preMain").removeAttr("style");
+				} else {
+					head1 = this.create(head1);
 				}
-				flag = false;
-				ch = "y";
-				this.cmd("step");
-				
-				this.introNextStep("#btnsDiv","left", "");
 			} else {
-				head1 = this.create(head1);
-			}
-		} else {
-			if (ch == "y") {
-				head2 = this.create(head2);
-			} else {
-				this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y);
-				this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y, head1_POS_X + 130, head1_POS_Y);
-				this.cmd("Step");
-				this.cmd("SetText", this.head2Id, address[0]);
-				this.cmd("Step");
-				this.cmd("Delete", this.dummyCoeff);
-				this.cmd("Delete", this.headId);
-				this.cmd("Delete", this.headRectID);
-				this.cmd("Delete", this.headLable);
-				this.cmd("Step");
-				flag = true;
-				ch = "y";
+				if (ch == "y") {
+					head2 = this.create(head2);
+				} else {
+					this.cmd("CreateLabel", this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y);
+					this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y, head1_POS_X + 130, head1_POS_Y);
+					this.cmd("Step");
+					this.cmd("SetText", this.head2Id, address[0]);
+					this.cmd("Step");
+					this.cmd("Delete", this.dummyCoeff);
+					this.cmd("Delete", this.headId);
+					this.cmd("Delete", this.headRectID);
+					this.cmd("Delete", this.headLable);
+					this.cmd("Step");
+					flag = manikanta = true;
+					ch = "y";
+					this.introNextStep("#btnsDiv", "left", "");
+				}
 			}
 		}
 	}
-		
 	
 	return this.commands;
 }
@@ -1512,11 +1565,11 @@ PolynomialLL.prototype.testing = function() {
 	this.cmd("SetText", this.llNext[nodeCount], null);
 	this.cmd("Delete", this.llNextVal[nodeCount]);
 	this.cmd("Step");
-	
-	head1 = this.addTerm(head1, temp);
-	
-	//return head1;
-	
+	if (flag) {
+		head1 = this.addTerm(head1, temp);
+	} else {
+		head2 = this.addTerm(head2, temp);
+	}
 	return this.commands;
 }
 
@@ -1567,39 +1620,6 @@ PolynomialLL.prototype.commonCodeForAddAndSub = function(operation) {
 		this.llNext3[i] = this.nextIndex++;
 		this.addVal3[i] = this.nextIndex++;
 	}
-	
-	//empty Animation bord
-	/*for (let i = 0; i < nodeCount1; i++) {
-		this.cmd("Delete", this.llCoeff1[i]);
-		this.cmd("Delete", this.llExp1[i]);
-		this.cmd("Delete", this.llNext1[i]);
-		this.cmd("Delete", this.addVal1[i]);
-		
-		this.llCoeff1[i] = this.nextIndex++;
-		this.llExp1[i] = this.nextIndex++;
-		this.llNext1[i] = this.nextIndex++;
-		this.addVal1[i] = this.nextIndex++;
-	
-	}
-	
-	for (let i = 0; i < nodeCount2; i++) {
-		this.cmd("Delete", this.llCoeff2[i]);
-		this.cmd("Delete", this.llExp2[i]);
-		this.cmd("Delete", this.llNext2[i]);
-		this.cmd("Delete", this.addVal2[i]);
-		
-		this.llCoeff2[i] = this.nextIndex++;
-		this.llExp2[i] = this.nextIndex++;
-		this.llNext2[i] = this.nextIndex++;
-		this.addVal2[i] = this.nextIndex++;
-	
-	}
-	*/
-/*	this.cmd("SetText", this.head1Id, null);
-	this.cmd("SetText", this.head2Id, null);
-	head1 = head2 = head3 = null;
-	nodeCount1 = nodeCount2 = 0;*/
-	
 	this.cmd("Delete", this.dummyNull1);
 	this.cmd("SetText", this.head3Id, null);
 	this.cmd("Step");

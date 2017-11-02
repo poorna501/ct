@@ -43,6 +43,7 @@
 <script type="text/javascript" src="js/al-li/polynomial-LL.js"></script>
 
 <style type="text/css">
+
 .ct-demo-heading {
 	background: highlight none repeat scroll 0 0;
 	border-radius: 10px;
@@ -174,6 +175,17 @@ r {
 	content: attr(placeholder);
 }
 
+.blinkingRed {
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+ }
+
+@keyframes blink {
+	50% {
+		background:  #ffad99;
+	}
+}
 
 </style>
 
@@ -307,7 +319,6 @@ var ch
 					<span class="title">Output</span>
 				</div>
 				<div class="output-console-body">
-					<div id="text1" class="opacity00">Enter 1st polynomial: </div>
 					<!-- <div id="output1" class = "opacity00">Enter coefficient, exponent of node : 
 						<div id="input1"><input class="output-scanf-line input opacity00" id="val1" size="15" maxlength="5"/></div>
 					</div> -->
