@@ -833,6 +833,12 @@ PolynomialLL.prototype.resetLinkedListPositions = function(count, nodeCount) {
 
 PolynomialLL.prototype.print = function(head) {
     temp = head;
+    $("#preMain").removeClass("opacity00").removeAttr("style");
+    $('#headsDes').removeAttr("style").empty().append('\n<div id="displayInMain"><span id="print1List">'
+    		+ 'print(<span id="head1" class"position">head1</span>);</span>\n'
+			+ '<span id="print2List">print(<span id="head2" class"position">head2</span>);</span></div>');
+	this.introNextStep("#displayInMain", "bottom", "hide");
+	
     
     this.tempLabel = this.nextIndex++;
     this.tempRectID = this.nextIndex++;
@@ -855,6 +861,8 @@ PolynomialLL.prototype.print = function(head) {
     }
     this.cmd("Step");
     
+    this.introNextStep("#printWhileLoop", "right", "hide");
+    this.cmd("Step");
     let index = xPos = 0;
     var disVal;
     if (temp == null) {
@@ -862,6 +870,7 @@ PolynomialLL.prototype.print = function(head) {
 		this.cmd("Step");
 		this.cmd("SetText", (flag) ? this.dummyNull1 : this.dummyNull2, "NULL");
     }
+    this.cmd("Step");
     while(temp != null) {
     	console.log("%d X^ %d --->", temp["coeff"], temp["exp"]);
     	temp = temp["next"];
@@ -1433,21 +1442,20 @@ PolynomialLL.prototype.createNode = function() {
 		head1 = head2 = head3 = null;
 		nodeCount1 = nodeCount2 = 0;
 		this.cmd("step");
-		$('.btn').attr("disabled", false);
 		createButtonFlag = true;
-		$('#createBtn').click();
-		this.cmd("step")
 		doPlayPause();
+		/*$('.btn').attr("disabled", false);
+		$('#createBtn').click();
+		this.cmd("step")*/
 		
-	} else {
+	} 
 		if (manikanta) {
-			$('#preMain').removeAttr("style").empty().append('\n\n<div id="createInMain"><span id="print1">printf("Enter 1st polynomial: ");\n</span>' +
+			$('#headsDes').removeAttr("style").empty().append('\n<div id="createInMain"><span id="print1">printf("Enter 1st polynomial: ");\n</span>' +
 					'<span id="head1Null">head1 = NULL;\n'+
 					'<span id="createCall1">head1 = create(<span id="head1Name" class="position">head1</span>);</span></span>\n'+
 					'<span id="print2">printf("Enter 2nd polynomial: ");</span>\n'+
 					'<span id="head2Null">head2 = NULL;\n'+
 					'<span id="createCall2">head2 = create(<span id="head2Name" class="position">head2</span>);</span></span>\n</div>');
-			this.cmd("Step");
 			this.cmd("Step");
 			this.introNextStep("#createInMain", "bottom", "hide");
 			if (lang == "cpp") {
@@ -1479,12 +1487,12 @@ PolynomialLL.prototype.createNode = function() {
 			$("#polyInit").parent().addClass("hide");
 			this.introNextStep("#preTemp", "right", "hide");
 			this.cmd("Step");
+			manikanta = false;
 			if (flag) {
 				head1 = this.create(head1);
 			} else {
 				head2 = this.create(head2);
 			}
-			manikanta = false;
 		} else {
 			if (flag) {
 				if (ch == "n") {
@@ -1492,8 +1500,8 @@ PolynomialLL.prototype.createNode = function() {
 					this.moveValueFromOnePositionToAnother(this.dummyCoeff, address[0], head1_POS_X + 5, POLYLL_ELE_POS_Y, head1_POS_X + 5, head1_POS_Y);
 					this.cmd("Step");
 					this.cmd("SetText", this.head1Id, address[0]);
-					this.cmd("Step");
 					this.cmd("Delete", this.dummyCoeff);
+					this.cmd("Step");
 					this.cmd("Delete", this.headId);
 					this.cmd("Delete", this.headRectID);
 					this.cmd("Delete", this.headLable);
@@ -1510,6 +1518,7 @@ PolynomialLL.prototype.createNode = function() {
 					this.cmd("step");
 					this.cmd("step");
 					$("#preMain").removeAttr("style");
+					this.cmd("Step");
 				} else {
 					head1 = this.create(head1);
 				}
@@ -1527,12 +1536,12 @@ PolynomialLL.prototype.createNode = function() {
 					this.cmd("Delete", this.headRectID);
 					this.cmd("Delete", this.headLable);
 					this.cmd("Step");
-					flag = manikanta = true;
+					flag = true;
+					manikanta = true;
 					ch = "y";
 					this.introNextStep("#btnsDiv", "left", "");
 				}
 			}
-		}
 	}
 	
 	return this.commands;
@@ -1541,25 +1550,24 @@ PolynomialLL.prototype.createNode = function() {
 PolynomialLL.prototype.testing = function() {
 	this.commands = new Array();
 	
-	temp["coeff"] = listCoeff[nodeCount] = arr[0];
-	temp["exp"] = listExp[nodeCount] = arr[1];
+	temp["coeff"] = listCoeff[nodeCount] = parseInt(arr[0]);
+	temp["exp"] = listExp[nodeCount] = parseInt(arr[1]);
 	temp["next"] = null;
 	
 	this.cmd("CreateLabel", this.coefficient, "coeff : ", 40, 20);
-	console.log('coefficient');
-	this.cmd("CreateLabel", this.coefficientValue, arr[0], 70, 20);
+	this.cmd("CreateLabel", this.coefficientValue, parseInt(arr[0]), 70, 20);
 	this.cmd("CreateLabel", this.exponent, "exp : ", 150, 20);
-	this.cmd("CreateLabel", this.exponentValue, arr[1], 180, 20);
+	this.cmd("CreateLabel", this.exponentValue, parseInt(arr[1]), 180, 20);
 	
 	this.cmd("Step");
-	this.moveValueFromOnePositionToAnother(this.llCoeffVal[nodeCount], arr[0], 70, 20, POLYLL_ELE_POS_X, POLYLL_ELE_POS_Y);
+	this.moveValueFromOnePositionToAnother(this.llCoeffVal[nodeCount], parseInt(arr[0]), 70, 20, POLYLL_ELE_POS_X, POLYLL_ELE_POS_Y);
 	this.cmd("Step");
-	this.cmd("SetText", this.llCoeff[nodeCount], arr[0]);
+	this.cmd("SetText", this.llCoeff[nodeCount], parseInt(arr[0]));
 	this.cmd("Delete", this.llCoeffVal[nodeCount]);
 	this.cmd("Step");
-	this.moveValueFromOnePositionToAnother(this.llExpVal[nodeCount], arr[1], 180, 20, POLYLL_NEXT_POS_X, POLYLL_ELE_POS_Y);
+	this.moveValueFromOnePositionToAnother(this.llExpVal[nodeCount], parseInt(arr[1]), 180, 20, POLYLL_NEXT_POS_X, POLYLL_ELE_POS_Y);
 	this.cmd("Step");
-	this.cmd("SetText", this.llExp[nodeCount], arr[1]);
+	this.cmd("SetText", this.llExp[nodeCount], parseInt(arr[1]));
 	this.cmd("Delete", this.llExpVal[nodeCount]);
 	this.cmd("Step");
 	this.cmd("SetText", this.llNext[nodeCount], null);
@@ -1575,21 +1583,23 @@ PolynomialLL.prototype.testing = function() {
 
 PolynomialLL.prototype.displayNodes = function() {
 	this.commands = new Array();
+	
 	this.print(head1);
 	this.cmd("Step");
-	this.print(head2);
 	this.cmd("Step");
+	/*this.print(head2);
+	this.cmd("Step");*/
 	this.cmd("Step");
 	for (let i = 0; i < nodeCount1; i++) {
 		this.cmd("Delete", this.displayVal1[i]);
 		this.cmd("Delete", this.dummyarrow1[i]);
 	}
-	for (let i = 0; i < nodeCount2; i++) {
+	/*for (let i = 0; i < nodeCount2; i++) {
 		this.cmd("Delete", this.displayVal2[i]);
 		this.cmd("Delete", this.dummyarrow2[i]);
-	}
+	}*/
 	this.cmd("Delete", this.dummyNull1);
-	this.cmd("Delete", this.dummyNull2);
+	//this.cmd("Delete", this.dummyNull2);
 	this.cmd("Step");
 	return this.commands;
 }

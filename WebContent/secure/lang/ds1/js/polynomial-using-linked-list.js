@@ -58,9 +58,7 @@ function initIntroJS() {
 				break;
 				case "polyInit":
 					$(".introjs-helperLayer").one("transitionend", function() {
-						setTimeout(function() {
-							introjs.nextStep();
-						}, 1500);
+						setTimeToIntroGoesNextStep();
 					});
 				break;
 				case "strcutSpan":
@@ -85,8 +83,8 @@ function initIntroJS() {
 					});
 				break;
 				case "preMain":
-					$('#preMain').removeClass("hide").append('<div class="text-center b">In Main()</div>'
-								+ '<span id="headsDex">poly head1 = NULL, head2 = NULL,<br/> head3 = NULL;</span>');
+					$('#preMain').removeClass("hide").append('<span id="headsDex">poly head1 = NULL, head2 = NULL,<br/> head3 = NULL;</span>'
+							+'\n<span id="headsDes"></span>');
 					introjs.refresh();
 					$(".introjs-helperLayer").one("transitionend", function() {
 						var text = "Here, we are declaring <y>three</y> pointer variables <y>head1</y>, <y>head2</y> and "
@@ -98,16 +96,13 @@ function initIntroJS() {
 				break;
 				case "animationDiv":
 					$("#btnsDiv, .btn").attr("disabled", "disabled");
-					$("#inMain").removeClass("opacity00");
+					$("#preMain").removeClass("opacity00");
 					$(".introjs-helperLayer").one("transitionend", function() {
 						var animateStep = introjs._introItems[introjs._currentStep].animateStep;
 						switch (animateStep) {
 							case "headDec":
-								$('#canvas').removeClass(
-										"opacity00");
-								setTimeout(function() {
-									introjs.nextStep();
-								}, 1500);
+								$('#canvas').removeClass("opacity00");
+								setTimeToIntroGoesNextStep();
 								introNextSteps("#btnsDiv", "", "left");
 							break;
 							case "head1Null":
@@ -121,21 +116,26 @@ function initIntroJS() {
 							case "ifP1EqP2":
 							case "returnHead":
 							case "callBtnDiv":
+							case "print":
+							case "printAnimation":
 								$("#createinitTemp , #temp, #console1, #readConsole1").removeClass("background-color-yellow");
 								if (ch != 'n'&& animateStep == "StoreValues") {
 									$('#testBtn').click();
 								}
-								if ((nodeCount != 0 && animateStep == "memoryAllocation")) {
+								if ((nodeCount != 0 && animateStep == "memoryAllocation") ||  animateStep == "callBtnDiv") {
 									$('.btn').attr("disabled", false);
 									$('#createBtn').click();
 								}
-								if (animateStep == "returnHead" || animateStep == "callBtnDiv") {
+								if (animateStep == "returnHead") {
+									doPlayPause();
 									setTimeout(function() {
 										$('.btn').attr("disabled", false);
 										$('#createBtn').click();
-									}, 3000);
+										
+									},3000);
+								} else {
+									doPlayPause();
 								}
-								doPlayPause();
 							break;
 						}
 					});
@@ -146,10 +146,14 @@ function initIntroJS() {
 						var text = "Click on any button.";
 						typing(".introjs-tooltiptext", text, function() {
 							$('#btnsDiv').removeClass("opacity00");
+							$("#preTemp").addClass("hide");
+							$("#preMain").removeClass("opacity00").removeAttr("style");
+							$("#headsDes").empty();
 							$("#btnsDiv, .btn").removeAttr("disabled");
 							if (!test) {
 								callCount = 1;
 								createButtonFlag = false;
+								test = true;
 							}
 						});
 					});
@@ -159,14 +163,43 @@ function initIntroJS() {
 						doPlayPause();
 					});
 				break;
-				case "print"+callCount:
+				case "displayInMain" :
+					$("#preMain").removeClass("opacity hide").removeAttr("style")
+					$(".introjs-helperLayer").one("transitionend", function() {
+						introNextSteps("#print"+ callCount +"List", "", "");
+						setTimeToIntroGoesNextStep();
+					});
+				break;
+				case "print"+ callCount +"List" :
+					$(".introjs-helperLayer").one("transitionend", function() {
+						$(".introjs-tooltip").removeClass("hide");
+						var value;
+						if (callCount == 1) {
+							value = (address1.length != 0) ? address1[0] : "null";
+							var text = "Here, we are calling <y>print()</y> method and passing an argument <y>head"+ callCount 
+										+ "</y> (i.e. <y>"+ value +"</y>)";
+						} else {
+							value = (address2.length != 0) ? address2[0] : "null";
+							var text = "Here, we are calling <y>print()</y>method and passing an argument <y>head"+ callCount 
+										+ "</y> (i.e<y>"+ address2[0] +"</y>)";
+						}
+						typing(".introjs-tooltiptext", text, function() {
+							flip("#head" + callCount, value, function() {
+								buttonName = "displayBtn";
+								$("#preTemp").removeClass("hide");
+								introNextSteps("#preTemp", "", "right");
+								//introNextSteps("#animationDiv", "print", "");
+								$(".introjs-nextbutton").show();
+							})
+						});
+					});
+				break;
+				case "print" + callCount:
 					$(".introjs-helperLayer").one("transitionend", function() {
 						introNextSteps("#outputDiv", "text" + callCount, "");
-						setTimeout(function() {
-							introjs.nextStep();
-						}, 1500);
+						setTimeToIntroGoesNextStep();
 					});
-					break;
+				break;
 				case "outputDiv":
 					$(".introjs-helperLayer").one("transitionend", function() {
 						var animateStep = introjs._introItems[introjs._currentStep].animateStep;
@@ -176,9 +209,7 @@ function initIntroJS() {
 								//$('#text' + callCount).removeClass("opacity00");
 								$('.output-console-body').scrollTo($('.output-console-body div:last'), 500);
 								introNextSteps("#head"+ callCount +"Null", "call"+ callCount, "");
-								setTimeout(function() {
-									introjs.nextStep();
-								}, 1500);
+								setTimeToIntroGoesNextStep();
 							break;
 							case "readValues":
 								$('.output-console-body').append('<div id="output'+ outputCount + '">Enter coefficient, exponent'
@@ -186,7 +217,7 @@ function initIntroJS() {
 										+ 'id="val'+ outputCount+ '" size="15" maxlength="6"/></div></div>');
 								$('#val' + outputCount).focus();
 								$('.introjs-tooltip').removeClass("hide");
-								var text = "Enter <y>coefficient</y> and <y>exponent</y> of the <y>list</y> each separated nnumber "
+								var text = "Enter <y>coefficient</y> and <y>exponent</y> of the <y>list</y> each separated number "
 										+ "by a <y>space</y>.";
 								typing(".introjs-tooltiptext",text,function() {
 									introNextSteps("#storeCoeffNdExp","", "");
@@ -231,8 +262,8 @@ function initIntroJS() {
 				break;
 				case "preTemp":
 					$(".introjs-helperLayer").one("transitionend", function() {
+						$("#preTemp").removeClass("opacity00");
 						if (buttonName == "createBtn") {
-							$("#preTemp").removeClass("opacity00");
 							displayCreateMethodCode();
 							introjs.refresh();
 							$("#createHead").addClass("background-color-yellow");
@@ -253,7 +284,37 @@ function initIntroJS() {
 									});
 								});
 							});
+						} else if (buttonName == "displayBtn") {
+							displayPrintMethod();
+							introjs.refresh();
+							$("#displayHead").addClass("background-color-yellow");
+							arrow("#methodName", "#methodName", function() {
+								$(".introjs-tooltip").removeClass("hide");
+								$('.introjs-tooltiptext').append('<ul><li></li></ul>');
+								var value = (callCount == 1) ? (address1.length != 0) ? address1[0] : "null" : (address2.length != 0) ? address2[0] : "null"  
+								var text = "Here, store, the <y>head"+ callCount +"</y> value (<y>"+ value +"</y>) to the <y>head</y>.";
+								typing(".introjs-tooltiptext ul li:last",text,function() {
+									arrow("#methodName","#tempNode",function() {
+										$("#displayHead").removeClass("background-color-yellow");
+										$("#tempNode").addClass("background-color-yellow");
+										$('.introjs-tooltiptext ul').append('<li></li>');
+										var text = "Here, we are storing <y>head</y> value (i.e <y>"+ value +"</y>) to <y>temp</y> node. ";
+										typing(".introjs-tooltiptext ul li:last", text, function() {
+											introNextSteps("#animationDiv","printAnimation","");
+											$(".introjs-nextbutton").show()
+										});
+									});
+								});
+							});
 						}
+					});
+				break;
+				case "printWhileLoop" :
+					$(".introjs-helperLayer").one("transitionend",function() {
+						$(".introjs-tooltip").removeClass("hide");
+						arrow("#tempNotNull","#tempNotNull", function() {
+							var text = "Repeat the loop until <y>temp != NULL</y>.<br/>if it is <y>true</y> then print <y>coeff</y> "
+						});
 					});
 				break;
 				case "storeCoeffNdExp":
@@ -391,9 +452,7 @@ function initIntroJS() {
 					$(".introjs-helperLayer").one("transitionend", function() {
 						arrow(fromId, "#rtnHead", function() {
 							introNextSteps("#yesOrNoQus", "addTermMethod", "");
-							setTimeout(function() {
-								introjs.nextStep();
-							}, 800);
+							setTimeToIntroGoesNextStep();
 						});
 					});
 				break;
@@ -403,9 +462,7 @@ function initIntroJS() {
 					$(".introjs-helperLayer").one("transitionend", function() {
 						arrow(fromId, "#rtnHead", function() {
 							introNextSteps("#outputDiv", "enterYesOrNo", "");
-							setTimeout(function() {
-								introjs.nextStep();
-							}, 800);
+							setTimeToIntroGoesNextStep();
 						});
 					});
 				break;
@@ -418,7 +475,6 @@ function initIntroJS() {
 							$("#whileChNotEqN").addClass("blinkingRed");
 							var text = 'Here, the condition <y>ch != "n"</y> will evaluates to <y>false</y>.';
 							typing(".introjs-tooltiptext", text, function() {
-								console.log("entered no in the console.");
 								introNextSteps("#returnHead", "return", "");
 								$(".introjs-nextbutton").show();
 							});
@@ -437,13 +493,10 @@ function initIntroJS() {
 								$('.btn').attr("disabled", false);
 								$('#createBtn').click();
 								introjs.nextStep();
-								
-							}, 800);
+							},1000);
 						} else {
 							introNextSteps("#animationDiv", "callBtnDiv", "");
-							setTimeout(function() {
-								introjs.nextStep();
-							},500);
+							setTimeToIntroGoesNextStep();
 						}
 					});
 				break;
@@ -530,6 +583,22 @@ function displayAddTermMethod() {
 			+ '\t}</span>\n'
 			+ '\t<span id="rtnHead">return head;</span>\n' + '}\n';
 	$("#preAddTerm").empty().append(addtermCode);
+}
+
+function displayPrintMethod() {
+	var displayMethodCode = '<span id="methodName">void print(<span id="displayHead">poly head</span>) {</span>\n'
+			+ '\t<span id="tempNode">poly temp = head;</span>\n'
+			+ '\t<span id="printWhileLoop"><span id="tempNotNull">while(temp != NULL) {</span>\n'
+            + '\t\t<span id="printValues">printf("%d X^ %d --->", temp -> coeff, temp -> exp);</span>\n'
+            + '\t\ttemp = temp -> next;\n'
+  			+ '\t}\n'
+  			+ '\t<span id="printNull">printf("NULL\\n");</span></span>\n'
+			+ '}';
+			if (lang == "cpp") {
+				$("#printValues").text("cout << temp -> coeff << temp -> exp ;");
+				$("#printNull").text('cout << "NULL\n";');
+			}
+	$('#preTemp').empty().append(displayMethodCode);
 }
 
 function allocateMemory(num) {
@@ -744,9 +813,6 @@ function ifP1EqP2() {
 							$("#p1ToTmpNxt, #tmpToHead1").addClass("background-color-yellow");
 							introNextSteps("#animationDiv", "ifP1EqP2", "");
 							$(".introjs-nextbutton").removeClass("introjs-disabled").show();
-							
-							  /*$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' " +
-							  "onclick='ifP1EqP2()'>Next &#8594;</a>");*/
 						});
 					});
 				} else {
@@ -763,4 +829,10 @@ function ifP1EqP2() {
 			});
 		});
 	});
+}
+
+function setTimeToIntroGoesNextStep() {
+	setTimeout(function() {
+		introjs.nextStep();
+	}, 1500);
 }
