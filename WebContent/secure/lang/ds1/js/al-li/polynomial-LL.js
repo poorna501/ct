@@ -831,14 +831,10 @@ PolynomialLL.prototype.resetLinkedListPositions = function(count, nodeCount) {
 	this.cmd("Move", this.addVal[nodeCount], nextX + 25, nextY + 25);
 }
 
+
+
 PolynomialLL.prototype.print = function(head) {
     temp = head;
-    $("#preMain").removeClass("opacity00").removeAttr("style");
-    $('#headsDes').removeAttr("style").empty().append('\n<div id="displayInMain"><span id="print1List">'
-    		+ 'print(<span id="head1" class"position">head1</span>);</span>\n'
-			+ '<span id="print2List">print(<span id="head2" class"position">head2</span>);</span></div>');
-	this.introNextStep("#displayInMain", "bottom", "hide");
-	
     
     this.tempLabel = this.nextIndex++;
     this.tempRectID = this.nextIndex++;
@@ -846,12 +842,13 @@ PolynomialLL.prototype.print = function(head) {
     
     let nodeAdd = null;;
     if (nodeCount1 != 0 || nodeCount2 != 0 || nodeCount3 != 0) {
-    	(flag == true) ? nodeAdd = address1[0] : (flag == false) ? nodeAdd = address2[0] : nodeAdd = address3[0] ;
+    	firstAdd = (flag == true) ? nodeAdd = address1[0] : (flag == false) ? nodeAdd = address2[0] : nodeAdd = address3[0] ;
     } 
     
     this.cmd("CreateLabel", this.tempLabel, "temp : ", head1_LABLE_X + 360, head1_LABLE_Y);
 	this.cmd("CreateRectangle", this.tempRectID, "", head1_WIDTH, head1_HEIGHT, head1_POS_X + 365, head1_POS_Y);
 	this.cmd("CreateLabel", this.tempId, "", head1_POS_X + 365, head1_POS_Y);
+	
     if (flag == true) {
     	this.moveValueFromOnePositionToAnother(this.tempId, nodeAdd, head1_POS_X + 5, head1_POS_Y, head1_POS_X + 365, head1_POS_Y);
     } else  if (flag == false) {
@@ -860,17 +857,16 @@ PolynomialLL.prototype.print = function(head) {
     	this.moveValueFromOnePositionToAnother(this.tempId, nodeAdd, head1_POS_X + 255, head1_POS_Y, head1_POS_X + 365, head1_POS_Y);
     }
     this.cmd("Step");
+    this.cmd("Step");
     
+    /*introNextSteps("#printWhileLoop", "bottom", "hide");
+	this.cmd("RunNextIntroStep");
+	this.cmd("Step");*/
     this.introNextStep("#printWhileLoop", "right", "hide");
     this.cmd("Step");
     let index = xPos = 0;
     var disVal;
-    if (temp == null) {
-    	this.cmd("CreateLabel", (flag) ? this.dummyNull1 : this.dummyNull2, "",  110 + xPos, (flag) ? 100 : 120);
-		this.cmd("Step");
-		this.cmd("SetText", (flag) ? this.dummyNull1 : this.dummyNull2, "NULL");
-    }
-    this.cmd("Step");
+   
     while(temp != null) {
     	console.log("%d X^ %d --->", temp["coeff"], temp["exp"]);
     	temp = temp["next"];
@@ -945,16 +941,26 @@ PolynomialLL.prototype.print = function(head) {
 		this.cmd("Step");
 		this.cmd("Delete", this.dummyCoeff); 
     }
-	this.cmd("Step");
+    if (temp == null) {
+    	this.cmd("CreateLabel", (flag) ? this.dummyNull1 : this.dummyNull2, "",  110 + xPos, (flag) ? 100 : 120);
+		this.cmd("Step");
+		this.cmd("SetText", (flag) ? this.dummyNull1 : this.dummyNull2, "NULL");
+    }
+    this.cmd("Step");
+    this.cmd("Step");
     console.log("NULL");
     this.cmd("Step");
     this.cmd("Delete", this.tempLabel);
     this.cmd("Delete", this.tempRectID);
     this.cmd("Delete", this.tempId);
-    if (flag == true) {
+    if (flag) {
     	flag = false;
-    } else  {
+    	this.introNextStep("#print2List", "", "");
+    	this.print(head2);
+    	//callCount++;
+    } else {
     	flag = true;
+    	callCount = 1;
     }
 }
 
@@ -1583,24 +1589,32 @@ PolynomialLL.prototype.testing = function() {
 
 PolynomialLL.prototype.displayNodes = function() {
 	this.commands = new Array();
+	this.cmd("Step");
+	$('#headsDes').removeAttr("style").empty().append('\n<div id="displayInMain"><span id="print1List">'
+			+ 'print(<span id="head1" class="position">head1</span>);</span>\n'
+			+ '<span id="print2List">print(<span id="head2" class="position">head2</span>);</span></div>');
+	$("#preMain, #preTemp").removeClass("opacity00 hide").removeAttr("style");
+	introNextSteps("#displayInMain", "bottom", "hide");
+	this.cmd("RunNextIntroStep");
+	this.cmd("Step");
+	this.cmd("Step");
+	
 	
 	this.print(head1);
 	this.cmd("Step");
-	this.cmd("Step");
-	/*this.print(head2);
-	this.cmd("Step");*/
 	this.cmd("Step");
 	for (let i = 0; i < nodeCount1; i++) {
 		this.cmd("Delete", this.displayVal1[i]);
 		this.cmd("Delete", this.dummyarrow1[i]);
 	}
-	/*for (let i = 0; i < nodeCount2; i++) {
+	for (let i = 0; i < nodeCount2; i++) {
 		this.cmd("Delete", this.displayVal2[i]);
 		this.cmd("Delete", this.dummyarrow2[i]);
-	}*/
+	}
 	this.cmd("Delete", this.dummyNull1);
-	//this.cmd("Delete", this.dummyNull2);
+	this.cmd("Delete", this.dummyNull2);
 	this.cmd("Step");
+	this.introNextStep("#btnsDiv", "left", "");
 	return this.commands;
 }
 
@@ -1608,6 +1622,15 @@ PolynomialLL.prototype.commonCodeForAddAndSub = function(operation) {
 	flag = "addition";
 	sum = null;
 	this.cmd("Step");
+	
+	$('#headsDes').removeAttr("style").empty().append('\n<div id="addInMain"><span id="addMtdCall">'
+			+ 'head3 = add(<span id="head1" class="position">head1</span>, <span id="head2" class="position">head2</span>);</span>\n'
+			+ '<span id="callPrint">print(<span id="head3" class="position">head3</span>);</span></div>');
+	$("#preMain, #preTemp").removeClass("opacity00 hide").removeAttr("style");
+	this.introNextStep("#addInMain", "bottom", "hide");
+	
+	
+	
 	head3 = this.addition(head1, head2, operation);
 	this.cmd("Step");
 	head3 = sum;
@@ -1656,6 +1679,7 @@ PolynomialLL.prototype.mulNodes = function() {
 	indexM1 = indexM2 = indexM3 = 0;
 	head3 = mul(head1, head2);
 	this.cmd("Step");
+	
 	
 	
 	this.multiplicationAnimation();

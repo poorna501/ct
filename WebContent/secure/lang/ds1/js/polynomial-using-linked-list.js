@@ -1,5 +1,5 @@
 var lang, fromId, test =  true;
-var callCount = buttonName = outputCount = 1;
+var callCount = buttonName = outputCount = printCount = 1;
 
 var polynomialUsingLinkedList = function() {
 	lang = getURLParameter("lang");
@@ -118,6 +118,7 @@ function initIntroJS() {
 							case "callBtnDiv":
 							case "print":
 							case "printAnimation":
+							case "displayVal":
 								$("#createinitTemp , #temp, #console1, #readConsole1").removeClass("background-color-yellow");
 								if (ch != 'n'&& animateStep == "StoreValues") {
 									$('#testBtn').click();
@@ -150,6 +151,7 @@ function initIntroJS() {
 							$("#preMain").removeClass("opacity00").removeAttr("style");
 							$("#headsDes").empty();
 							$("#btnsDiv, .btn").removeAttr("disabled");
+							printCount = 1;
 							if (!test) {
 								callCount = 1;
 								createButtonFlag = false;
@@ -166,35 +168,58 @@ function initIntroJS() {
 				case "displayInMain" :
 					$("#preMain").removeClass("opacity hide").removeAttr("style")
 					$(".introjs-helperLayer").one("transitionend", function() {
-						introNextSteps("#print"+ callCount +"List", "", "");
+						introNextSteps("#print"+ printCount +"List", "", "");
 						setTimeToIntroGoesNextStep();
 					});
 				break;
-				case "print"+ callCount +"List" :
+				case "addInMain" :
+					$(".introjs-helperLayer").one("transitionend", function() {
+						introNextSteps("#addMtdCall", "", "");
+						setTimeToIntroGoesNextStep();
+					});
+				break;
+				case "addMtdCall" :
+					$(".introjs-helperLayer").one("transitionend", function() {
+						$(".introjs-tooltip").removeClass("hide");
+						var value1 = (address1.length != 0) ? address1[0] : "null";
+						var value2 = (address2.length != 0) ? address2[0] : "null"
+						var text = "Here, we are calling <y>add()</y> method and pass <y>head1</y> value (i.e. <y>"+ value1 
+									+ "</y>) and <y>head2</y> value (i.e. "+ value2 +").";
+						typing(".introjs-tooltiptext", text, function() {
+							flip("#head1", value1, function() {
+								flip("#head2", value2, function() {
+									buttonName = "addBtn"
+									introNextSteps("#preTemp", "", "");
+									$(".introjs-nextbutton").show();
+								});
+							});
+						});
+					});
+				break;
+				case "print"+ printCount +"List" :
 					$(".introjs-helperLayer").one("transitionend", function() {
 						$(".introjs-tooltip").removeClass("hide");
 						var value;
-						if (callCount == 1) {
+						if (printCount == 1) {
 							value = (address1.length != 0) ? address1[0] : "null";
-							var text = "Here, we are calling <y>print()</y> method and passing an argument <y>head"+ callCount 
-										+ "</y> (i.e. <y>"+ value +"</y>)";
 						} else {
 							value = (address2.length != 0) ? address2[0] : "null";
-							var text = "Here, we are calling <y>print()</y>method and passing an argument <y>head"+ callCount 
-										+ "</y> (i.e<y>"+ address2[0] +"</y>)";
 						}
+						text = "Here, we are calling <y>print()</y>method and passing an argument <y>head"+ callCount 
+						+ "</y> (i.e <y>"+ value +"</y>)";
 						typing(".introjs-tooltiptext", text, function() {
-							flip("#head" + callCount, value, function() {
+							$("#preTemp").removeClass("hide").removeAttr("style");
+							flip("#head" + printCount, value, function() {
+								(printCount == 1) ? printCount++ : printCount = 1;
 								buttonName = "displayBtn";
-								$("#preTemp").removeClass("hide");
 								introNextSteps("#preTemp", "", "right");
-								//introNextSteps("#animationDiv", "print", "");
 								$(".introjs-nextbutton").show();
 							})
 						});
 					});
 				break;
 				case "print" + callCount:
+					$(".introjs-tooltip").removeClass("hide")
 					$(".introjs-helperLayer").one("transitionend", function() {
 						introNextSteps("#outputDiv", "text" + callCount, "");
 						setTimeToIntroGoesNextStep();
@@ -306,14 +331,60 @@ function initIntroJS() {
 									});
 								});
 							});
+						} else if (buttonName == "addBtn") {
+							displatAddAndSubMethod(true);
 						}
 					});
 				break;
-				case "printWhileLoop" :
+				case "printWhileLoop":
 					$(".introjs-helperLayer").one("transitionend",function() {
 						$(".introjs-tooltip").removeClass("hide");
+						$("#tempNode").removeClass("background-color-yellow");
 						arrow("#tempNotNull","#tempNotNull", function() {
-							var text = "Repeat the loop until <y>temp != NULL</y>.<br/>if it is <y>true</y> then print <y>coeff</y> "
+							$("#tempNotNull").addClass("background-color-yellow");
+								$(".introjs-tooltip").removeClass('hide');
+								$(".introjs-tooltiptext").append("<ul></ul>");
+								$(".introjs-tooltiptext ul li *").removeAttr("id");
+								$(".introjs-tooltiptext ul").append("<li>"
+											+ "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+											+ "<span  id='tooltipFront'>temp</span> != NULL</span></li>");
+								travel("#tempNotNull", $(".introjs-tooltiptext ul li:last-child span"), function() {
+									var nodeAdd = "null";
+									if (nodeCount1 != 0 || nodeCount2 != 0 || nodeCount3 != 0) {
+										value = (flag == true) ? nodeAdd = address1[0] : (flag == false) ? nodeAdd = address2[0] : nodeAdd = address3[0] ;
+								    }
+									flip("#tooltipFront", nodeAdd, function() {
+										$(".introjs-tooltiptext ul").append("<li></li>");
+										if (nodeAdd != "null") {
+											var text = "The above condition is evaluates to <y>true</y> so the control"
+														+ " enters into <y>while-block</y> then print <y>coeff</y> and "
+														+ "<y>exp</y> of <y>temp</y> then travel the <y>next</y> field of <y>temp</y> to "
+														+ " <y>temp</y>.";
+											typing(".introjs-tooltiptext ul li:last", text, function() {
+												arrow("#tempNotNull", "#printValues", function() {
+													$("#tempNotNull").removeClass("background-color-yellow").removeAttr("style");
+													$("#printValues, #tmpNxtToTmp").addClass("background-color-yellow");
+													introNextSteps("#animationDiv","displayVal","");
+													$(".introjs-nextbutton").show();
+												});
+											});
+										} else {
+											var text = "The above condition is evaluates to <y>false</y> so print <y>null</y> to the <y>console</y>.";
+											typing(".introjs-tooltiptext ul li:last", text, function() {
+												arrow("#tempNotNull", "#printNull", function() {
+													$("#tempNotNull").removeClass("background-color-yellow").removeAttr("style");
+													$("#printNull").addClass("background-color-yellow");
+													introNextSteps("#animationDiv", "displayVal","");
+													$(".introjs-nextbutton").show();
+												});
+											});
+										}
+									});
+							
+							/*var text = "Repeat the loop until <y>temp != NULL</y>.<br/>if it is <y>true</y> then print <y>coeff</y> ";
+							typing(".introjs-tooltiptext", text, function() {*/
+								
+							});
 						});
 					});
 				break;
@@ -585,12 +656,60 @@ function displayAddTermMethod() {
 	$("#preAddTerm").empty().append(addtermCode);
 }
 
+function displatAddAndSubMethod(addOrSub) {
+	var addOrSubMethodCode = '<span id="methodName">poly add(poly head1,poly head2) {\n'
+        + '\tpoly t1, t2, sum = NULL, t3;\n'
+        + 't1 = head1;\n'
+        + 't2 = head2;\n'
+        + 'while(t1 != NULL && t2 != NULL) {\n'
+        + 't3 = (poly)malloc(sizeof(struct polynomial));\n'
+        + 'if(t1 -> exp == t2 -> exp) {\n'
+        + 't3 -> coeff = t1 -> coeff + t2->coeff;\n'
+        + 't3 -> exp = t1 -> exp;\n'
+        + 't3 -> next = NULL;\n'
+        + 'sum = addterm(sum,t3);\n'
+        + 't1 = t1 -> next;\n'
+        + 't2 = t2 -> next;\n'
+        + '} else if(t1 -> exp > t2 -> exp) {\n'
+        + 't3 -> coeff = t1 -> coeff;\n'
+        + 't3 -> exp = t1 -> exp;\n'
+        + 't3 -> next = NULL;\n'
+        + 'sum = addterm(sum,t3);\n'
+        + 't1 = t1 -> next;\n'
+        + '} else {\n'
+        + 't3 -> coeff = t2->coeff;\n'
+        + 't3 -> exp = t2 -> exp;\n'
+        + 't3 -> next = NULL;\n'
+        + 'sum = addterm(sum,t3);\n'
+        + 't2 = t2 -> next;\n'
+        + '}\n'
+    	+ '}\n'
+    	+ 'while(t1 != NULL) {\n'
+        + 't3 = (poly)malloc(sizeof(struct polynomial));\n'
+        + 't3 -> coeff = t1 -> coeff;\n'
+        + 't3 -> exp = t1 -> exp;\n'
+        + 't3 -> next = NULL;\n'
+        + 'sum = addterm(sum,t3);\n'
+        + 't1 = t1 -> next;\n'
+    	+ '}\n'
+    	+ 'while(t2!=NULL) {\n'
+        + 't3 = (poly)malloc(sizeof(struct polynomial));\n'
+        + 't3 -> coeff = t2 -> coeff;\n'
+        + 't3 -> exp = t2 -> exp;\n'
+        + 't3 -> next = NULL;\n'
+        + 'sum = addterm(sum,t3);\n'
+        + 't2 = t2 -> next;\n'
+    	+ '}\n'
+    	+ 'return sum;\n'
+    	+ '}\n</span>'
+}
+
 function displayPrintMethod() {
 	var displayMethodCode = '<span id="methodName">void print(<span id="displayHead">poly head</span>) {</span>\n'
 			+ '\t<span id="tempNode">poly temp = head;</span>\n'
 			+ '\t<span id="printWhileLoop"><span id="tempNotNull">while(temp != NULL) {</span>\n'
             + '\t\t<span id="printValues">printf("%d X^ %d --->", temp -> coeff, temp -> exp);</span>\n'
-            + '\t\ttemp = temp -> next;\n'
+            + '\t\t<span id="tmpNxtToTmp">temp = temp -> next;</span>\n'
   			+ '\t}\n'
   			+ '\t<span id="printNull">printf("NULL\\n");</span></span>\n'
 			+ '}';
@@ -598,7 +717,7 @@ function displayPrintMethod() {
 				$("#printValues").text("cout << temp -> coeff << temp -> exp ;");
 				$("#printNull").text('cout << "NULL\n";');
 			}
-	$('#preTemp').empty().append(displayMethodCode);
+	$('#preTemp').removeClass("hide").empty().append(displayMethodCode);
 }
 
 function allocateMemory(num) {
