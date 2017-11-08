@@ -20,7 +20,10 @@
 <script type="text/javascript" src="/js/typewriting.min.js"></script>
 <script type="text/javascript" src="/js/gs/TweenMax.min.js"></script>
 <script type="text/javascript" src="/js/jquery.scrollTo.js"></script>
-<script type="text/javascript" src="js/polynomial-using-linked-list.js"></script>
+
+<!-- <script type="text/javascript" src="js/polynomial-using-linked-list.js"></script> -->
+
+<script type="text/javascript" src="js/polynomial-using-linked-list1.js"></script>
 
 <!-- Javascript for the actual visualization code -->
 
@@ -40,7 +43,9 @@
  
 <!-- <script type="text/javascript" src="js/al-li/poly-dummy.js"></script> -->
 
-<script type="text/javascript" src="js/al-li/polynomial-LL.js"></script>
+<!-- <script type="text/javascript" src="js/al-li/polynomial-LL.js"></script> -->
+
+<script type="text/javascript" src="js/al-li/polynomial-LL1.js"></script>
 
 <style type="text/css">
 
@@ -186,7 +191,11 @@ r {
 		background:  #ffad99;
 	}
 }
-
+.z-index1000000 {
+	background-color: white;
+	z-index : 1000000 !important;
+	position: relative;
+}
 </style>
 
 <script type="text/javascript">
@@ -294,7 +303,7 @@ var ch
 		<div id="mainContent" class='col-xs-12 margin-top-20 padding0'>
 		
 			<div class='col-xs-3'>
-				<div class='col-xs-12 box-border'>
+				<div class='col-xs-12 box-border' id="structDiv">
 					<pre class='creampretab4' id='polyInit' style="margin-top: 10px;"><span id="strcutSpan">struct polynomial {
 	int coeff;
 	int exp;
@@ -357,7 +366,7 @@ var ch
 										<span id="mulBtn" class="btn btn-sm btn-success">Multiplication</span>
 								</span>
 							</div>
-							<span id="testBtn" class="btn btn-sm btn-success hide">Multiplication</span>
+							<span id="testBtn" class="btn btn-sm btn-success hide">  </span>
 						</div>
 					</div>
 					<canvas class="opacity00" id="canvas" width="900" height="500"></canvas>

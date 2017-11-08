@@ -142,6 +142,7 @@ function initIntroJS() {
 					});
 				break;
 				case "btnsDiv":
+					$(".btn").removeAttr("disabled");
 					$(".introjs-helperLayer").one("transitionend", function() {
 						$(".introjs-tooltip").removeClass("hide");
 						var text = "Click on any button.";
@@ -150,7 +151,7 @@ function initIntroJS() {
 							$("#preTemp").addClass("hide");
 							$("#preMain").removeClass("opacity00").removeAttr("style");
 							$("#headsDes").empty();
-							$("#btnsDiv, .btn").removeAttr("disabled");
+							$("#btnsDiv, .btn").attr("disabled", "");
 							printCount = 1;
 							if (!test) {
 								callCount = 1;
@@ -659,30 +660,30 @@ function displayAddTermMethod() {
 function displatAddAndSubMethod(addOrSub) {
 	var addOrSubMethodCode = '<span id="methodName">poly add(poly head1,poly head2) {\n'
         + '\tpoly t1, t2, sum = NULL, t3;\n'
-        + 't1 = head1;\n'
-        + 't2 = head2;\n'
-        + 'while(t1 != NULL && t2 != NULL) {\n'
-        + 't3 = (poly)malloc(sizeof(struct polynomial));\n'
-        + 'if(t1 -> exp == t2 -> exp) {\n'
-        + 't3 -> coeff = t1 -> coeff + t2->coeff;\n'
-        + 't3 -> exp = t1 -> exp;\n'
-        + 't3 -> next = NULL;\n'
-        + 'sum = addterm(sum,t3);\n'
-        + 't1 = t1 -> next;\n'
-        + 't2 = t2 -> next;\n'
-        + '} else if(t1 -> exp > t2 -> exp) {\n'
-        + 't3 -> coeff = t1 -> coeff;\n'
-        + 't3 -> exp = t1 -> exp;\n'
-        + 't3 -> next = NULL;\n'
-        + 'sum = addterm(sum,t3);\n'
-        + 't1 = t1 -> next;\n'
-        + '} else {\n'
-        + 't3 -> coeff = t2->coeff;\n'
-        + 't3 -> exp = t2 -> exp;\n'
-        + 't3 -> next = NULL;\n'
-        + 'sum = addterm(sum,t3);\n'
-        + 't2 = t2 -> next;\n'
-        + '}\n'
+        + '\tt1 = head1;\n'
+        + '\tt2 = head2;\n'
+        + '\twhile(t1 != NULL && t2 != NULL) {\n'
+        + '\t\tt3 = (poly)malloc(sizeof(struct polynomial));\n'
+        + '\t\tif(t1 -> exp == t2 -> exp) {\n'
+        + '\t\tt3 -> coeff = t1 -> coeff + t2->coeff;\n'
+        + '\t\tt3 -> exp = t1 -> exp;\n'
+        + '\t\tt3 -> next = NULL;\n'
+        + '\t\tsum = addterm(sum,t3);\n'
+        + '\t\tt1 = t1 -> next;\n'
+        + '\t\tt2 = t2 -> next;\n'
+        + '\t} else if(t1 -> exp > t2 -> exp) {\n'
+        + '\t\tt3 -> coeff = t1 -> coeff;\n'
+        + '\t\tt3 -> exp = t1 -> exp;\n'
+        + '\t\tt3 -> next = NULL;\n'
+        + '\t\tsum = addterm(sum,t3);\n'
+        + '\t\tt1 = t1 -> next;\n'
+        + '\t} else {\n'
+        + '\t\tt3 -> coeff = t2->coeff;\n'
+        + '\t\tt3 -> exp = t2 -> exp;\n'
+        + '\t\tt3 -> next = NULL;\n'
+        + '\t\tsum = addterm(sum,t3);\n'
+        + '\t\tt2 = t2 -> next;\n'
+        + '\t}\n'
     	+ '}\n'
     	+ 'while(t1 != NULL) {\n'
         + 't3 = (poly)malloc(sizeof(struct polynomial));\n'
@@ -692,15 +693,15 @@ function displatAddAndSubMethod(addOrSub) {
         + 'sum = addterm(sum,t3);\n'
         + 't1 = t1 -> next;\n'
     	+ '}\n'
-    	+ 'while(t2!=NULL) {\n'
-        + 't3 = (poly)malloc(sizeof(struct polynomial));\n'
-        + 't3 -> coeff = t2 -> coeff;\n'
-        + 't3 -> exp = t2 -> exp;\n'
-        + 't3 -> next = NULL;\n'
-        + 'sum = addterm(sum,t3);\n'
-        + 't2 = t2 -> next;\n'
-    	+ '}\n'
-    	+ 'return sum;\n'
+    	+ '\twhile(t2!=NULL) {\n'
+        + '\t\tt3 = (poly)malloc(sizeof(struct polynomial));\n'
+        + '\t\tt3 -> coeff = t2 -> coeff;\n'
+        + '\t\tt3 -> exp = t2 -> exp;\n'
+        + '\t\tt3 -> next = NULL;\n'
+        + '\t\tsum = addterm(sum,t3);\n'
+        + '\t\tt2 = t2 -> next;\n'
+    	+ '\t}\n'
+    	+ '\treturn sum;\n'
     	+ '}\n</span>'
 }
 
