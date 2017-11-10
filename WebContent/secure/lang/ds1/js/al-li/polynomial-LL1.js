@@ -98,6 +98,11 @@ PolynomialLL.prototype.Controls = function() {
 	this.testButton = document.getElementById("testBtn");
 	this.testButton.onclick = this.testCallBack.bind(this);
 	this.ButtonArr.push(this.testButton);
+	
+	this.testButton = document.getElementById("nodeCreateBtn");
+	this.testButton.onclick = this.nodeCreateCallBack.bind(this);
+	this.ButtonArr.push(this.nodeCreateButton);
+	
 }
 
 PolynomialLL.prototype.varDec = function() {
@@ -321,6 +326,14 @@ PolynomialLL.prototype.create = function(head) {
 	this.introNextStep("#doWhileLoop", "right", "hide");
 	this.cmd("Step");
 	
+	return head;
+} 
+
+PolynomialLL.prototype.nodeCreate = function() {
+	this.commands = new Array();
+	
+	firstAdd  = (nodeCount == 0) ? "null": address[0];
+		
 	this.cmd("CreateLabel", this.tempLabel, "temp", 225, 100);
 	this.cmd("CreateRectangle", this.llCoeff[nodeCount], "", POLYLL_ELE_WIDTH, POLYLL_ELE_HEIGHT, POLYLL_ELE_POS_X, POLYLL_ELE_POS_Y);
 	this.cmd("CreateLabel", this.llCoeffVal[nodeCount], "", POLYLL_ELE_POS_X, POLYLL_ELE_POS_Y);
@@ -332,10 +345,13 @@ PolynomialLL.prototype.create = function(head) {
 	address[nodeCount] = randomAdd;
 	this.cmd("CreateLabel", this.addVal[nodeCount], randomAdd, 225, 150);
 	this.cmd("Step");
-	
+	this.cmd("Step");
+	this.cmd("Step");
 	this.introNextStep("#readValuesFromKeyBord", "right", "hide");
-	return head;
-} 
+	this.cmd("Step");
+	
+	return this.commands;
+}
 
 PolynomialLL.prototype.testing = function() {
 	this.commands = new Array();
@@ -370,6 +386,9 @@ PolynomialLL.prototype.testing = function() {
 	} else {
 		head2 = this.addTerm(head2, temp);
 	}
+	this.cmd("Step");
+	this.introNextStep("#rtnHead", "bottom", "hide");
+	this.cmd("Step");
 	return this.commands;
 }
 
@@ -774,9 +793,9 @@ PolynomialLL.prototype.deleteLabels = function() {
 	this.cmd("Delete", this.p2Id);
 	
 	if (flag != "addition") {
-		this.cmd("Delete", this.coefficient);
+		//this.cmd("Delete", this.coefficient);
 		this.cmd("Delete", this.coefficientValue);
-		this.cmd("Delete", this.exponent);
+		//this.cmd("Delete", this.exponent);
 		this.cmd("Delete", this.exponentValue);
 	}
 }
@@ -1787,6 +1806,11 @@ PolynomialLL.prototype.mulCallBack = function() {
 PolynomialLL.prototype.testCallBack = function() {
 	this.implementAction(this.testing.bind(this), "");
 	console.log("Testing");
+}
+
+PolynomialLL.prototype.nodeCreateCallBack = function() {
+	this.implementAction(this.nodeCreate.bind(this), "");
+	console.log("Node Creation");
 }
 
 

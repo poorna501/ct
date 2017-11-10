@@ -7,6 +7,8 @@ function deleteAtBeginNodeInDLLAnimation() { //call the method to start the intr
 	svgAppend("#animationDiv", "svgId");
 	svgMarkerAppend("#svgId", "arrow");
 	introFunction();
+	var toolTopText = "This is a tempary node to store the address of node.";
+	tooltipDisplay("#last", "bottom", toolTopText);
 }
 
 function introFunction() {	
@@ -215,7 +217,7 @@ function firstNotEqNullAnimation() {
 	$('.user-btn, #btn').remove();
 	createDynamicNodes(1);
 	svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1",
-			 "#svgId", "line1", "arrow", false);
+			 "#svgId", "line1", "arrow", true);
 	setTimeout(function() {
 		$('#data1').text(10);
 		$('#next1, #prev1').text('NULL');
@@ -251,7 +253,7 @@ function createTempNodeAnimation() {
 		$('#tempVal').removeClass('opacity00');
 		fromEffectWithTweenMax("#tempVal", "#firstVal", $("#firstVal").text(), function() {
 			svgAnimatingLineTopToBottom("#animationDiv", "#tempNode", "#prevDiv1",
-					 "#svgId", "line11", "arrow", false, function() {
+					 "#svgId", "line11", "arrow", true, function() {
 				appendNextBtn('.introjs-tooltipbuttons', 'firstNextToFirstText');
 			});
 		});
@@ -289,7 +291,7 @@ function firstNextToFirstAnimation() {
 			});
 		} else {
 			svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1",
-					 "#svgId", "line21", "arrow", false, function() {
+					 "#svgId", "line21", "arrow", true, function() {
 				$('#line21').remove();
 				$('#next1').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
 					fadeInBounceEffectWithTimelineMax("#next1", "#firstVal", function() {
@@ -343,7 +345,21 @@ function printAndDeleteNodeAnimation() {
 				for (var i = 1; i <= $('#dynamicNodes .nodes').length; i++) {
 					if (i == 1) {
 						svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1",
+								"#svgId", "line"+ i +"", "arrow", true);
+					} else {
+						svgAnimatingLineRightToLeft("#animationDiv", "#nextDiv"+ (i - 1) +"", "#prevDiv"+ (i) +"",
 								"#svgId", "line"+ i +"", "arrow", false);
+						
+						svgAnimatingLineLeftToRight("#animationDiv", "#prevDiv"+ (i) +"", "#nextDiv"+ (i - 1) +"",
+								"#svgId", "line1"+ i +"", "arrow", false);
+					}
+				}
+				/*
+				
+				for (var i = 1; i <= $('#dynamicNodes .nodes').length; i++) {
+					if (i == 1) {
+						svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1",
+								"#svgId", "line"+ i +"", "arrow", true);
 					} else {
 						svgAnimatingLineRightToLeft("#animationDiv", "#nextDiv"+ (i - 1) +"", "#prevDiv"+ (i) +"",
 								"#svgId", "line"+ i +"", "arrow", true);
@@ -351,7 +367,7 @@ function printAndDeleteNodeAnimation() {
 						svgAnimatingLineLeftToRight("#animationDiv", "#prevDiv"+ (i) +"", "#nextDiv"+ (i - 1) +"",
 								"#svgId", "line1"+ i +"", "arrow", false);
 					}
-				}
+				}*/
 				introNextSteps('#algorithmStepsDiv', 'step3');
 				$('.introjs-nextbutton').show();
 				$('.introjs-tooltip').scrollTo('.introjs-nextbutton', 500);
@@ -414,10 +430,10 @@ function regenerateArrows(flag) {
 	for (var i = 1; i <= $('#dynamicNodes .nodes').length; i++) {
 		if (i == 1) {
 			svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1",
-					"#svgId", "line"+ i +"", "arrow", false);
+					"#svgId", "line"+ i +"", "arrow", flag);
 		} else {
 			svgAnimatingLineRightToLeft("#animationDiv", "#nextDiv"+ (i - 1) +"", "#prevDiv"+ (i) +"",
-					"#svgId", "line"+ i +"", "arrow", flag);
+					"#svgId", "line"+ i +"", "arrow", false);
 			
 			svgAnimatingLineLeftToRight("#animationDiv", "#prevDiv"+ (i) +"", "#nextDiv"+ (i - 1) +"",
 					"#svgId", "line1"+ i +"", "arrow", false);
@@ -518,8 +534,18 @@ function createDynamicNodes(val) {
 					+ ' <span id="next' + val + '" class="position next-span ct-green-color ct-fonts inline-style opacity00"></span></div></div>'
 					+ ' <div class="col-xs-12 padding00"><div class="col-xs-4 col-xs-offset-4 padding00 text-center"><span id="dataAddress' + val + '"'
 					+ ' class="data-address padding00 ct-brown-color ct-fonts">'+ randomAddress + '</span></div></div></div>';
-	
 	$('#dynamicNodes').append(x);
+	
+	var toolTopText = "This is an int data type to hold the user data";
+	tooltipDisplay(".data-div", "top", toolTopText);
+	var toolTopText = "This is an pointer type to hold the address of the next node";
+	tooltipDisplay(".next-div", "top", toolTopText);
+	var toolTopText = "it indicates the address of the node";
+	tooltipDisplay(".data-address", "bottom", toolTopText);
+}
+
+function tooltipDisplay(selector, position, text) {
+	$(selector).attr({"data-placement": ""+ position +"", "title": ""+ text +""}).tooltip();
 }
 
 function declareNodesWhenFunctionCall(id1, id2, nodeName, nodeNameText, callBackFunction) {	//Temp node div declaration 
@@ -639,20 +665,20 @@ function svgLineAppend(svgId, svgLineId, markerId, x1, y1, x2, y2) {
 	$(svgId).append(line);
 }
 
-function svgAnimatingLineRightToLeft(parentSelector, selector1, selector2, svgId, svgLineId, markerId, lineFlag, callBackFunction) {
+function svgAnimatingLineRightToLeft(parentSelector, selector1, selector2, svgId, svgLineId, markerId, flag, callBackFunction) {
 	var parentOffset = $(parentSelector).offset();
 	var x1 = $(selector1).offset().left - parentOffset.left + $(selector1).outerWidth();
 	var x2 = $(selector2).offset().left - parentOffset.left;
-	if (lineFlag) {
-		var y1 = $(selector1).offset().top - parentOffset.top + $(selector1).outerHeight() / 1.5;
-		var y2 = $(selector2).offset().top - parentOffset.top + $(selector2).outerHeight() / 1.5;
-	} else {
+	if(flag) {
 		var y1 = $(selector1).offset().top - parentOffset.top + $(selector1).outerHeight() / 2;
 		var y2 = $(selector2).offset().top - parentOffset.top + $(selector2).outerHeight() / 2;
+	} else {
+		var y1 = $(selector1).offset().top - parentOffset.top + $(selector1).outerHeight() / 1.5;
+		var y2 = $(selector2).offset().top - parentOffset.top + $(selector2).outerHeight() / 1.5;
 	}
 	svgLineAppend(svgId, svgLineId, markerId, x1, y1, x1, y1);
 	TweenMax.to($('#' + svgLineId).show(), 1, {attr: {x2: x2, y2: y2}, onComplete: function() {
-		if (typeof callBackFunction === 'function') {
+		if (typeof callBackFunction === "function") {
 			callBackFunction();
 		}
 	}});
@@ -663,11 +689,11 @@ function svgAnimatingLineLeftToRight(parentSelector, selector1, selector2, svgId
 	var x1 = $(selector1).offset().left - parentOffset.left;
 	var x2 = $(selector2).offset().left - parentOffset.left + $(selector2).outerWidth();
 	if (lineFlag) {
-		var y1 = $(selector1).offset().top - parentOffset.top + $(selector1).outerHeight() / 5;
-		var y2 = $(selector2).offset().top - parentOffset.top + $(selector2).outerHeight() / 5;
-	} else {
 		var y1 = $(selector1).offset().top - parentOffset.top + $(selector1).outerHeight() / 2;
 		var y2 = $(selector2).offset().top - parentOffset.top + $(selector2).outerHeight() / 2;
+	} else {
+		var y1 = $(selector1).offset().top - parentOffset.top + $(selector1).outerHeight() / 4;
+		var y2 = $(selector2).offset().top - parentOffset.top + $(selector2).outerHeight() / 4;
 	}
 	svgLineAppend(svgId, svgLineId, markerId, x1, y1, x1, y1);
 	TweenMax.to($('#' + svgLineId).show(), 1, {attr: {x2: x2, y2: y2}, onComplete: function() {
@@ -676,6 +702,7 @@ function svgAnimatingLineLeftToRight(parentSelector, selector1, selector2, svgId
 		}
 	}});
 }
+
 
 function svgAnimatingLineBottomToTop(parentSelector, selector1, selector2, svgId, svgLineId, markerId, lineFlag, callBackFunction) {
 	var parentOffset = $(parentSelector).offset();

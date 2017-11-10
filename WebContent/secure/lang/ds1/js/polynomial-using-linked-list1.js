@@ -102,8 +102,11 @@ function initIntroJS() {
 					introNextSteps("#btnsDiv", "", "left");
 					setTimeToIntroGoesNextStep();
 				} else if (animateStep == "readCoeffAndExpValues") {
-					console.log("hello Poorna");
 					$("#testBtn").click();
+					doPlayPause();
+				} else if (animateStep == "allocateMemory") {
+					console.log("hello Poorna click node createBtn");
+					$("#nodeCreateBtn").click();
 					doPlayPause();
 				} else {
 					doPlayPause();
@@ -151,8 +154,21 @@ function initIntroJS() {
 							introNextSteps("#storeCoeffNdExp","", "right");
 							readCoeffAndExpValuesFromConsole("#val" + outputCount);
 						});
-						
 					break;
+					case "enterYesOrNoToContinue" :
+						$('.output-console-body').append('<div id="yesOrNoText'+ outputCount+ '">Do u want another node(y/n): '
+								+ ' <div class="position" id="yesOrNotDiv'+ outputCount+ '"><input class="output-scanf-line input" '
+								+ 'id="yesOrNoVal'+ outputCount+ '" size="15" maxlength="2"/></div></div>');
+						$('#yesOrNoVal' + outputCount).focus();
+						$(".introjs-tooltip").removeClass('hide');
+						var text = "Enter <y>y/n</y> (or) <y>Y/N</y> to continue to insert node into the list.";
+						typing(".introjs-tooltiptext",text,function() {
+							introNextSteps("#doWhileLoop","", "right");
+							readYesOrNoFromConsole('#yesOrNoVal' + outputCount);
+							outputCount++;
+						});
+					break;
+					
 				}
 			});
 		break;
@@ -192,13 +208,11 @@ function initIntroJS() {
 			$(".introjs-helperLayer").one("transitionend", function() {
 				$("#createHead, #ch, #coeffExp").removeClass("background-color-yellow");
 				$("#temp, #createinitTemp").addClass("background-color-yellow");
-				arrow("#coeffExp", "#createinitTemp", function() {
-					$("#createinitTemp , #temp").addClass("background-color-yellow");
-					var text = "Control enters into <y>do-while</y> body\n Allocate memory for <y>struct</y> variable <y>temp</y>.";
-					tooltipBooletsAppendAndTypeText(text, "ul", function() {
-						introNextSteps("#animationDiv", "allocateMemory", "");
-						$('.introjs-nextbutton').show();
-					});
+				$("#createinitTemp , #temp").addClass("background-color-yellow");
+				var text = "Control enters into <y>do-while</y> body\n Allocate memory for <y>struct</y> variable <y>temp</y>.";
+				tooltipBooletsAppendAndTypeText("#coeffExp", "#createinitTemp", text, "ul", function() {
+					introNextSteps("#animationDiv", "allocateMemory", "");
+					$('.introjs-nextbutton').show();
 				});
 			});
 		break;
@@ -217,24 +231,18 @@ function initIntroJS() {
 		case "storeCoeffNdExp" :
 			$("#console1, #readConsole1").removeClass("background-color-yellow");
 			$(".introjs-helperLayer").one("transitionend", function() {
-				arrow("#readConsole1", "#tCoeff", function() {
-					$("#tCoeff").addClass("background-color-yellow");
-					$(".introjs-tooltip").removeClass("hide");
-					var text = "The user given <y>coefficient</y> value <y>"+ arr[0] +"</y> is stored in the <y>coeff</y> field of <y>temp</y>.";
-					tooltipBooletsAppendAndTypeText(text, "ul", function() {
-						arrow("#tCoeff", "#tExp", function() {
-							$("#tExp").addClass("background-color-yellow");
-							var text = "The user given <y>exponent</y> value <y>"+ arr[1] +"</y> is stored in <y>exp</y> field of <y>temp</y>.";
-							tooltipBooletsAppendAndTypeText(text, "li", function() {
-								arrow("#tExp", "#tNext", function() {
-									$("#tNext").addClass("background-color-yellow");
-									var text = "The <y>NULL</y> is stored in the <y>next</y> field of <y>temp</y>.";
-									tooltipBooletsAppendAndTypeText(text, "li", function() {
-										introNextSteps("#animationDiv", "readCoeffAndExpValues", "");
-										$('.introjs-nextbutton').show();
-									});
-								});
-							});
+				$("#tCoeff").addClass("background-color-yellow");
+				$(".introjs-tooltip").removeClass("hide");
+				var text = "The user given <y>coefficient</y> value <y>"+ arr[0] +"</y> is stored in the <y>coeff</y> field of <y>temp</y>.";
+				tooltipBooletsAppendAndTypeText("#readConsole1", "#tCoeff", text, "ul", function() {
+					$("#tExp").addClass("background-color-yellow");
+					var text = "The user given <y>exponent</y> value <y>"+ arr[1] +"</y> is stored in <y>exp</y> field of <y>temp</y>.";
+					tooltipBooletsAppendAndTypeText("#tCoeff", "#tExp", text, "li", function() {
+						$("#tNext").addClass("background-color-yellow");
+						var text = "The <y>NULL</y> is stored in the <y>next</y> field of <y>temp</y>.";
+						tooltipBooletsAppendAndTypeText("#tExp", "#tNext", text, "li", function() {
+							introNextSteps("#animationDiv", "readCoeffAndExpValues", "");
+							$('.introjs-nextbutton').show();
 						});
 					});
 				});
@@ -244,18 +252,16 @@ function initIntroJS() {
 			$("#tCoeff, #tExp, #tNext").removeClass("background-color-yellow");
 			$(".introjs-helperLayer").one("transitionend", function() {
 				$("#callAddTerm").addClass("background-color-yellow");
-				arrow("#tNext", "#callAddTerm", function() {
-					$(".introjs-tooltip").removeClass("hide");
-					var text = "Here, we are calling <y>addTerm()</y> method and pass two arguments (i.e. <y>"+ firstAdd 
-								+ "</y> and <y>"+ randomAdd +"</y>) in <y>addTerm()</y>.";
-					tooltipBooletsAppendAndTypeText(text, "ul", function() {
-						flip("#aHead", firstAdd, function() {
-							flip("#aTemp", randomAdd, function() {
-								$("#preAddTerm").removeClass("hide");
-								introNextSteps("#preAddTerm", "", "right");
-								//introNextSteps("#animationDiv", "addTermVariables", "");
-								$('.introjs-nextbutton').show();
-							});
+				$(".introjs-tooltip").removeClass("hide");
+				var text = "Here, we are calling <y>addTerm()</y> method and pass two arguments (i.e. <y>"+ firstAdd 
+							+ "</y> and <y>"+ randomAdd +"</y>) in <y>addTerm()</y>.";
+				tooltipBooletsAppendAndTypeText("#tNext", "#callAddTerm", text, "ul", function() {
+					flip("#aHead", firstAdd, function() {
+						flip("#aTemp", randomAdd, function() {
+							$("#preAddTerm").removeClass("hide");
+							arrow("#tNext", "#callAddTerm");
+							introNextSteps("#preAddTerm", "", "right");
+							$('.introjs-nextbutton').show();
 						});
 					});
 				});
@@ -275,7 +281,33 @@ function initIntroJS() {
 		case "addTermLogic" :
 			$("#aCallHndT, #p1ndp2Dec, #p1NdP2Init").removeClass("background-color-yellow");
 			$(".introjs-helperLayer").one("transitionend", function() {
-				
+				var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+							+ "<span  id='tooltipFront'>p1</span> == NULL</span></li>";
+				tooltipBooletsAppendAndTypeText("#p1NdP2Init", "#ifp1EqNullBefore", text, "ul", function() {
+					trueOrFalseCondition("#ifp1EqNullBefore", "#tooltipFront", address.length == 1, "NULL", firstAdd, function() {
+						$("#tmpToHead").addClass("background-color-yellow");
+						var text = 'Now, store <y>temp</y> value (i.e. <y>'+ randomAdd +'</y>) to <y>head</y>.';
+						tooltipBooletsAppendAndTypeText("#ifp1EqNullBefore", "#tmpToHead", text, "li", function() {
+							introNextSteps("#animationDiv", "storeTempToHead", "");
+							$('.introjs-nextbutton').show();
+						});
+					});
+				});
+			});
+		break;
+		case "rtnHead" :
+			$("#ifp1EqNullBefore, #tmpToHead").removeClass("background-color-yellow");
+			$(".introjs-helperLayer").one("transitionend", function() {
+				introNextSteps("#yesOrNoQus", "", "");
+				setTimeToIntroGoesNextStep();
+			});
+		break;
+		case "yesOrNoQus" :
+			$(".z-index1000000, .background-color-yellow").removeClass("z-index1000000 background-color-yellow");
+			$("#preAddTerm").addClass("hide");
+			$(".introjs-helperLayer").one("transitionend", function() {
+				introNextSteps("#outputDiv", "enterYesOrNoToContinue", "right");
+				setTimeToIntroGoesNextStep();
 			});
 		break;
 		}
@@ -290,6 +322,26 @@ function initIntroJS() {
 	$('.introjs-skipbutton').hide();
 	$('.introjs-bullets').hide();
 }
+
+function trueOrFalseCondition(selector1, selector2, condition, value1, value2, callBackFunction) {
+	travel(selector1, $(".introjs-tooltiptext ul li:last-child span"), function() {
+		flip(selector2, condition ? value1 : value2, function() {
+			var text = "";
+			if (condition) {
+				text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
+			} else {
+				text = "Since it evaluates to <r>false</r>."
+			}
+			$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+			typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+				if (typeof callBackFunction === "function") {
+					callBackFunction();
+				}
+			});
+		});
+	});
+}
+
 
 function createMethodDef() {
 	var createMethodCode = '<span id="methodName">poly create(<span id="createHead">poly head</span>) {</span>\n'
@@ -343,62 +395,53 @@ function addTermMethodDefinition() {
 
 function createNodeAnimation() {
 	$("#createHead").addClass("background-color-yellow");
-	arrow("#methodName", "#methodName", function() {
-		var text = "Here, store, the <y>head"+ printCount +"</y> value (i.e. <y>NULL</y>) to the <y>head</y>.";
-		tooltipBooletsAppendAndTypeText(text, "ul", function() {
-			$("#ch, #coeffExp").addClass("background-color-yellow");
-			arrow("#methodName", "#ch", function() {
-				var text = "Here, we are declaring a <y>character</y> variable <y>ch</y> and"
-							+ " <y>two</y> integer variables <y>coeff</y> and <y>exp</y>. ";
-				tooltipBooletsAppendAndTypeText(text, "li", function() {
-					arrow("#ch", "#coeffExp", function() {
-						introNextSteps("#animationDiv", "variablesDec", "");
-						$('.introjs-nextbutton').show();
-						
-					});
-				});
+	var text = "Here, store, the <y>head"+ printCount +"</y> value (i.e. <y>NULL</y>) to the <y>head</y>.";
+	tooltipBooletsAppendAndTypeText("#methodName", "#methodName", text, "ul", function() {
+		$("#ch, #coeffExp").addClass("background-color-yellow");
+		var text = "Here, we are declaring a <y>character</y> variable <y>ch</y> and"
+					+ " <y>two</y> integer variables <y>coeff</y> and <y>exp</y>. ";
+		tooltipBooletsAppendAndTypeText("#methodName", "#ch", text, "li", function() {
+			arrow("#ch", "#coeffExp", function() {
+				introNextSteps("#animationDiv", "variablesDec", "");
+				$('.introjs-nextbutton').show();
 			});
 		});
 	});
 }
 
 function addTermFunctionAnimation() {
-	arrow("#addTermFunName", "#addTermFunName", function() {
-		$("#aCallHndT").addClass("background-color-yellow");
-		$(".introjs-tooltip").removeClass("hide");
-		var text = "The <y>"+ firstAdd +"</y> value will be stored in <y>head</y> and <y>"+ randomAdd 
-					+ "</y> value will be stored in <y>temp</y>.";
-		tooltipBooletsAppendAndTypeText(text, "ul", function() {
-			$("#p1ndp2Dec").addClass("background-color-yellow");
-			arrow("#addTermFunName", "#p1ndp2Dec", function() {
-				var text = "Here we are declaring two pointer variables <y>p1</y> and <y>p2</y>.";
-				tooltipBooletsAppendAndTypeText(text, "li", function() {
-					$("#p1NdP2Init").addClass("background-color-yellow");
-					arrow("#p1ndp2Dec", "#p1NdP2Init", function() {
-						var text = "Here we are initializing two pointer variables <y>p1</y> and <y>p2</y> to <y>head</y> value (i.e. <y>"+ 
-									firstAdd +"</y>).";
-						tooltipBooletsAppendAndTypeText(text, "li", function() {
-							introNextSteps("#animationDiv", "addTermVariablesDec", "");
-							$('.introjs-nextbutton').show();
-						});
-					});
-				});
+	$("#aCallHndT").addClass("background-color-yellow");
+	$(".introjs-tooltip").removeClass("hide");
+	var text = "The <y>"+ firstAdd +"</y> value will be stored in <y>head</y> and <y>"+ randomAdd 
+				+ "</y> value will be stored in <y>temp</y>.";
+	tooltipBooletsAppendAndTypeText("#addTermFunName", "#addTermFunName", text, "ul", function() {
+		$("#p1ndp2Dec").addClass("background-color-yellow");
+		var text = "Here we are declaring two pointer variables <y>p1</y> and <y>p2</y>.";
+		tooltipBooletsAppendAndTypeText("#addTermFunName", "#p1ndp2Dec", text, "li", function() {
+			$("#p1NdP2Init").addClass("background-color-yellow");
+			var text = "Here we are initializing two pointer variables <y>p1</y> and <y>p2</y> to <y>head</y> value (i.e. <y>"+ 
+						firstAdd +"</y>).";
+			tooltipBooletsAppendAndTypeText("#p1ndp2Dec", "#p1NdP2Init", text, "li", function() {
+				introNextSteps("#animationDiv", "addTermVariablesDec", "");
+				$('.introjs-nextbutton').show();
 			});
 		});
 	});
 }
 
-function tooltipBooletsAppendAndTypeText(text, appendText,  callBackFunction) {
-	$(".introjs-tooltip").removeClass("hide");
-	if (appendText == "ul") {
-		$('.introjs-tooltiptext').append('<ul><li></li></ul>');
-	} else {
-		$('.introjs-tooltiptext ul').append('<li></li>');
-	}
-	typing(".introjs-tooltiptext ul li:last", text, function() {
-		if (typeof callBackFunction === "function") {
-			callBackFunction();
+function tooltipBooletsAppendAndTypeText(selector1, selector2, text, appendText, callBackFunction) {
+	arrow(selector1, selector2, function() {
+		$(".introjs-tooltip").removeClass("hide");
+		if (appendText == "ul") {
+			$('.introjs-tooltiptext').append('<ul><li></li></ul>');
+		} else {
+			$('.introjs-tooltiptext ul').append('<li></li>');
 		}
+		typing(".introjs-tooltiptext ul li:last", text, function() {
+			if (typeof callBackFunction === "function") {
+				callBackFunction();
+			}
+		});
 	});
 }
 

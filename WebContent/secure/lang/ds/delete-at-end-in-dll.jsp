@@ -4,6 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Delete at End Algorithm</title>
+
 <link rel="stylesheet" href="/css/bootstrap.min.css">
 <link rel="stylesheet" href="/css/jquery-ui.css">
 <link rel="stylesheet" href="/css/introjs.css">
@@ -13,14 +15,12 @@
 
 <script src="/js/jquery-latest.js"></script>
 <script src="/js/intro.js"></script>
-<script src="/js/bootstrap.js"></script>
 <script src="/js/jquery-ui-all.js"></script>
+<script src="/js/bootstrap.js"></script>
 <script src="/js/typewriting.min.js"></script>
 <script src="/js/gs/TweenMax.min.js"></script>
 <script src="/js/jquery.scrollTo.js"></script>
-<script src="js/delete-at-begin-node-in-dll.js"></script>
-
-<title>Delete-At-Begin-Node-in-DLL</title>
+<script src="js/delete-at-end-in-dll.js"></script>
 
 <style type="text/css">
 
@@ -117,7 +117,7 @@
 }
 
 .algorithm-steps-Div, #parentPre {
-	height: 250px;
+	height: 300px;
 	background-color: #fffae6;
 	overflow-y: auto; 
 }
@@ -136,7 +136,7 @@
 .div-border {
 	margin: 0;
 	padding: 0;
-	width: 40px;
+	width: 45px;
 	min-height: 24px;
 	text-align: center;
 	display: inline-block;
@@ -149,13 +149,13 @@
 	border-radius: 6px 0 0 6px;
 }
 
+.no-radius {
+	border-color: blue;
+}
+
 .right-radius {
 	border-color: green;
 	border-radius: 0 6px 6px 0;
-}
-
-.no-radius {
-	border-color: blue;
 }
 
 .inline-css {
@@ -257,30 +257,31 @@ bwBg {
 .padding5 {
 	padding: 5px;
 }
+	
 </style>
 </head>
-
 <body>
+
 <script type="text/javascript">
 	$(document).ready(function() {
-		deleteAtBeginNodeInDLLAnimation();
 		//$('.opacity00').removeClass('opacity00');
+		deleteAtEndNodeAnimation();
 	});
 </script>
 
-<div class='col-xs-12 padding00'>
+	<div class='col-xs-12 padding00'>
 		<div class='col-xs-12 padding00'>
 			<div class="ct-box-main">
 				<div class='text-center'>
-					<h4 class='label ct-demo-heading' id='headingDiv'>deleteAtBegin() in Doubly Linked List </h4>
+					<h4 class='label ct-demo-heading' id='headingDiv'>deleteAtEnd() in Doubly Linked List</h4>
 				</div>
 			</div>
 			
-			<div class='col-xs-12 margin-top-5 padding00' id='totalDiv'>
+			<div class='col-xs-12 margin-top-5' id='totalDiv'>
 				<div class='col-xs-12 padding00'>
 					<div class='col-xs-5 padding00'>
 						<div class='col-xs-12 margin-top-15 padding00'>
-							<div class='col-xs-12 box-border padding00' id='animationDiv'>
+							<div class='col-xs-12 box-border' id='animationDiv'>
 								<div class='col-xs-12 margin-top-25 margin-bottom-25 padding00'>
 									<div class="col-xs-12 padding00 margin-top-25" id="csllNodes">
 										<div class="col-xs-2 padding00 opacity00 position" id="firstNode">
@@ -290,11 +291,11 @@ bwBg {
 												</div>
 												<div class="col-xs-12 padding00">
 												<div class="col-xs-6 padding00 text-center">
-													<span id="dataAddress0" class="position  ct-brown-color ct-fonts opacity00">2318</span>
+													<span id="dataAddress1" class="position  ct-brown-color ct-fonts opacity00">2318</span>
 												</div>
 											</div>
 										</div>
-										<div class="col-xs-10 padding00" id="dynamicNodes"></div>
+										<div class="col-xs-10" id="dynamicNodes" style='padding-right: 0;'></div>
 									</div>
 									<div class="col-xs-12 margin-top-25 padding00" id="declareNodes"></div>
 								</div>
@@ -330,6 +331,5 @@ bwBg {
 			</div>
 		</div>
 	</div>
-
 </body>
-</html>.
+</html>

@@ -366,7 +366,8 @@ var ch
 										<span id="mulBtn" class="btn btn-sm btn-success">Multiplication</span>
 								</span>
 							</div>
-							<span id="testBtn" class="btn btn-sm btn-success hide">  </span>
+							<span id="testBtn" class="btn btn-sm btn-success hide"></span>
+							<span id="nodeCreateBtn" class="btn btn-sm btn-success hide"></span>
 						</div>
 					</div>
 					<canvas class="opacity00" id="canvas" width="900" height="500"></canvas>
