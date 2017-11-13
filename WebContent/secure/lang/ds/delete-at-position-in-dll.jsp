@@ -162,6 +162,7 @@
 }
 
 .right-radius {
+	border-left: none;
 	border-color: green;
 	border-radius: 0 6px 6px 0;
 }
