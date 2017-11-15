@@ -285,17 +285,23 @@ function initIntroJS() {
 							+ "<span  id='tooltipFront'>p1</span> == NULL</span></li>";
 				tooltipBooletsAppendAndTypeText("#p1NdP2Init", "#ifp1EqNullBefore", text, "ul", function() {
 					trueOrFalseCondition("#ifp1EqNullBefore", "#tooltipFront", address.length == 1, "NULL", firstAdd, function() {
-						$("#tmpToHead").addClass("background-color-yellow");
-						var text = 'Now, store <y>temp</y> value (i.e. <y>'+ randomAdd +'</y>) to <y>head</y>.';
-						tooltipBooletsAppendAndTypeText("#ifp1EqNullBefore", "#tmpToHead", text, "li", function() {
-							introNextSteps("#animationDiv", "storeTempToHead", "");
-							$('.introjs-nextbutton').show();
-						});
+						if (address.length == 1) {
+							$("#tmpToHead").addClass("background-color-yellow");
+							var text = 'Now, store <y>temp</y> value (i.e. <y>'+ randomAdd +'</y>) to <y>head</y>.';
+							tooltipBooletsAppendAndTypeText("#ifp1EqNullBefore", "#tmpToHead", text, "li", function() {
+								introNextSteps("#animationDiv", "storeTempToHead", "");
+								$('.introjs-nextbutton').show();
+							});
+						} else {
+							$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+									+ "onclick='addTermElseCondition()'>Next &#8594;</a>");
+						}
 					});
 				});
 			});
 		break;
 		case "rtnHead" :
+			$(".y").removeClass("y");
 			$("#ifp1EqNullBefore, #tmpToHead").removeClass("background-color-yellow");
 			$(".introjs-helperLayer").one("transitionend", function() {
 				introNextSteps("#yesOrNoQus", "", "");
@@ -322,6 +328,180 @@ function initIntroJS() {
 	$('.introjs-skipbutton').hide();
 	$('.introjs-bullets').hide();
 }
+
+function addTermElseCondition() {
+	$('.user-btn').remove();
+	$("#ifp1EqNullBefore").removeClass("background-color-yellow").removeAttr('style');;
+	$("#whileP1NotNull").addClass("background-color-yellow");
+	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+				+ "<span  id='pOneVal'>p1</span> != NULL && <span id='p1ExpVal'>p1 -> exp</span> &gt; "
+				+ "<span id='tempExpVal'>temp -> exp</span></span></li>";
+	tooltipBooletsAppendAndTypeText("#ifp1EqNullBefore", "#whileP1NotNull", text, "li", function() {
+		travel('#whileP1NotNull', $(".introjs-tooltiptext ul li:last-child span"), function() {
+			flip("#pOneVal", firstAdd, function() {
+				flip("#p1ExpVal", firstExpVal, function() {
+					flip("#tempExpVal", arr[1], function() {
+						var text = "";
+						if (firstAdd != "null" && firstExpVal > parseInt(arr[1])) {
+							text = "Since it evaluates to <y>true</y>, so the control enters into <y>while-block</y>" 
+								+ " and repeat the loop until the while loop will evaluates to <y>false</y>."
+							$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+							typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+								introNextSteps("#animationDiv", "repeatWhileLoop", "");
+								$('.introjs-nextbutton').show();
+							});
+						} else {
+							text = "Since it evaluates to <r>false</r>.";
+							$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+							typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+								$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+										+ "onclick='ifWhileFalse()'>Next &#8594;</a>");
+							});
+						}
+					});	
+				});
+			});
+		});
+	});
+}
+
+function ifWhileFalse() {
+	$(".user-btn").remove();
+	$("#whileP1NotNull").removeClass("background-color-yellow").removeAttr('style');
+	$("#ifp1EqNullAfter").addClass("background-color-yellow");
+	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+			+ "<span  id='p1Val'>p1</span> == NULL</span></li>";
+	tooltipBooletsAppendAndTypeText("#whileP1NotNull", "#ifp1EqNullAfter", text, "li", function() {
+		trueOrFalseCondition("#ifp1EqNullAfter", "#p1Val", address.length == 1, "NULL", firstAdd, function() {
+			if(address.length == 1) {
+			} else {
+				$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+						+ "onclick='checkIfP1ExpNdTmpExpSame()'>Next &#8594;</a>");
+			}
+		});
+	});
+}
+
+function checkIfP1ExpNdTmpExpSame() {
+	$(".user-btn").remove();
+	$("#ifp1EqNullAfter").removeClass("background-color-yellow").removeAttr('style');
+	$("#p1EqTemp").addClass("background-color-yellow")
+	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+				+ "<span  id='p1ExpVal1'>p1 -> exp</span> == <span id='tempExpVal1'>temp -> exp</span></span></li>";
+	tooltipBooletsAppendAndTypeText("#ifp1EqNullAfter", "#p1EqTemp", text, "li", function() {
+		flip("#p1ExpVal1", parseInt(p1["exp"]), function() {
+			flip("#tempExpVal1", parseInt(temp["exp"]), function() {
+				var text = "";
+				if (parseInt(p1["exp"]) == parseInt(temp["exp"])) {
+					text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
+					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+						$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+								+ "onclick='ifBothp1ExpAndTempExpAreSame()'>Next &#8594;</a>");
+					});
+				} else {
+					text = "Since it evaluates to <r>false</r>."
+					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+						$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+								+ "onclick='checkIfP1ExpNdTmpExpgreaterThan()'>Next &#8594;</a>");
+					});
+				}
+				
+			});
+		});
+	});
+}
+
+function ifBothp1ExpAndTempExpAreSame() {
+	$(".user-btn").remove();
+	$("#p1EqTemp").removeClass("background-color-yellow").removeAttr('style');
+	$("#p1PlsTemp").addClass("background-color-yellow");
+	arrow("#p1EqTemp", "#p1PlsTemp", function() {
+		var text = "Here, we are adding <y>coeff</y> field of <y>p1</y> and <y>coeff</y> field of <y>temp</y> them store the result into "
+					+ " the <y>coeff</y> field of <y>p1</y>.";
+		$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+		typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+			introNextSteps("#animationDiv", "addp1CoeffAndTempCoeff", "");
+			$('.introjs-nextbutton').show();
+		});
+	});
+}
+
+function checkIfP1ExpNdTmpExpgreaterThan() {
+	$(".user-btn").remove();
+	$("#p1EqTemp").removeClass("background-color-yellow").removeAttr("style");
+	$("#p1LessTemp").addClass("background-color-yellow");
+	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+				+ "<span  id='p1ExpVal2'>p1 -> exp</span> &lt; <span id='tempExpVal2'>temp -> exp</span></span></li>";
+	tooltipBooletsAppendAndTypeText("#p1EqTemp", "#p1LessTemp", text, "li", function() {
+		flip("#p1ExpVal2", parseInt(p1["exp"]), function() {
+			flip("#tempExpVal2", parseInt(temp["exp"]), function() {
+				var text = "";
+				if (parseInt(p1["exp"]) < parseInt(temp["exp"])) {
+					text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
+				} else {
+					text = "Since it evaluates to <r>false</r>."	
+				}
+				$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+				typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+					$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+							+ "onclick='checkIfP1andP2AreSameOrNot()'>Next &#8594;</a>");
+				});
+			});
+		});
+	});
+}
+
+function checkIfP1andP2AreSameOrNot() {
+	$(".user-btn").remove();
+	$("#p1LessTemp").removeClass("background-color-yellow").removeAttr("style");
+	$("#p2EqP1").addClass("background-color-yellow");
+	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+				+ "<span  id='p1Value'>p1</span> == <span id='p2Value'>p2</span></span></li>";
+	tooltipBooletsAppendAndTypeText("#p1LessTemp", "#p2EqP1", text, "li", function() {
+		flip("#p1Value", address[p1NdP2Val + 1], function() {
+			flip("#p2Value", address[p1NdP2Val + 1], function() {
+				var text = "";
+				if (p2 == p1) {
+					text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
+					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+						$("#p2EqP1").removeClass("background-color-yellow").removeAttr("style");
+						$("#p1ToTmpNxt, #tmpToHead1").addClass("background-color-yellow");
+						arrow("#p2EqP1", "#p1ToTmpNxt", function() {
+							$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+									+ "onclick='storep1ToTmpNdTmpToHead()'>Next &#8594;</a>");
+						});
+					});
+				} else {
+					text = "Since it evaluates to <r>false</r>."	
+					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+						/*$("#p2EqP1").removeClass("background-color-yellow").removeAttr("style");
+						$("#p1ToTmpNxt, #tmpToHead1").addClass("background-color-yellow");
+						arrow("#p2EqP1", "#p1ToTmpNxt", function() {
+							$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+									+ "onclick='storep1ToTmpNdTmpToHead()'>Next &#8594;</a>");
+						});*/
+					});
+				}
+			});
+		});
+	});
+}
+
+function storep1ToTmpNdTmpToHead() {
+	$(".user-btn").remove();
+	var text = "Here, store the <y>p1</y> value (i.e. <y>"+ address[p1NdP2Val + 1]  +"</y>) is stored in the <y>next</y> field of <y>temp</y>"
+				+ " node also assign <y>temp</y> value (i.e. <y>"+ randomAdd +"</y>) to <y>head</y> node.";
+	$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+	typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+		introNextSteps("#animationDiv", "storep1AndTempValue", "");
+		$('.introjs-nextbutton').show();
+	});
+}
+
 
 function trueOrFalseCondition(selector1, selector2, condition, value1, value2, callBackFunction) {
 	travel(selector1, $(".introjs-tooltiptext ul li:last-child span"), function() {
@@ -365,6 +545,7 @@ function createMethodDef() {
 }
 
 function addTermMethodDefinition() {
+	$('.y').removeClass('y');
 	var addtermCode = '<span id="addTermFunName">poly addterm(<span id="aCallHndT">poly head, poly temp</span>) {</span>\n'
 			+ '\t<span id="p1ndp2Dec">poly p1,p2;</span>\n'
 			+ '\t<Span id="p1NdP2Init">p1 = p2 = head;</span>\n'
