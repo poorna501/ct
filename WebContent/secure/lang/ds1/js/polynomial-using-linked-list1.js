@@ -102,11 +102,15 @@ function initIntroJS() {
 					introNextSteps("#btnsDiv", "", "left");
 					setTimeToIntroGoesNextStep();
 				} else if (animateStep == "readCoeffAndExpValues") {
-					$("#testBtn").click();
+						$("#testBtn").click();
 					doPlayPause();
 				} else if (animateStep == "allocateMemory") {
 					console.log("hello Poorna click node createBtn");
 					$("#nodeCreateBtn").click();
+					doPlayPause();
+				} else if (animateStep == "enterNoInConsole") {
+					printCount++;
+					$("#yesOrNoBtn").click();
 					doPlayPause();
 				} else {
 					doPlayPause();
@@ -161,15 +165,36 @@ function initIntroJS() {
 								+ 'id="yesOrNoVal'+ outputCount+ '" size="15" maxlength="2"/></div></div>');
 						$('#yesOrNoVal' + outputCount).focus();
 						$(".introjs-tooltip").removeClass('hide');
-						var text = "Enter <y>y/n</y> (or) <y>Y/N</y> to continue to insert node into the list.";
-						typing(".introjs-tooltiptext",text,function() {
+						if (nodeCount < SIZE - 1) {
+							var text = "Enter <y>y/n</y> (or) <y>Y/N</y> to continue to insert node into the list.";
 							introNextSteps("#doWhileLoop","", "right");
+						} else {
+							var text = "Enter <y>n</y> (or) <y>N</y> to exit the node insertion (Here, we are restricted to allow only "
+										+ " <y>5</y> nodes in the list).";
+							introNextSteps("#whileChNotEqN","", "right");
+						}
+						typing(".introjs-tooltiptext",text,function() {
 							readYesOrNoFromConsole('#yesOrNoVal' + outputCount);
 							outputCount++;
 						});
 					break;
 					
 				}
+			});
+		break;
+		case "whileChNotEqN" :
+			introjs.refresh();
+			$(".introjs-helperLayer").one("transitionend", function() {
+				$(".introjs-tooltip").removeClass('hide');
+				var text = '<span id="tooltipCndtn" style="font-family: monospace; font-weight: bold;">'
+							+ '<span  id="tooltipFront1">ch</span> != "y"</span></li>';
+				tooltipBooletsAppendAndTypeText("#whileChNotEqN", "#whileChNotEqN", text, "ul", function() {
+					trueOrFalseCondition("#whileChNotEqN", "#tooltipFront1", ch == "n", ch , ch, function() {
+						$("#tooltipFront1").removeAttr("style");
+						introNextSteps("#animationDiv", "enterNoInConsole", "");
+						$('.introjs-nextbutton').show();
+					});
+				});
 			});
 		break;
 		case "head"+ printCount +"Null":
@@ -207,13 +232,19 @@ function initIntroJS() {
 		case "doWhileLoop" :
 			$(".introjs-helperLayer").one("transitionend", function() {
 				$("#createHead, #ch, #coeffExp").removeClass("background-color-yellow");
-				$("#temp, #createinitTemp").addClass("background-color-yellow");
-				$("#createinitTemp , #temp").addClass("background-color-yellow");
-				var text = "Control enters into <y>do-while</y> body\n Allocate memory for <y>struct</y> variable <y>temp</y>.";
-				tooltipBooletsAppendAndTypeText("#coeffExp", "#createinitTemp", text, "ul", function() {
-					introNextSteps("#animationDiv", "allocateMemory", "");
-					$('.introjs-nextbutton').show();
-				});
+					if (ch == "n") {
+						introNextSteps("#whileChNotEqN","", "right");
+						introjs.refresh();
+						setTimeToIntroGoesNextStep();
+					} else {
+						$("#temp, #createinitTemp").addClass("background-color-yellow");
+						$("#createinitTemp , #temp").addClass("background-color-yellow");
+						var text = "Control enters into <y>do-while</y> body\n Allocate memory for <y>struct</y> variable <y>temp</y>.";
+						tooltipBooletsAppendAndTypeText("#coeffExp", "#createinitTemp", text, "ul", function() {
+							introNextSteps("#animationDiv", "allocateMemory", "");
+							$('.introjs-nextbutton').show();
+						});
+					}
 			});
 		break;
 		case "readValuesFromKeyBord":
@@ -316,6 +347,12 @@ function initIntroJS() {
 				setTimeToIntroGoesNextStep();
 			});
 		break;
+		case "addTermIfLogic":
+			$(".z-index1000000, .background-color-yellow").removeClass("z-index1000000 background-color-yellow");
+			$(".introjs-helperLayer").one("transitionend", function() {
+				ifWhileFalse();
+			});
+		break;
 		}
 	});
 	introjs.setOption('showStepNumbers', false);
@@ -369,11 +406,21 @@ function ifWhileFalse() {
 	$(".user-btn").remove();
 	$("#whileP1NotNull").removeClass("background-color-yellow").removeAttr('style');
 	$("#ifp1EqNullAfter").addClass("background-color-yellow");
+	if(p1 == null || arr[1] != listExp[0]) {
+		$('.introjs-tooltiptext').append('<ul></ul>');
+	}
 	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
-			+ "<span  id='p1Val'>p1</span> == NULL</span></li>";
+				+ "<span  id='p1Val'>p1</span> == NULL</span>";
 	tooltipBooletsAppendAndTypeText("#whileP1NotNull", "#ifp1EqNullAfter", text, "li", function() {
-		trueOrFalseCondition("#ifp1EqNullAfter", "#p1Val", address.length == 1, "NULL", firstAdd, function() {
-			if(address.length == 1) {
+		trueOrFalseCondition("#ifp1EqNullAfter", "#p1Val", (p1 == null), "NULL", address[p1NdP2Val + 1], function() {
+			if(p1 == null) {
+				$("#tempTpNxtP2").addClass("background-color-yellow");
+				$("#ifp1EqNullAfter").removeClass("background-color-yellow").removeAttr("style");
+				var text = "Now store the <y>temp</y> value (i.e. <y>"+ randomAdd +"</y>) to the <y>next</y> field of <y>p2</y>.";
+				tooltipBooletsAppendAndTypeText("#ifp1EqNullAfter", "#tempTpNxtP2", text, "li", function() {
+					introNextSteps("#animationDiv", "storeTempValueToP2Next", "");
+					$('.introjs-nextbutton').show();
+				});
 			} else {
 				$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
 						+ "onclick='checkIfP1ExpNdTmpExpSame()'>Next &#8594;</a>");
@@ -418,8 +465,8 @@ function ifBothp1ExpAndTempExpAreSame() {
 	$("#p1EqTemp").removeClass("background-color-yellow").removeAttr('style');
 	$("#p1PlsTemp").addClass("background-color-yellow");
 	arrow("#p1EqTemp", "#p1PlsTemp", function() {
-		var text = "Here, we are adding <y>coeff</y> field of <y>p1</y> and <y>coeff</y> field of <y>temp</y> them store the result into "
-					+ " the <y>coeff</y> field of <y>p1</y>.";
+		var text = "<li>Here, we are adding <y>coeff</y> field of <y>p1</y> and <y>coeff</y> field of <y>temp</y> them store the result into "
+					+ " the <y>coeff</y> field of <y>p1</y>.</li>";
 		$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 		typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
 			introNextSteps("#animationDiv", "addp1CoeffAndTempCoeff", "");
@@ -458,10 +505,10 @@ function checkIfP1andP2AreSameOrNot() {
 	$("#p1LessTemp").removeClass("background-color-yellow").removeAttr("style");
 	$("#p2EqP1").addClass("background-color-yellow");
 	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
-				+ "<span  id='p1Value'>p1</span> == <span id='p2Value'>p2</span></span></li>";
+				+ "<span  id='p2Value'>p2</span> == <span id='p1Value'>p1</span></span></li>";
 	tooltipBooletsAppendAndTypeText("#p1LessTemp", "#p2EqP1", text, "li", function() {
 		flip("#p1Value", address[p1NdP2Val + 1], function() {
-			flip("#p2Value", address[p1NdP2Val + 1], function() {
+			flip("#p2Value", (address.length == 2) ? address[p1NdP2Val + 1] : address[p1NdP2Val - 1], function() {
 				var text = "";
 				if (p2 == p1) {
 					text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
@@ -478,12 +525,12 @@ function checkIfP1andP2AreSameOrNot() {
 					text = "Since it evaluates to <r>false</r>."	
 					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
-						/*$("#p2EqP1").removeClass("background-color-yellow").removeAttr("style");
-						$("#p1ToTmpNxt, #tmpToHead1").addClass("background-color-yellow");
-						arrow("#p2EqP1", "#p1ToTmpNxt", function() {
+						$("#p2EqP1").removeClass("background-color-yellow").removeAttr("style");
+						$("#p1ToTmpNxt1, #tmpToP2Nxt").addClass("background-color-yellow");
+						arrow("#p2EqP1", "#p1ToTmpNxt1", function() {
 							$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
 									+ "onclick='storep1ToTmpNdTmpToHead()'>Next &#8594;</a>");
-						});*/
+						});
 					});
 				}
 			});
@@ -493,15 +540,20 @@ function checkIfP1andP2AreSameOrNot() {
 
 function storep1ToTmpNdTmpToHead() {
 	$(".user-btn").remove();
-	var text = "Here, store the <y>p1</y> value (i.e. <y>"+ address[p1NdP2Val + 1]  +"</y>) is stored in the <y>next</y> field of <y>temp</y>"
-				+ " node also assign <y>temp</y> value (i.e. <y>"+ randomAdd +"</y>) to <y>head</y> node.";
+	if (p2 == p1) {
+		var text = "<li>Here, store the <y>p1</y> value (i.e. <y>"+ address[p1NdP2Val + 1]  +"</y>)into the <y>next</y> "
+					+ "field of <y>temp</y> node also assign <y>temp</y> value (i.e. <y>"+ randomAdd +"</y>) to <y>head</y> node.</li>";
+	} else {
+		var text = "<li>Here, store the <y>p1</y> value (i.e. <y>"+ address[p1NdP2Val + 1]  +"</y>) into the <y>next</y> "
+					+ "field of <y>temp</y> node also assign <y>temp</y> value (i.e. <y>"+ randomAdd +"</y>) to the "
+					+ " <y>next</y> field of <y>p2</y> node.</li>";
+	}
 	$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 	typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
 		introNextSteps("#animationDiv", "storep1AndTempValue", "");
 		$('.introjs-nextbutton').show();
 	});
 }
-
 
 function trueOrFalseCondition(selector1, selector2, condition, value1, value2, callBackFunction) {
 	travel(selector1, $(".introjs-tooltiptext ul li:last-child span"), function() {

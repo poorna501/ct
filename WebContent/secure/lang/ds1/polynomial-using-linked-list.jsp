@@ -278,14 +278,26 @@ var ch
 			}
 		});
 		$(selector).on("keyup", function(e) {
-			if (($(this).val() != "") && (($(this).val().toLowerCase() == "y") || ($(this).val().toLowerCase() == "n"))) {
-				ch = $(this).val().toLowerCase();
-				$(".introjs-nextbutton").show();
+			if (nodeCount < SIZE - 1) {
+				if (($(this).val() != "") && (($(this).val().toLowerCase() == "y") || ($(this).val().toLowerCase() == "n"))) {
+					ch = $(this).val().toLowerCase();
+					$(".introjs-nextbutton").show();
+				} else {
+					$('.length-error-text').remove();
+					$('.introjs-tooltiptext').append("<span class='ct-code-b-red length-error-text'><br/>Please enter (y/n (or) Y/N).</span>");
+					$(".introjs-nextbutton").hide();
+				}
 			} else {
-				$('.length-error-text').remove();
-				$('.introjs-tooltiptext').append("<span class='ct-code-b-red length-error-text'><br/>Please enter (y/n (or) Y/N).</span>");
-				$(".introjs-nextbutton").hide();
-			}
+				if (($(this).val() != "") && ($(this).val().toLowerCase() == "n")) {
+					ch = $(this).val().toLowerCase();
+					$(".introjs-nextbutton").show();
+				} else {
+					$('.length-error-text').remove();
+					$('.introjs-tooltiptext').append("<span class='ct-code-b-red length-error-text'><br/>Please enter (n (or) N). because "
+								+" we are restricted to allow list size to (<y>5</y> nodes) only</span>");
+					$(".introjs-nextbutton").hide();
+				}
+			} 
 			introjs.refresh();
 		});
 	}
@@ -368,6 +380,7 @@ var ch
 							</div>
 							<span id="testBtn" class="btn btn-sm btn-success hide"></span>
 							<span id="nodeCreateBtn" class="btn btn-sm btn-success hide"></span>
+							<span id="yesOrNoBtn" class="btn btn-sm btn-success hide"></span>
 						</div>
 					</div>
 					<canvas class="opacity00" id="canvas" width="900" height="500"></canvas>
