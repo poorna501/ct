@@ -437,16 +437,8 @@ PolynomialLL.prototype.chYesOrNoCondition = function() {
 			flag = false;
 			ch = "y";
 			this.cmd("step");
-			this.cmd("step");
-			this.cmd("step");
-			this.cmd("step");
-			this.cmd("step");
-			this.cmd("step");
-			this.cmd("step");
-			$("#create").click();
-			doPlayPause();
-			/*$("#preTemp").removeClass("hide");
-			this.introNextStep("#preTemp", "right", "hide");*/
+			$("#mainDiv").removeClass("hide");
+			this.introNextStep("#print2", "right", "hide");
 			this.cmd("step");
 		} else {
 			console.log("User entered ch is Yes");

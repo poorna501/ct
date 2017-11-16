@@ -112,6 +112,8 @@ function initIntroJS() {
 					printCount++;
 					$("#yesOrNoBtn").click();
 					doPlayPause();
+				} else if (animateStep == "head2Null") {
+					
 				} else {
 					doPlayPause();
 				}
@@ -299,7 +301,7 @@ function initIntroJS() {
 			});
 		break;
 		case "preAddTerm" :
-			$("#createCall1").removeClass("z-index1000000");
+			$("#createCall"+ printCount).removeClass("z-index1000000");
 			$("#callAddTerm").addClass("z-index1000000");
 			$(".introjs-helperLayer").one("transitionend", function() {
 				$("#structDiv, #mainDiv").addClass("hide");
