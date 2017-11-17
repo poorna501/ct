@@ -83,7 +83,7 @@ function initIntroJS() {
 			});
 		break;
 		case "preMain":
-			$('#preMain').removeClass("hide").append('<span id="headsDex">poly head1 = NULL, head2 = NULL,<br/> head3 = NULL;</span>'
+			$('#preMain').removeClass("hide").append('<span id="headsDex">poly head1 = NULL, head2 = NULL,<br/>\thead3 = NULL;</span>'
 					+'\n<span id="headsDes"></span>');
 			introjs.refresh();
 			$(".introjs-helperLayer").one("transitionend", function() {
@@ -102,18 +102,18 @@ function initIntroJS() {
 					introNextSteps("#btnsDiv", "", "left");
 					setTimeToIntroGoesNextStep();
 				} else if (animateStep == "readCoeffAndExpValues") {
-						$("#testBtn").click();
+					$('.btn').attr("disabled", false);
+					$("#testBtn").click();
 					doPlayPause();
 				} else if (animateStep == "allocateMemory") {
-					console.log("hello Poorna click node createBtn");
+					$('.btn').attr("disabled", false);
 					$("#nodeCreateBtn").click();
 					doPlayPause();
-				} else if (animateStep == "enterNoInConsole") {
-					printCount++;
+				} else if (animateStep == "enterNoInConsole" || animateStep == "head2Null") {
+					$('.btn').attr("disabled", false);
+					if (animateStep == "enterNoInConsole") {printCount++;}
 					$("#yesOrNoBtn").click();
 					doPlayPause();
-				} else if (animateStep == "head2Null") {
-					
 				} else {
 					doPlayPause();
 				}
@@ -121,8 +121,11 @@ function initIntroJS() {
 		break;
 		case "btnsDiv":
 			$("#btnsDiv").removeClass("opacity00");
+			$(".arrow").remove();
+			$(".y").removeAttr("Style").removeClass('y');
 			$(".introjs-helperLayer").one("transitionend", function() {
-				$(".btn").removeAttr("disabled");
+				printCount = 1;
+				$('.btn').attr("disabled", false);
 			});
 		break;
 		case "createInMain":
@@ -132,8 +135,36 @@ function initIntroJS() {
 				setTimeToIntroGoesNextStep();
 			});
 		break;
+		case "displayInMain" :
+			$(".introjs-helperLayer").one("transitionend", function() {
+				$("#displayInMain").removeClass("opacity00");
+				introNextSteps("#displayCall"+ printCount, "", "right");
+				setTimeToIntroGoesNextStep();
+			});
+		break;
+		case "displayCall" + printCount :
+			$(".introjs-helperLayer").one("transitionend", function() {
+				var val = (address.length == 0) ? "NULL" : firstAdd;
+				$(".introjs-tooltip").removeClass('hide');
+				$("#head" + printCount + "Name").effect("highlight", {color: 'blue'}, 500, function() {
+					flip("#head" + printCount + "Name", val, function() {
+						$(".introjs-tooltip").removeClass('hide');
+						var text = "Here, we initialize the <y>head"+ printCount +"</y> to <y>"+ val +"</y>.<br/><br/> After initialization"
+								+ " call the <y>print</y> method and pass an argument <y>head"+ printCount +"</y> (<y>"+ val 
+								+ "</y>) to <y>print</y> method.";
+						typing(".introjs-tooltiptext",text,function() {
+							buttonName = "display";
+							$("#preTemp").removeClass("hide");
+							introNextSteps("#preTemp", "head"+ printCount +"Null", "right");
+							$('.introjs-nextbutton').show();
+						});
+					});
+				});
+			});
+		break;
 		case "print" + printCount :
 			$(".introjs-helperLayer").one("transitionend", function() {
+				$(".arrow").remove();
 				introNextSteps("#outputDiv", "text" + printCount, "");
 				setTimeToIntroGoesNextStep();
 			});
@@ -162,6 +193,7 @@ function initIntroJS() {
 						});
 					break;
 					case "enterYesOrNoToContinue" :
+						arrow("#console2", "#console2");
 						$('.output-console-body').append('<div id="yesOrNoText'+ outputCount+ '">Do u want another node(y/n): '
 								+ ' <div class="position" id="yesOrNotDiv'+ outputCount+ '"><input class="output-scanf-line input" '
 								+ 'id="yesOrNoVal'+ outputCount+ '" size="15" maxlength="2"/></div></div>');
@@ -228,6 +260,11 @@ function initIntroJS() {
 					introjs.refresh();
 					$("#createCall" + printCount).addClass("z-index1000000");
 					createNodeAnimation()
+				} else if (buttonName == "display") {
+					displayMethodDef();
+					introjs.refresh();
+					$("#displayCall" + printCount).addClass("z-index1000000");
+					displayNodeAnimation();
 				}
 			});
 		break;
@@ -342,6 +379,7 @@ function initIntroJS() {
 			});
 		break;
 		case "yesOrNoQus" :
+			arrow("#console2", "#console2");
 			$(".z-index1000000, .background-color-yellow").removeClass("z-index1000000 background-color-yellow");
 			$("#preAddTerm").addClass("hide");
 			$(".introjs-helperLayer").one("transitionend", function() {
@@ -576,8 +614,8 @@ function trueOrFalseCondition(selector1, selector2, condition, value1, value2, c
 	});
 }
 
-
 function createMethodDef() {
+	$(".y").removeAttr("Style").removeClass('y');
 	var createMethodCode = '<span id="methodName">poly create(<span id="createHead">poly head</span>) {</span>\n'
 		+ '\t<span id="ch">char ch;</span>\n'
 		+ '\t<span id="coeffExp">int coeff, exp;</span>\n'
@@ -599,7 +637,7 @@ function createMethodDef() {
 }
 
 function addTermMethodDefinition() {
-	$('.y').removeClass('y');
+	$(".y").removeClass('y').removeAttr("Style");
 	var addtermCode = '<span id="addTermFunName">poly addterm(<span id="aCallHndT">poly head, poly temp</span>) {</span>\n'
 			+ '\t<span id="p1ndp2Dec">poly p1,p2;</span>\n'
 			+ '\t<Span id="p1NdP2Init">p1 = p2 = head;</span>\n'
@@ -627,6 +665,20 @@ function addTermMethodDefinition() {
 			+ '\t<span id="rtnHead">return head;</span>\n' + '}\n';
 	$("#preAddTerm").empty().append(addtermCode);
 }
+
+function displayMethodDef() {
+	$(".y").removeAttr("Style").removeClass('y');
+	var displayMethodCode = '<span id="methodName"><span id="printMthdName">void print(<span id="displayHead">poly head</span>) {</span>\n'
+		+ '\t<span id="storeHeadToTmp">poly temp = head;</span>\n'
+		+ '\t<span id="displayWhileCon">while(temp != NULL) {\n'
+        + '\t\tprintf("%d X^ %d --->", temp -> coeff, temp -> exp);\n'
+        + '\t\ttemp = temp -> next;\n'
+    	+'\t}</span>\n'
+    	+ '\t<span id="printNull">printf("NULL\\n");</span>\n'
+		+ '}\n</span>';
+	$('#preTemp').empty().append(displayMethodCode);
+}
+
 
 function createNodeAnimation() {
 	$("#createHead").addClass("background-color-yellow");
@@ -661,6 +713,17 @@ function addTermFunctionAnimation() {
 				$('.introjs-nextbutton').show();
 			});
 		});
+	});
+}
+
+function displayNodeAnimation() {
+	$("#displayHead, #storeHeadToTmp").addClass("background-color-yellow");
+	$(".introjs-tooltip").removeClass("hide");
+	var value = (address.length == 0) ? "NULL" : firstAdd;
+	var text = "The <y>"+ value + "</y> will be stored in <y>head</y>."
+	tooltipBooletsAppendAndTypeText("#printMthdName", "#printMthdName", text, "ul", function() {
+		//introNextSteps("#animationDiv", "printVariableDec", "");
+		$(".introjs-nextbutton").show();
 	});
 }
 
