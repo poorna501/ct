@@ -122,7 +122,7 @@ function initIntroJS() {
 		case "btnsDiv":
 			$("#btnsDiv").removeClass("opacity00");
 			$(".arrow").remove();
-			$(".y").removeAttr("Style").removeClass('y');
+			$(".background-color-yellow, .z-index1000000").removeAttr("Style").removeClass('background-color-yellow z-index1000000');
 			$(".introjs-helperLayer").one("transitionend", function() {
 				printCount = 1;
 				$('.btn').attr("disabled", false);
@@ -144,7 +144,11 @@ function initIntroJS() {
 		break;
 		case "displayCall" + printCount :
 			$(".introjs-helperLayer").one("transitionend", function() {
-				var val = (address.length == 0) ? "NULL" : firstAdd;
+				if (printCount == 2) {
+					$("#displayCall1").removeClass("z-index1000000");
+				}
+				var value = (printCount == 1) ? address1[0] : address2[0];
+				var val = (address.length == 0) ? "NULL" : value;
 				$(".introjs-tooltip").removeClass('hide');
 				$("#head" + printCount + "Name").effect("highlight", {color: 'blue'}, 500, function() {
 					flip("#head" + printCount + "Name", val, function() {
@@ -264,7 +268,8 @@ function initIntroJS() {
 					displayMethodDef();
 					introjs.refresh();
 					$("#displayCall" + printCount).addClass("z-index1000000");
-					displayNodeAnimation();
+					printCount++;
+					printNodeAnimation();
 				}
 			});
 		break;
@@ -391,6 +396,19 @@ function initIntroJS() {
 			$(".z-index1000000, .background-color-yellow").removeClass("z-index1000000 background-color-yellow");
 			$(".introjs-helperLayer").one("transitionend", function() {
 				ifWhileFalse();
+			});
+		break;
+		case "displayWhileCon":
+			$(".introjs-helperLayer").one("transitionend", function() {
+				printfWhileLoopAnimation();
+			});
+		break;
+		case "printNull":
+			$(".introjs-helperLayer").one("transitionend", function() {
+				arrow("#printNull", "#printNull", function() {
+					introNextSteps("#animationDiv", "whileLoopAnimation", "");
+					setTimeToIntroGoesNextStep();
+				})
 			});
 		break;
 		}
@@ -615,7 +633,8 @@ function trueOrFalseCondition(selector1, selector2, condition, value1, value2, c
 }
 
 function createMethodDef() {
-	$(".y").removeAttr("Style").removeClass('y');
+	$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
+	$(".arrow").remove();
 	var createMethodCode = '<span id="methodName">poly create(<span id="createHead">poly head</span>) {</span>\n'
 		+ '\t<span id="ch">char ch;</span>\n'
 		+ '\t<span id="coeffExp">int coeff, exp;</span>\n'
@@ -637,7 +656,8 @@ function createMethodDef() {
 }
 
 function addTermMethodDefinition() {
-	$(".y").removeClass('y').removeAttr("Style");
+	$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
+	$(".arrow").remove();
 	var addtermCode = '<span id="addTermFunName">poly addterm(<span id="aCallHndT">poly head, poly temp</span>) {</span>\n'
 			+ '\t<span id="p1ndp2Dec">poly p1,p2;</span>\n'
 			+ '\t<Span id="p1NdP2Init">p1 = p2 = head;</span>\n'
@@ -667,12 +687,13 @@ function addTermMethodDefinition() {
 }
 
 function displayMethodDef() {
-	$(".y").removeAttr("Style").removeClass('y');
+	$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
+	$(".arrow").remove();
 	var displayMethodCode = '<span id="methodName"><span id="printMthdName">void print(<span id="displayHead">poly head</span>) {</span>\n'
 		+ '\t<span id="storeHeadToTmp">poly temp = head;</span>\n'
-		+ '\t<span id="displayWhileCon">while(temp != NULL) {\n'
-        + '\t\tprintf("%d X^ %d --->", temp -> coeff, temp -> exp);\n'
-        + '\t\ttemp = temp -> next;\n'
+		+ '\t<span id="displayWhileCon">while(<span id="printTempNotEqNull">temp != NULL</span>) {\n'
+        + '\t\t<span id="whilePrint">printf("%d X^ %d --->", temp -> coeff, temp -> exp);</span>\n'
+        + '\t\t<span id="whileTmp">temp = temp -> next;</span>\n'
     	+'\t}</span>\n'
     	+ '\t<span id="printNull">printf("NULL\\n");</span>\n'
 		+ '}\n</span>';
@@ -716,14 +737,43 @@ function addTermFunctionAnimation() {
 	});
 }
 
-function displayNodeAnimation() {
+function printNodeAnimation() {
 	$("#displayHead, #storeHeadToTmp").addClass("background-color-yellow");
 	$(".introjs-tooltip").removeClass("hide");
 	var value = (address.length == 0) ? "NULL" : firstAdd;
 	var text = "The <y>"+ value + "</y> will be stored in <y>head</y>."
 	tooltipBooletsAppendAndTypeText("#printMthdName", "#printMthdName", text, "ul", function() {
-		//introNextSteps("#animationDiv", "printVariableDec", "");
-		$(".introjs-nextbutton").show();
+		var text = "Here, we are storing <y>head</y> value (i.e. <y>"+ value + "</y>) into <y>temp</y> node."
+		tooltipBooletsAppendAndTypeText("#printMthdName", "#storeHeadToTmp", text, "li", function() {
+			introNextSteps("#animationDiv", "printVariableDec", "");
+			$(".introjs-nextbutton").show();
+		});
+	});
+}
+
+function printfWhileLoopAnimation() {
+	$("#displayHead, #storeHeadToTmp").removeAttr("style").removeClass("background-color-yellow");
+	$("#printTempNotEqNull").addClass("background-color-yellow");
+	$(".introjs-tooltip").removeClass("hide");
+	var tempVal = (address.length == 0) ? "NULL" : firstAdd;
+	var text = '<span id="tooltipCndtn" style="font-family: monospace; font-weight: bold;">'
+		+ '<span  id="tooltipFront1">temp</span> != NULL</span></li>';
+	tooltipBooletsAppendAndTypeText("#storeHeadToTmp", "#displayWhileCon", text, "ul", function() {
+		var value = (printCount == 2) ? address1[0] : address2[0];
+		console.log("in print while count = " + firstAdd);
+		trueOrFalseCondition("#printTempNotEqNull", "#tooltipFront1", (address1.length != 0 || address2.length != 0), value, "NULL", function() {
+			if (address1.length != 0 || address2.length != 0) {
+				arrow("#printTempNotEqNull", "#whilePrint", function() {
+					$("#printTempNotEqNull").removeAttr("style").removeClass("background-color-yellow");
+					$("#whilePrint, #whileTmp").addClass("background-color-yellow");
+					introNextSteps("#animationDiv", "printAnimation", "");
+					$(".introjs-nextbutton").show();
+				});
+			} else {
+				introNextSteps("#printNull", "", "");
+				$(".introjs-nextbutton").show();
+			}
+		});
 	});
 }
 
