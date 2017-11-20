@@ -45,6 +45,7 @@ var indexM1 = indexM2 = indexM3 = 0
 var ButtonArr = [];
 var flag = true, ch = "y", name; 
 var headPos = 1, p1NdP2Val = p1Value = whenCreateClick = 0;
+t3 = {};
 
 function PolynomialLL(am, w, h) {
 	this.init(am, w, h);
@@ -403,7 +404,6 @@ PolynomialLL.prototype.yesOrNoQus = function() {
 	this.chYesOrNoCondition();
 	return this.commands;
 }
-
 
 PolynomialLL.prototype.chYesOrNoCondition = function() {
 	if (flag) {
@@ -1104,15 +1104,31 @@ PolynomialLL.prototype.addition = function(head1, head2, operation) {
 	t1 = head1;
 	t2 = head2;
 	
+	$("#mainDiv").removeClass("hide");
+	if (whenCreateClick == 2) {
+		whenCreateClick = 1;
+		doPlayPause();
+	}
+	$('#headsDes').removeAttr("style").empty().append('\n<div class="opacity00" id="additionInMain">'
+			+ '\t<span id="addCll1">head3 = <span id="mthdNme">add</span>(<span id="head1Name" class="position">head1</span>,'
+			+ ' <span id="head2Name" class="position">head2</span> );</span></span>\n'
+			+ '\t<span id="printCall2">print(<span id="head3Name" class="position">head3</span>);</span></span>\n</div>');
+	
+	if (operation == "sub") {
+		$("#mthdNme").text("sub")
+	}
+	this.cmd("Step");
+	this.introNextStep("#additionInMain", "bottom", "hide");
 	this.createTempararyNodes("sum");
 	this.cmd("Step");
 	this.storeT1AndT2();
 	this.cmd("Step");
 	this.idChange();
 	var index1 = index2 = index3 =  0;
+	this.introNextStep("#additionLogic", "right", "hide");
 	
 	while(t1 != null && t2 != null) {
-		t3 = {};
+		//t3 = {};
 		if(parseInt(t1["exp"]) == parseInt(t2["exp"])) {
 			t3["coeff"] = listCoeff[nodeCount] = parseInt(t1["coeff"]) + parseInt(t2["coeff"]);
 			t3["exp"] = listExp[nodeCount] = t1["exp"];
@@ -1168,6 +1184,8 @@ PolynomialLL.prototype.commanCodeForAddSubAndMul = function() {
 	this.cmd("Delete", this.sumLabel);
 	this.cmd("Delete", this.sumId);
 	this.cmd("Step");
+	
+	
 }
 
 PolynomialLL.prototype.T1ExpGraterAndT1NotNull = function(index1) {
@@ -1212,7 +1230,6 @@ PolynomialLL.prototype.T2ExpGraterAndT2NotNull = function(index2) {
 	sum = addterm(sum,t3);
 	t2 = t2["next"];
 }
-
 
 PolynomialLL.prototype.t1IsGreaterThanT2 = function(index1, status) {
     
@@ -1578,8 +1595,12 @@ PolynomialLL.prototype.commonCodeForAddAndSub = function(operation) {
 	head3 = this.addition(head1, head2, operation);
 	this.cmd("Step");
 	head3 = sum;
-	this.print(head3);
 	
+	$("#preMain, #headsDes").removeClass("hide");
+	this.introNextStep("#printCall2", "right", "hide");
+	
+	
+	this.print(head3);
 	this.cmd("Step");
 	this.cmd("Step");
 	for (let i = 0; i < nodeCount3; i++) {
@@ -1598,29 +1619,6 @@ PolynomialLL.prototype.commonCodeForAddAndSub = function(operation) {
 		this.addVal3[i] = this.nextIndex++;
 	}
 	
-	// empty Animation bord
-	/*
-	 * for (let i = 0; i < nodeCount1; i++) { this.cmd("Delete",
-	 * this.llCoeff1[i]); this.cmd("Delete", this.llExp1[i]); this.cmd("Delete",
-	 * this.llNext1[i]); this.cmd("Delete", this.addVal1[i]);
-	 * 
-	 * this.llCoeff1[i] = this.nextIndex++; this.llExp1[i] = this.nextIndex++;
-	 * this.llNext1[i] = this.nextIndex++; this.addVal1[i] = this.nextIndex++;
-	 *  }
-	 * 
-	 * for (let i = 0; i < nodeCount2; i++) { this.cmd("Delete",
-	 * this.llCoeff2[i]); this.cmd("Delete", this.llExp2[i]); this.cmd("Delete",
-	 * this.llNext2[i]); this.cmd("Delete", this.addVal2[i]);
-	 * 
-	 * this.llCoeff2[i] = this.nextIndex++; this.llExp2[i] = this.nextIndex++;
-	 * this.llNext2[i] = this.nextIndex++; this.addVal2[i] = this.nextIndex++;
-	 *  }
-	 */
-/*
- * this.cmd("SetText", this.head1Id, null); this.cmd("SetText", this.head2Id,
- * null); head1 = head2 = head3 = null; nodeCount1 = nodeCount2 = 0;
- */
-	
 	this.cmd("Delete", this.dummyNull1);
 	this.cmd("SetText", this.head3Id, null);
 	this.cmd("Step");
@@ -1628,7 +1626,12 @@ PolynomialLL.prototype.commonCodeForAddAndSub = function(operation) {
 
 PolynomialLL.prototype.addNodes = function() {
 	this.commands = new Array();
-	this.commonCodeForAddAndSub("sum")
+	buttonName = "addition";
+	this.commonCodeForAddAndSub("sum");
+	
+	this.introNextStep("#btnsDiv", "left", "hide");
+	this.cmd("Step");
+	this.cmd("Step");
 	return this.commands;
 }
 
@@ -1636,9 +1639,13 @@ PolynomialLL.prototype.subNodes = function() {
 	this.commands = new Array();
 	head3 = {};
 	console.log("subtraction");
+	buttonName = "addition";
+	this.commonCodeForAddAndSub("sub");
+	//head3 = subtraction(head1, head2);
 	
-	this.commonCodeForAddAndSub("sub")
-	head3 = subtraction(head1, head2);
+	this.cmd("Step");
+	this.introNextStep("#btnsDiv", "left", "hide");
+	this.cmd("Step");
 	return this.commands;
 }
 
@@ -1648,20 +1655,16 @@ PolynomialLL.prototype.mulNodes = function() {
 	head3 = mul(head1, head2);
 	this.cmd("Step");
 	
-	
 	this.multiplicationAnimation();
 	this.cmd("Step");
-
 	this.print(head3);
-	
 	this.cmd("Step");
+	
 	for (let i = 0; i < nodeCount3; i++) {
-		
 		this.cmd("Delete", this.llCoeff3[i]);
 		this.cmd("Delete", this.llExp3[i]);
 		this.cmd("Delete", this.llNext3[i]);
 		this.cmd("Delete", this.addVal3[i]);
-		
 		this.cmd("Delete", this.displayVal1[i]);
 		this.cmd("Delete", this.dummyarrow1[i]);
 		
@@ -1670,7 +1673,6 @@ PolynomialLL.prototype.mulNodes = function() {
 		this.llNext3[i] = this.nextIndex++;
 		this.addVal3[i] = this.nextIndex++;
 	}
-	
 	this.cmd("Delete", this.dummyNull1);
 	this.cmd("SetText", this.head3Id, null);
 	this.cmd("Step");
@@ -1722,7 +1724,6 @@ PolynomialLL.prototype.multiplicationAnimation = function() {
 	return sum;
 	
 }
-
 
 PolynomialLL.prototype.assignT1Value = function() {
 	this.dummyCoeff = this.nextIndex++;
@@ -1948,6 +1949,7 @@ function decSumAndSubValues() {
 	head3 = null;
 	flag = "addition";
 	nodeCount3 = 0;
+	whenCreateClick++;
 	listCoeff3 = []; listExp3 = []; address3 = [];
 }
 

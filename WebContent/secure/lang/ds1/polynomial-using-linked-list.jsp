@@ -154,6 +154,10 @@ r {
 	color: blue;
 }
 
+.green {
+	color: green;
+}
+
 
 .user-btn {
 	background-color: green;

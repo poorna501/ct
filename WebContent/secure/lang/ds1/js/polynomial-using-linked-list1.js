@@ -129,16 +129,18 @@ function initIntroJS() {
 			});
 		break;
 		case "createInMain":
-			$(".introjs-helperLayer").one("transitionend", function() {
-				$("#createInMain").removeClass("opacity00");
-				introNextSteps("#print1", "", "left");
-				setTimeToIntroGoesNextStep();
-			});
+			inMainIntro("#createInMain", "#print1", "left")
 		break;
 		case "displayInMain" :
+			inMainIntro("#displayInMain", "#displayCall" + printCount, "right")
+		break;
+		case "additionInMain" :
+			inMainIntro("#additionInMain", "#addCll" + printCount, "right")
+		break;
+		case "print" + printCount :
 			$(".introjs-helperLayer").one("transitionend", function() {
-				$("#displayInMain").removeClass("opacity00");
-				introNextSteps("#displayCall"+ printCount, "", "right");
+				$(".arrow").remove();
+				introNextSteps("#outputDiv", "text" + printCount, "");
 				setTimeToIntroGoesNextStep();
 			});
 		break;
@@ -166,11 +168,26 @@ function initIntroJS() {
 				});
 			});
 		break;
-		case "print" + printCount :
+		case "addCll" + printCount :
 			$(".introjs-helperLayer").one("transitionend", function() {
-				$(".arrow").remove();
-				introNextSteps("#outputDiv", "text" + printCount, "");
-				setTimeToIntroGoesNextStep();
+				$(".introjs-tooltip").removeClass("hide");
+					var value1 = (address1.length == 0) ? "NULL" : address1[0];
+					var value2 = (address2.length == 0) ? "NULL" : address2[0];
+				var text = "Here, we are storing <y>"+  value1 +"</y> to <y>head1</y> and <y>"+ value2 +"</y> to <y>"+ head2 +"</y>.";
+				typing(".introjs-tooltiptext", text, function() {
+					$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn'>Next &#8594;</a>");
+					$(".user-btn").click(function() {
+						$(".user-btn").remove();
+						flip("#head1Name", value1, function() {
+							flip("#head2Name", value2, function() {
+								$("#preTemp").removeClass("hide");
+								buttonName = "addition";
+								introNextSteps("#preTemp", "callAddMethode", "right");
+								$('.introjs-nextbutton').show();
+							});
+						});
+					});
+				});
 			});
 		break;
 		case "outputDiv" :
@@ -270,6 +287,12 @@ function initIntroJS() {
 					$("#displayCall" + printCount).addClass("z-index1000000");
 					printCount++;
 					printNodeAnimation();
+				} else if (buttonName == "addition") {
+					additionMethodDef();
+					introjs.refresh();
+					printCount++;
+					$("#addCall" + printCount).addClass("z-index1000000");
+					additionAndSubtractionAnimation();
 				}
 			});
 		break;
@@ -411,6 +434,36 @@ function initIntroJS() {
 				})
 			});
 		break;
+		case "additionLogic" :
+			$(".introjs-helperLayer").one("transitionend", function() {
+				addAndSubtractionWhileLoopAnimation();
+			});
+		break;
+		case "rtnSum" :
+			$("#preMain, #headsDes").removeClass("hide");
+			introjs.refresh();
+			$(".introjs-helperLayer").one("transitionend", function() {
+				introNextSteps("#animationDiv", "returnSum", "");
+				setTimeToIntroGoesNextStep();
+			});
+		break;
+		case "printCall2":
+			$(".introjs-helperLayer").one("transitionend", function() {
+				$(".introjs-tooltip").removeClass("hide");
+				$("#preTemp").addClass("hide");
+				var text = "Here, we are calling <y>print</y> method to print the polynomial list after performaing <y>addition</y> operation"
+							+ " and pass <y>head3</y> value (i.e. "+ sum +") as argument.";
+				tooltipBooletsAppendAndTypeText("#printCall2", "#printCall2", text, "ul", function() {
+					flip("#head3Name", (address3.length != 0) ? "NULL" : address3[0], function() {
+						introjs.refresh();
+						$("#preTemp").empty().removeClass("hide");
+						introNextSteps("#preTemp", "", "right");
+						buttonName = "display";
+						$('.introjs-nextbutton').show();
+					});
+				});
+			});
+		break;
 		}
 	});
 	introjs.setOption('showStepNumbers', false);
@@ -424,9 +477,115 @@ function initIntroJS() {
 	$('.introjs-bullets').hide();
 }
 
+function addAndSubtractionWhileLoopAnimation() {
+	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+	$("#addfrstWhileCon").addClass('background-color-yellow');
+	var text = '<span id="tooltipCndtn" style="font-family: monospace; font-weight: bold;">'
+				+ '<span  id="tooltipT1Val">t1</span> != NULL && <span  id="tooltipT2Val">t2</span> != NULL</span></span>';
+	tooltipBooletsAppendAndTypeText("#intilT2Val", "#addWhileLoop", text, "ul", function() {
+		travel("#addfrstWhileCon", ".introjs-tooltiptext ul li:last-child li", function() {
+			flip("#tooltipT1Val", (address1.length != 0) ? address1[0] : "NULL", function() {
+				flip("#tooltipT2Val", (address2.length != 0) ? address2[0] : "NULL", function() {
+					var text = "";
+					var con1 = (value = (address1.length != 0) ? address1[0] : "NULL") != "NULL";
+					var con2 = (value = (address2.length != 0) ? address2[0] : "NULL") != "NULL";
+					var text = "";
+					if (con1 && con2) {
+						trueText("#trueOrFalse1", "addAndSubtracrFirstWhileTrue");
+					} else {
+						falseText("#trueOrFalse1", "addAndSubtracrFirstWhileFalse");
+					}
+				});
+			});
+		});
+	});
+}
+
+function trueText(selector1, nameOfTheMethod) {
+	$(selector1).append('<i class="fa fa-check green"></i>');
+	text = "Since it evaluates to <y>true</y>, so the control enters into <y>while-block</y>."
+	$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+	typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+		$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+				+ "onclick='"+ nameOfTheMethod +"()'>Next &#8594;</a>");
+	});
+}
+
+function falseText(selector1, nameOfTheMethod) {
+	$(selector1).append('<i class="fa fa-times ct-code-b-red"></i>');
+	text = "Since it evaluates to <r>false</r>."
+	$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+	typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+		$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+				+ "onclick='"+ nameOfTheMethod +"()'>Next &#8594;</a>");
+	});
+}
+
+function addAndSubtracrFirstWhileTrue() {
+	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+	$(".user-btn").remove();
+}
+
+function addAndSubtracrFirstWhileFalse() {
+	$(".user-btn").remove();
+	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+	$("#addSecondWhileLoop").addClass('background-color-yellow');
+	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+				+ "<span  id='t1Val'>t1</span> != NULL</span>";
+	tooltipBooletsAppendAndTypeText("#addWhileLoop", "#addSecondWhileLoop", text, "li", function() {
+		var con = (value = (address1.length != 0) ? address1[0] : "NULL") != "NULL";
+		travel("#ifT1NotNull", $(".introjs-tooltiptext ul li:last-child span"), function() {
+			flip("#t1Val", value, function() {
+				if (con) {
+					trueText("#trueOrFalse2", "addAndSubtracrSecondWhileTrue");
+				} else {
+					falseText("#trueOrFalse2", "addAndSubtracrSecondWhileFalse");
+				}
+			});
+		});
+	});
+}
+
+function addAndSubtracrSecondWhileTrue() {
+	$(".user-btn").remove()
+	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+}
+
+function addAndSubtracrSecondWhileFalse() {
+	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+	$(".user-btn").remove();
+	$("#addSecondWhileLoop").addClass('background-color-yellow');
+	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
+				+ "<span  id='t2Val'>t2</span> != NULL</span>";
+	tooltipBooletsAppendAndTypeText("#addSecondWhileLoop", "#addSecondWhileLoop", text, "li", function() {
+		var con = (value = (address2.length != 0) ? address2[0] : "NULL") != "NULL";
+		travel("#ifT2NotNull", $(".introjs-tooltiptext ul li:last-child span"), function() {
+			flip("#t2Val", value, function() {
+				if (con) {
+					trueText("#trueOrFalse3", "addAndSubtracrThirdWhileTrue");
+				} else {
+					falseText("#trueOrFalse3", "addAndSubtracrThirdWhileFalse");
+				}
+			});
+		});
+	});
+}
+
+function addAndSubtracrThirdWhileTrue() {
+	$(".user-btn").remove();
+	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+}
+
+function addAndSubtracrThirdWhileFalse() {
+	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+	$(".user-btn").remove();
+	introNextSteps("#rtnSum", "returnSum", "right");
+	introjs.nextStep();
+}
+
 function addTermElseCondition() {
 	$('.user-btn').remove();
-	$("#ifp1EqNullBefore").removeClass("background-color-yellow").removeAttr('style');;
+	$("#ifp1EqNullBefore").removeClass("background-color-yellow").removeAttr('style');
 	$("#whileP1NotNull").addClass("background-color-yellow");
 	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
 				+ "<span  id='pOneVal'>p1</span> != NULL && <span id='p1ExpVal'>p1 -> exp</span> &gt; "
@@ -633,8 +792,6 @@ function trueOrFalseCondition(selector1, selector2, condition, value1, value2, c
 }
 
 function createMethodDef() {
-	$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
-	$(".arrow").remove();
 	var createMethodCode = '<span id="methodName">poly create(<span id="createHead">poly head</span>) {</span>\n'
 		+ '\t<span id="ch">char ch;</span>\n'
 		+ '\t<span id="coeffExp">int coeff, exp;</span>\n'
@@ -652,12 +809,10 @@ function createMethodDef() {
 		+ '\t\t<span id="readConsole2">scanf("  %c", &ch);</span></span>\n'
 		+ '\t} <span id="whileChNotEqN">while(ch != \'n\');</span></span>\n'
 		+ '\t<span id="returnHead">return head;</span>\n' + '}\n';
-	$('#preTemp').empty().append(createMethodCode);
+	methodDefCommonCode("#preTemp", createMethodCode);
 }
 
 function addTermMethodDefinition() {
-	$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
-	$(".arrow").remove();
 	var addtermCode = '<span id="addTermFunName">poly addterm(<span id="aCallHndT">poly head, poly temp</span>) {</span>\n'
 			+ '\t<span id="p1ndp2Dec">poly p1,p2;</span>\n'
 			+ '\t<Span id="p1NdP2Init">p1 = p2 = head;</span>\n'
@@ -683,12 +838,10 @@ function addTermMethodDefinition() {
 			+ '\t\t}</span>\n'
 			+ '\t}</span>\n'
 			+ '\t<span id="rtnHead">return head;</span>\n' + '}\n';
-	$("#preAddTerm").empty().append(addtermCode);
+	methodDefCommonCode("#preAddTerm", addtermCode)
 }
 
 function displayMethodDef() {
-	$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
-	$(".arrow").remove();
 	var displayMethodCode = '<span id="methodName"><span id="printMthdName">void print(<span id="displayHead">poly head</span>) {</span>\n'
 		+ '\t<span id="storeHeadToTmp">poly temp = head;</span>\n'
 		+ '\t<span id="displayWhileCon">while(<span id="printTempNotEqNull">temp != NULL</span>) {\n'
@@ -697,9 +850,75 @@ function displayMethodDef() {
     	+'\t}</span>\n'
     	+ '\t<span id="printNull">printf("NULL\\n");</span>\n'
 		+ '}\n</span>';
-	$('#preTemp').empty().append(displayMethodCode);
+	methodDefCommonCode("#preTemp", displayMethodCode);
 }
 
+function additionMethodDef() {
+	$("#structDiv, #preMain").addClass("hide");
+	var additionMethodCode = '<span id="methodName"><span id="additionMthdName">poly add(<span id="addHead1">head1</span>, '
+		+ '<span id="addhead2">head2</span>) {</span>\n'
+		+ '\t<span id="decAddVar">poly t1, t2, <span id="addvar">sum</span> = NULL, t3;</span>\n'
+        + '\t<span id="inilt1Val">t1 = head1;</span>\n'
+        + '\t<span id="intilT2Val">t2 = head2;</span>\n'
+        + '\t<span id="additionLogic"><span id="addWhileLoop">while(<span id="addfrstWhileCon">t1 != NULL && t2 != NULL</span>) {'
+        + '<span id="trueOrFalse1"></span>\n'
+		+ '\t\t<span id="createMemory1">t3 = (poly)malloc(sizeof(struct polynomial));</span>\n'
+	    + '\t\t<span id="firstWhileFirstIf">if(<span id="ifBothAreSame">t1 -> exp == t2 -> exp</span>) {</span> '
+	    + '<span id="trueOrFalse1.1"></span>\n'
+	    + '\t\t\t<span id="addTwoCoeffValues">t3 -> coeff = t1 -> coeff + t2->coeff;</span>\n'
+	    + '\t\t\t<span id="storeT1ExpToT31">t3 -> exp = t1 -> exp;</span>\n'
+	    + '\t\t\t<span id="t3NxtToNull1">t3 -> next = NULL;</span>\n'
+	    + '\t\t\t<span id="callAddmthd1">sum = addterm(sum,t3);</span>\n'
+	    + '\t\t\t<span id="t1NxtTot11">t1 = t1 -> next;</span>\n'
+	    + '\t\t\t<span id="t2NxtTot21">t2 = t2 -> next;</span>\n'
+	    + '\t\t} else if(<span id="ifT1GrtrThnT2">t1 -> exp > t2 -> exp</span>) { <span id="trueOrFalse1.2"></span>\n'
+	    + '\t\t\t<span id="storeT1CoeffToT3Coeff2">t3 -> coeff = t1 -> coeff;</span>\n'
+	    + '\t\t\t<span id="storeT1ExpToT32">t3 -> exp = t1 -> exp;</span>\n'
+	    + '\t\t\t<span id="t3NxtToNull2">t3 -> next = NULL;</span>\n'
+	    + '\t\t\t<span id="callAddmthd2">sum = addterm(sum,t3);</span>\n'
+	    + '\t\t\t<span id="t1NxtTot12">t1 = t1 -> next;</span>\n'
+	    + '\t\t} else {\n'
+	    + '\t\t\t<span id="storeT2CoeffToT3Coeff2">t3 -> coeff = t2->coeff;</span>\n'
+	    + '\t\t\t<span id="storeT2ExpToT33">t3 -> exp = t2 -> exp;</span>\n'
+	    + '\t\t\t<span id="t3NxtToNull3">t3 -> next = NULL;</span>\n'
+	    + '\t\t\t<span id="callAddmthd3">sum = addterm(sum,t3);</span>\n'
+	    + '\t\t\t<span id="t2NxtTot23">t2 = t2 -> next;</span>\n'
+	    + '\t\t}\n'
+        + '\t}</span>\n'
+        + '\t<span id="addSecondWhileLoop">while(<span id="ifT1NotNull">t1 != NULL</span>) {</span> <span id="trueOrFalse2"></span>\n'
+        + '\t\t<span id="createMemory4">t3 = (poly)malloc(sizeof(struct polynomial));</span>\n'
+        + '\t\t<span id="storeT1CoeffToT3Coeff4">t3 -> coeff = t1 -> coeff;</span>\n'
+        + '\t\t<span id="storeT1ExpToT34">t3 -> exp = t1 -> exp;</span>\n'
+        + '\t\t<span id="t3NxtToNull4">t3 -> next = NULL;</span>\n'
+        + '\t\t<span id="callAddmthd4">sum = addterm(sum,t3);</span>\n'
+        + '\t\t<span id="t1NxtTot14">t1 = t1 -> next;</span>\n'
+        + '\t}\n'
+        + '\t<span id="addThirdWhileLoop">while(<span id="ifT2NotNull">t2!=NULL</spna>) {</span> <span id="trueOrFalse3"></span>\n'
+        + '\t\t<span id="createMemory5">t3 = (poly)malloc(sizeof(struct polynomial));</span>\n'
+        + '\t\t<span id="storeT2CoeffToT3Coeff5">t3 -> coeff = t2 -> coeff;</span>\n'
+        + '\t\t<span id="storeT2ExpToT35">t3 -> exp = t2 -> exp;</span>\n'
+        + '\t\t<span id="t3NxtToNull5">t3 -> next = NULL;</span>\n'
+        + '\t\t<span id="callAddmthd5">sum = addterm(sum,t3);</span>\n'
+        + '\t\t<span id="t2NxtTot25">t2 = t2 -> next;</span>\n'
+        + '\t}</span>\n'
+        + '\t<span id="rtnSum">return sum;</span>\n'
+        + '}</span>'
+        if (buttonName == "subtraction") {
+        	$("#addvar").text("sub");
+        	$("#addTwoCoeffValues").text('t3 -> coeff = t1 -> coeff - t2->coeff;'); 
+        	$("#rtnSum").text("return sub;");
+        	for (let i = 1; i <= 5; i++) {
+        		$("#callAddmthd" + i).text("sub = addterm(sub,t3);");
+        	}
+        }
+	methodDefCommonCode("#preTemp", additionMethodCode);
+}
+
+function methodDefCommonCode(selector1, appendText) {
+	$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
+	$(".arrow").remove();
+	$(selector1).empty().append(appendText);
+}
 
 function createNodeAnimation() {
 	$("#createHead").addClass("background-color-yellow");
@@ -747,6 +966,31 @@ function printNodeAnimation() {
 		tooltipBooletsAppendAndTypeText("#printMthdName", "#storeHeadToTmp", text, "li", function() {
 			introNextSteps("#animationDiv", "printVariableDec", "");
 			$(".introjs-nextbutton").show();
+		});
+	});
+}
+
+function additionAndSubtractionAnimation() {
+	$("#additionMthdName").addClass("background-color-yellow");
+	$(".introjs-tooltip").removeClass("hide");
+	var value1 = (address1.length != 0) ? address1[0] : "NULL";
+	var value2 = (address2.length != 0) ? address2[0] : "NULL";
+	var text = 'Here we are storing <y>'+ value1 +'</y> to <y>head1</y> and <y>'+ value2 +'</y> to <y>head2</y>.';
+	tooltipBooletsAppendAndTypeText("#additionMthdName", "#additionMthdName", text, "ul", function() {
+		$("#decAddVar").addClass("background-color-yellow");
+		var text = 'Here we are declare pointer variables <y>t1</y>, <y>t2</y>, <y>t3</y> and <y>sum</y>,  the <y>sum</y> will be initialize'
+					+ ' with <y>NULL</y> value.';
+		tooltipBooletsAppendAndTypeText("#additionMthdName", "#decAddVar", text, "li", function() {
+			$("#inilt1Val").addClass("background-color-yellow");
+			var text = 'Initialize <y>t1</y> with <y>head1</y> value (i.e. <y>'+ value1 +'</y>)';
+			tooltipBooletsAppendAndTypeText("#decAddVar", "#inilt1Val", text, "li", function() {
+				$("#intilT2Val").addClass("background-color-yellow");
+				var text = 'Initialize <y>t2</y> with <y>head2</y> value (i.e. <y>'+ value2 +'</y>)';
+				tooltipBooletsAppendAndTypeText("#inilt1Val", "#intilT2Val", text, "li", function() {
+					introNextSteps("#animationDiv", "addAndSubVariableDec", "");
+					$(".introjs-nextbutton").show();
+				});
+			});
 		});
 	});
 }
@@ -814,3 +1058,13 @@ function setTimeToIntroGoesNextStep() {
 	}, 1500);
 }
 
+function inMainIntro(selector1, selector2, position) {
+	$(".introjs-helperLayer").one("transitionend", function() {
+		$(selector1).removeClass("opacity00");
+		introNextSteps(selector2, "", position);
+		setTimeToIntroGoesNextStep();
+	});
+}
+
+
+/*<i class="fa fa-times ct-code-b-red"></i>*/
