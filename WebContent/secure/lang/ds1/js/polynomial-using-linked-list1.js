@@ -1,10 +1,9 @@
-var lang;
+var lang, addressCount = 0, animationName;
 var printCount = outputCount = 1;
 var polynomialUsingLinkedList = function() {
 	lang = getURLParameter("lang");
 	initIntroJS();
 }
-
 
 function getURLParameter(sParam) { // choose the language like c or cpp...etc
 	var sPageURL = window.location.search.substring(1);
@@ -114,6 +113,9 @@ function initIntroJS() {
 					if (animateStep == "enterNoInConsole") {printCount++;}
 					$("#yesOrNoBtn").click();
 					doPlayPause();
+				} else if (animateStep == "addAndSumFirstWhileLoop") {
+					$("#addWhileLoop").addClass('background-color-yellow');
+					doPlayPause();
 				} else {
 					doPlayPause();
 				}
@@ -122,6 +124,7 @@ function initIntroJS() {
 		case "btnsDiv":
 			$("#btnsDiv").removeClass("opacity00");
 			$(".arrow").remove();
+			$("#preTemp").addClass("hide");
 			$(".background-color-yellow, .z-index1000000").removeAttr("Style").removeClass('background-color-yellow z-index1000000');
 			$(".introjs-helperLayer").one("transitionend", function() {
 				printCount = 1;
@@ -173,7 +176,7 @@ function initIntroJS() {
 				$(".introjs-tooltip").removeClass("hide");
 					var value1 = (address1.length == 0) ? "NULL" : address1[0];
 					var value2 = (address2.length == 0) ? "NULL" : address2[0];
-				var text = "Here, we are storing <y>"+  value1 +"</y> to <y>head1</y> and <y>"+ value2 +"</y> to <y>"+ head2 +"</y>.";
+				var text = "Here, we are storing <y>"+  value1 +"</y> to <y>head1</y> and <y>"+ value2 +"</y> to <y>head2</y>.";
 				typing(".introjs-tooltiptext", text, function() {
 					$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn'>Next &#8594;</a>");
 					$(".user-btn").click(function() {
@@ -366,8 +369,10 @@ function initIntroJS() {
 			});
 		break;
 		case "preAddTerm" :
+			$("#preAddTerm").removeClass("hide");
 			$("#createCall"+ printCount).removeClass("z-index1000000");
 			$("#callAddTerm").addClass("z-index1000000");
+			$('.introjs-tooltiptext').append('<ul></ul>'); 
 			$(".introjs-helperLayer").one("transitionend", function() {
 				$("#structDiv, #mainDiv").addClass("hide");
 				$(".arrow").remove()
@@ -427,6 +432,7 @@ function initIntroJS() {
 			});
 		break;
 		case "printNull":
+			$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
 			$(".introjs-helperLayer").one("transitionend", function() {
 				arrow("#printNull", "#printNull", function() {
 					introNextSteps("#animationDiv", "whileLoopAnimation", "");
@@ -440,7 +446,8 @@ function initIntroJS() {
 			});
 		break;
 		case "rtnSum" :
-			$("#preMain, #headsDes").removeClass("hide");
+			$("#preMain, #headsDes, #mainDiv").removeClass("hide");
+			$("#preAddTerm").addClass("hide");
 			introjs.refresh();
 			$(".introjs-helperLayer").one("transitionend", function() {
 				introNextSteps("#animationDiv", "returnSum", "");
@@ -454,7 +461,7 @@ function initIntroJS() {
 				var text = "Here, we are calling <y>print</y> method to print the polynomial list after performaing <y>addition</y> operation"
 							+ " and pass <y>head3</y> value (i.e. "+ sum +") as argument.";
 				tooltipBooletsAppendAndTypeText("#printCall2", "#printCall2", text, "ul", function() {
-					flip("#head3Name", (address3.length != 0) ? "NULL" : address3[0], function() {
+					flip("#head3Name", (address3.length != 0) ? address3[0] : "NULL", function() {
 						introjs.refresh();
 						$("#preTemp").empty().removeClass("hide");
 						introNextSteps("#preTemp", "", "right");
@@ -462,6 +469,35 @@ function initIntroJS() {
 						$('.introjs-nextbutton').show();
 					});
 				});
+			});
+		break;
+		case "addWhileLoop" :
+			$(".introjs-helperLayer").one("transitionend", function() {
+				$(".introjs-tooltip").removeClass("hide");
+				$("#createMemory1").removeAttr("style").removeClass("background-color-yellow");
+				var text = "Repeat the While-Loop until the condition <y>t1 != NULL && t2 != NULL</y> is evaluates to <y>false</y>.";
+				typing(".introjs-tooltiptext", text, function() {
+					introNextSteps("#animationDiv", "addAndSumFirstWhileLoop", "");
+					$(".introjs-nextbutton").show();
+				});
+			});
+		break;
+		case "secondWhileLoop":
+			$(".introjs-helperLayer").one("transitionend", function() {
+				$("#trueOrFalse1").empty().append('<i class="fa fa-times ct-code-b-red"></i>');
+				$(".introjs-tooltip").removeClass("hide");
+				$('.introjs-tooltiptext').append('<ul></ul>');
+				animationName = "secondLoop";
+				addAndSubtracrFirstWhileFalse();
+			});
+		break;
+		case "thirdWhileLoop":
+			$(".introjs-helperLayer").one("transitionend", function() {
+				$("#trueOrFalse2").empty().append('<i class="fa fa-times ct-code-b-red"></i>');
+				$(".introjs-tooltip").removeClass("hide");
+				$('.introjs-tooltiptext').append('<ul></ul>');
+				animationName = "thirdLoop";
+				addAndSubtracrSecondWhileFalse();
 			});
 		break;
 		}
@@ -516,14 +552,26 @@ function falseText(selector1, nameOfTheMethod) {
 	text = "Since it evaluates to <r>false</r>."
 	$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 	typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
-		$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
-				+ "onclick='"+ nameOfTheMethod +"()'>Next &#8594;</a>");
+		if (animationName == "secondLoop") {
+			introNextSteps("#thirdWhileLoop", "", "right");
+			$('.introjs-nextbutton').show();
+		} else {
+			$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+					+ "onclick='"+ nameOfTheMethod +"()'>Next &#8594;</a>");
+		}
 	});
 }
 
 function addAndSubtracrFirstWhileTrue() {
 	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
 	$(".user-btn").remove();
+	
+	var text = "Control enters into <y>while-Loop</y> body Allocate memory for <y>struct</y> pointer variable <y>t3</y>.";
+	tooltipBooletsAppendAndTypeText("#addWhileLoop", "#createMemory1", text, "ul", function() {
+		$("#createMemory1").addClass("background-color-yellow");
+		introNextSteps("#animationDiv", "allocateMemoryFoAddAndSub", "");
+		$('.introjs-nextbutton').show();
+	});
 }
 
 function addAndSubtracrFirstWhileFalse() {
@@ -533,7 +581,7 @@ function addAndSubtracrFirstWhileFalse() {
 	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
 				+ "<span  id='t1Val'>t1</span> != NULL</span>";
 	tooltipBooletsAppendAndTypeText("#addWhileLoop", "#addSecondWhileLoop", text, "li", function() {
-		var con = (value = (address1.length != 0) ? address1[0] : "NULL") != "NULL";
+		var con = (value = (t1 != null) ? address1[0] : "NULL") != "NULL";
 		travel("#ifT1NotNull", $(".introjs-tooltiptext ul li:last-child span"), function() {
 			flip("#t1Val", value, function() {
 				if (con) {
@@ -549,6 +597,12 @@ function addAndSubtracrFirstWhileFalse() {
 function addAndSubtracrSecondWhileTrue() {
 	$(".user-btn").remove()
 	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+	var text = "Repear the <y>>while-Loop</y> until the condition <y>t1 != null</y>.";
+	tooltipBooletsAppendAndTypeText("#addWhileLoop", "#addSecondWhileLoop", text, "li", function() {
+		introNextSteps("#animationDiv", "addAndSumSecondWhileLoop", "");
+		$('.introjs-nextbutton').show();
+		//	introjs.nextStep();
+	});
 }
 
 function addAndSubtracrSecondWhileFalse() {
@@ -558,7 +612,7 @@ function addAndSubtracrSecondWhileFalse() {
 	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
 				+ "<span  id='t2Val'>t2</span> != NULL</span>";
 	tooltipBooletsAppendAndTypeText("#addSecondWhileLoop", "#addSecondWhileLoop", text, "li", function() {
-		var con = (value = (address2.length != 0) ? address2[0] : "NULL") != "NULL";
+		var con = (value = (t2 != null) ? address2[0] : "NULL") != "NULL";
 		travel("#ifT2NotNull", $(".introjs-tooltiptext ul li:last-child span"), function() {
 			flip("#t2Val", value, function() {
 				if (con) {
@@ -574,11 +628,17 @@ function addAndSubtracrSecondWhileFalse() {
 function addAndSubtracrThirdWhileTrue() {
 	$(".user-btn").remove();
 	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
+	var text = "Repear the <y>>while-Loop</y> until the condition <y>t2 != null</y>.";
+	tooltipBooletsAppendAndTypeText("#addWhileLoop", "#addSecondWhileLoop", text, "li", function() {
+		introNextSteps("#animationDiv", "addAndSumThirdWhileLoop", "");
+		$('.introjs-nextbutton').show();
+	});
 }
 
 function addAndSubtracrThirdWhileFalse() {
 	$(".background-color-yellow").removeAttr('style').removeClass("background-color-yellow");
 	$(".user-btn").remove();
+	$("#preMain, #headsDes, #mainDiv").removeClass("hide");
 	introNextSteps("#rtnSum", "returnSum", "right");
 	introjs.nextStep();
 }
@@ -862,45 +922,45 @@ function additionMethodDef() {
         + '\t<span id="intilT2Val">t2 = head2;</span>\n'
         + '\t<span id="additionLogic"><span id="addWhileLoop">while(<span id="addfrstWhileCon">t1 != NULL && t2 != NULL</span>) {'
         + '<span id="trueOrFalse1"></span>\n'
-		+ '\t\t<span id="createMemory1">t3 = (poly)malloc(sizeof(struct polynomial));</span>\n'
-	    + '\t\t<span id="firstWhileFirstIf">if(<span id="ifBothAreSame">t1 -> exp == t2 -> exp</span>) {</span> '
+		+ '\t\t<span id="createMemory1" class="fillColor">t3 = (poly)malloc(sizeof(struct polynomial));</span>\n'
+	    + '\t\t<span id="firstWhileFirstIf" class="fillColor">if(<span id="ifBothAreSame">t1 -> exp == t2 -> exp</span>) {</span> '
 	    + '<span id="trueOrFalse1.1"></span>\n'
-	    + '\t\t\t<span id="addTwoCoeffValues">t3 -> coeff = t1 -> coeff + t2->coeff;</span>\n'
-	    + '\t\t\t<span id="storeT1ExpToT31">t3 -> exp = t1 -> exp;</span>\n'
-	    + '\t\t\t<span id="t3NxtToNull1">t3 -> next = NULL;</span>\n'
-	    + '\t\t\t<span id="callAddmthd1">sum = addterm(sum,t3);</span>\n'
-	    + '\t\t\t<span id="t1NxtTot11">t1 = t1 -> next;</span>\n'
-	    + '\t\t\t<span id="t2NxtTot21">t2 = t2 -> next;</span>\n'
-	    + '\t\t} else if(<span id="ifT1GrtrThnT2">t1 -> exp > t2 -> exp</span>) { <span id="trueOrFalse1.2"></span>\n'
-	    + '\t\t\t<span id="storeT1CoeffToT3Coeff2">t3 -> coeff = t1 -> coeff;</span>\n'
-	    + '\t\t\t<span id="storeT1ExpToT32">t3 -> exp = t1 -> exp;</span>\n'
-	    + '\t\t\t<span id="t3NxtToNull2">t3 -> next = NULL;</span>\n'
-	    + '\t\t\t<span id="callAddmthd2">sum = addterm(sum,t3);</span>\n'
-	    + '\t\t\t<span id="t1NxtTot12">t1 = t1 -> next;</span>\n'
+	    + '\t\t\t<span id="addTwoCoeffValues" class="fillColor">t3 -> coeff = t1 -> coeff + t2->coeff;</span>\n'
+	    + '\t\t\t<span id="storeT1ExpToT31" class="fillColor">t3 -> exp = t1 -> exp;</span>\n'
+	    + '\t\t\t<span id="t3NxtToNull1" class="fillColor">t3 -> next = NULL;</span>\n'
+	    + '\t\t\t<span id="callAddmthd1" class="fillColor">sum = addterm(sum,t3);</span>\n'
+	    + '\t\t\t<span id="t1NxtTot11" class="fillColor">t1 = t1 -> next;</span>\n'
+	    + '\t\t\t<span id="t2NxtTot21" class="fillColor">t2 = t2 -> next;</span>\n'
+	    + '\t\t<span class="fillColor">} else if(<span id="ifT1GrtrThnT2">t1 -> exp > t2 -> exp</span>) { <span id="trueOrFalse1.2"></span></span>\n'
+	    + '\t\t\t<span id="storeT1CoeffToT3Coeff2" class="fillColor">t3 -> coeff = t1 -> coeff;</span>\n'
+	    + '\t\t\t<span id="storeT1ExpToT32" class="fillColor">t3 -> exp = t1 -> exp;</span>\n'
+	    + '\t\t\t<span id="t3NxtToNull2" class="fillColor">t3 -> next = NULL;</span>\n'
+	    + '\t\t\t<span id="callAddmthd2" class="fillColor">sum = addterm(sum,t3);</span>\n'
+	    + '\t\t\t<span id="t1NxtTot12" class="fillColor">t1 = t1 -> next;</span>\n'
 	    + '\t\t} else {\n'
-	    + '\t\t\t<span id="storeT2CoeffToT3Coeff2">t3 -> coeff = t2->coeff;</span>\n'
-	    + '\t\t\t<span id="storeT2ExpToT33">t3 -> exp = t2 -> exp;</span>\n'
-	    + '\t\t\t<span id="t3NxtToNull3">t3 -> next = NULL;</span>\n'
-	    + '\t\t\t<span id="callAddmthd3">sum = addterm(sum,t3);</span>\n'
-	    + '\t\t\t<span id="t2NxtTot23">t2 = t2 -> next;</span>\n'
+	    + '\t\t\t<span id="storeT2CoeffToT3Coeff2" class="fillColor">t3 -> coeff = t2->coeff;</span>\n'
+	    + '\t\t\t<span id="storeT2ExpToT33" class="fillColor">t3 -> exp = t2 -> exp;</span>\n'
+	    + '\t\t\t<span id="t3NxtToNull3" class="fillColor">t3 -> next = NULL;</span>\n'
+	    + '\t\t\t<span id="callAddmthd3" class="fillColor">sum = addterm(sum,t3);</span>\n'
+	    + '\t\t\t<span id="t2NxtTot23" class="fillColor">t2 = t2 -> next;</span>\n'
 	    + '\t\t}\n'
         + '\t}</span>\n'
-        + '\t<span id="addSecondWhileLoop">while(<span id="ifT1NotNull">t1 != NULL</span>) {</span> <span id="trueOrFalse2"></span>\n'
+        + '\t<span id="secondWhileLoop"><span id="addSecondWhileLoop">while(<span id="ifT1NotNull">t1 != NULL</span>) {</span> <span id="trueOrFalse2"></span>\n'
         + '\t\t<span id="createMemory4">t3 = (poly)malloc(sizeof(struct polynomial));</span>\n'
         + '\t\t<span id="storeT1CoeffToT3Coeff4">t3 -> coeff = t1 -> coeff;</span>\n'
         + '\t\t<span id="storeT1ExpToT34">t3 -> exp = t1 -> exp;</span>\n'
         + '\t\t<span id="t3NxtToNull4">t3 -> next = NULL;</span>\n'
         + '\t\t<span id="callAddmthd4">sum = addterm(sum,t3);</span>\n'
         + '\t\t<span id="t1NxtTot14">t1 = t1 -> next;</span>\n'
-        + '\t}\n'
-        + '\t<span id="addThirdWhileLoop">while(<span id="ifT2NotNull">t2!=NULL</spna>) {</span> <span id="trueOrFalse3"></span>\n'
+        + '\t}</span>\n'
+        + '\t<span id="thirdWhileLoop"><span id="addThirdWhileLoop">while(<span id="ifT2NotNull">t2!=NULL</spna>) {</span> <span id="trueOrFalse3"></span>\n'
         + '\t\t<span id="createMemory5">t3 = (poly)malloc(sizeof(struct polynomial));</span>\n'
         + '\t\t<span id="storeT2CoeffToT3Coeff5">t3 -> coeff = t2 -> coeff;</span>\n'
         + '\t\t<span id="storeT2ExpToT35">t3 -> exp = t2 -> exp;</span>\n'
         + '\t\t<span id="t3NxtToNull5">t3 -> next = NULL;</span>\n'
         + '\t\t<span id="callAddmthd5">sum = addterm(sum,t3);</span>\n'
         + '\t\t<span id="t2NxtTot25">t2 = t2 -> next;</span>\n'
-        + '\t}</span>\n'
+        + '\t}</span></span>\n'
         + '\t<span id="rtnSum">return sum;</span>\n'
         + '}</span>'
         if (buttonName == "subtraction") {
@@ -915,7 +975,7 @@ function additionMethodDef() {
 }
 
 function methodDefCommonCode(selector1, appendText) {
-	$(".background-color-yellow").removeAttr("Style").removeClass('background-color-yellow');
+	$(".background-color-yellow").removeAttr("style").removeClass('background-color-yellow');
 	$(".arrow").remove();
 	$(selector1).empty().append(appendText);
 }
@@ -939,8 +999,14 @@ function createNodeAnimation() {
 function addTermFunctionAnimation() {
 	$("#aCallHndT").addClass("background-color-yellow");
 	$(".introjs-tooltip").removeClass("hide");
-	var text = "The <y>"+ firstAdd +"</y> value will be stored in <y>head</y> and <y>"+ randomAdd 
-				+ "</y> value will be stored in <y>temp</y>.";
+	if (buttonName == "addition") {
+		var text = "The <y>"+ firstAdd +"</y> value will be stored in <y>head</y> and <y>"+ address3[addressCount] 
+					+ "</y> value will be stored in <y>temp</y>.";
+		addressCount++;
+	} else {
+		var text = "The <y>"+ firstAdd +"</y> value will be stored in <y>head</y> and <y>"+ randomAdd 
+					+ "</y> value will be stored in <y>temp</y>.";
+	}
 	tooltipBooletsAppendAndTypeText("#addTermFunName", "#addTermFunName", text, "ul", function() {
 		$("#p1ndp2Dec").addClass("background-color-yellow");
 		var text = "Here we are declaring two pointer variables <y>p1</y> and <y>p2</y>.";
@@ -1003,7 +1069,12 @@ function printfWhileLoopAnimation() {
 	var text = '<span id="tooltipCndtn" style="font-family: monospace; font-weight: bold;">'
 		+ '<span  id="tooltipFront1">temp</span> != NULL</span></li>';
 	tooltipBooletsAppendAndTypeText("#storeHeadToTmp", "#displayWhileCon", text, "ul", function() {
-		var value = (printCount == 2) ? address1[0] : address2[0];
+		var value;
+		if (btn == "add") {
+			value = address3[0]
+		} else {
+			value = (printCount == 2) ? address1[0] : address2[0];
+		}
 		console.log("in print while count = " + firstAdd);
 		trueOrFalseCondition("#printTempNotEqNull", "#tooltipFront1", (address1.length != 0 || address2.length != 0), value, "NULL", function() {
 			if (address1.length != 0 || address2.length != 0) {
@@ -1067,4 +1138,4 @@ function inMainIntro(selector1, selector2, position) {
 }
 
 
-/*<i class="fa fa-times ct-code-b-red"></i>*/
+

@@ -476,6 +476,7 @@ PolynomialLL.prototype.decP1AndP2 = function() {
 PolynomialLL.prototype.addTerm = function(head, t) {
 	p1 = p2 = head;
 	
+	console.log("Head value = " + head);
 	let index = 0;
 	if(flag == "addition") {
 		this.cmd("CreateLabel", this.headLable, "head : ", 520, 120);
@@ -1101,8 +1102,8 @@ PolynomialLL.prototype.createAnEmptyNode = function() {
 }
 
 PolynomialLL.prototype.addition = function(head1, head2, operation) {
-	t1 = head1;
-	t2 = head2;
+	t1 = temp1 = head1;
+	t2 = temp2 = head2;
 	
 	$("#mainDiv").removeClass("hide");
 	if (whenCreateClick == 2) {
@@ -1120,15 +1121,16 @@ PolynomialLL.prototype.addition = function(head1, head2, operation) {
 	this.cmd("Step");
 	this.introNextStep("#additionInMain", "bottom", "hide");
 	this.createTempararyNodes("sum");
+	firstAdd = address[0];
 	this.cmd("Step");
 	this.storeT1AndT2();
-	this.cmd("Step");
 	this.idChange();
+	this.cmd("Step");
 	var index1 = index2 = index3 =  0;
 	this.introNextStep("#additionLogic", "right", "hide");
 	
 	while(t1 != null && t2 != null) {
-		//t3 = {};
+		t3 = {};
 		if(parseInt(t1["exp"]) == parseInt(t2["exp"])) {
 			t3["coeff"] = listCoeff[nodeCount] = parseInt(t1["coeff"]) + parseInt(t2["coeff"]);
 			t3["exp"] = listExp[nodeCount] = t1["exp"];
@@ -1137,11 +1139,12 @@ PolynomialLL.prototype.addition = function(head1, head2, operation) {
 			this.cmd("Step");
 			this.createAnEmptyNode();
 			this.cmd("Step");
-			
+			this.introNextStep("#addWhileLoop", "right", "hide");
+			this.cmd("Step");
 			this.ifBothExpAreSame(operation, index1, index2);
 			index1++;
 			index2++;
-			sum = addterm(sum, t3);
+			//sum = addterm(sum, t3);
 	        t1 = t1["next"];
 	        t2 = t2["next"];
 	   } else if (parseInt(t1["exp"]) > parseInt(t2["exp"])) {
@@ -1152,12 +1155,26 @@ PolynomialLL.prototype.addition = function(head1, head2, operation) {
 		   index2++;
 	   }
 	}
+	var coount = 1
 	while(t1 != null) {
+		this.cmd("Step");
+		if (coount == 1) {
+			coount = 2;
+			this.introNextStep("#secondWhileLoop", "right", "hide");
+		}
+		this.cmd("Step");
 		t3 = {};
 		this.T1ExpGraterAndT1NotNull(index1);
 		index1++;
+		
 	}
+	
 	while(t2 != null) {
+		this.cmd("Step");
+		if (coount == 2) {
+			this.introNextStep("#thirdWhileLoop", "right", "hide");
+		}
+		this.cmd("Step");
 		t3 = {};
 		this.T2ExpGraterAndT2NotNull(index2);
 		index2++;
@@ -1184,8 +1201,6 @@ PolynomialLL.prototype.commanCodeForAddSubAndMul = function() {
 	this.cmd("Delete", this.sumLabel);
 	this.cmd("Delete", this.sumId);
 	this.cmd("Step");
-	
-	
 }
 
 PolynomialLL.prototype.T1ExpGraterAndT1NotNull = function(index1) {
@@ -1198,6 +1213,8 @@ PolynomialLL.prototype.T1ExpGraterAndT1NotNull = function(index1) {
 	this.cmd("Step");
 	this.t1IsGreaterThanT2(index1, true);
 	this.cmd("Step");
+	$("#preAddTerm").removeClass("hide opacity00");
+    this.introNextStep("#preAddTerm", "right", "hide");
 	sum = this.addTerm(sum, t3);
     this.cmd("Step");
     this.assignT3ToHead3();
@@ -1205,7 +1222,7 @@ PolynomialLL.prototype.T1ExpGraterAndT1NotNull = function(index1) {
 	this.t1NextToT1(index1);
 	this.cmd("Step");
     
-    sum = addterm(sum,t3);
+    //sum = addterm(sum,t3);
     t1 = t1["next"];
 }
 
@@ -1218,6 +1235,9 @@ PolynomialLL.prototype.T2ExpGraterAndT2NotNull = function(index2) {
 	this.cmd("Step");
 	this.t1IsGreaterThanT2(index2, false);
 	this.cmd("Step");
+	
+	$("#preAddTerm").removeClass("hide");
+    this.introNextStep("#preAddTerm", "right", "hide");
 	sum = this.addTerm(sum, t3);
     this.cmd("Step");
 	
@@ -1227,7 +1247,7 @@ PolynomialLL.prototype.T2ExpGraterAndT2NotNull = function(index2) {
 	this.t2NextToT2(index2);
 	this.cmd("Step");
 	
-	sum = addterm(sum,t3);
+	//sum = addterm(sum,t3);
 	t2 = t2["next"];
 }
 
@@ -1265,6 +1285,7 @@ PolynomialLL.prototype.t1IsGreaterThanT2 = function(index1, status) {
 }
 
 PolynomialLL.prototype.ifBothExpAreSame = function(operation, index1, index2) {
+	$(".background-color-yellow").removeAttr("style").removeClass("background-color-yellow");
 	this.cmd("Sethighlight", this.llExp1[index1], "#2eb82e");
 	this.cmd("Sethighlight", this.llExp2[index2], "#2eb82e");
 	this.cmd("Step");
@@ -1272,6 +1293,7 @@ PolynomialLL.prototype.ifBothExpAreSame = function(operation, index1, index2) {
 	this.cmd("Sethighlight", this.llExp1[index1], "");
 	this.cmd("Sethighlight", this.llExp2[index2], "");
 	
+	$("#firstWhileFirstIf").addClass("background-color-yellow");
 	var nextX = (index1) % LL_ELEMS_PER_LINE * LL_ELEM_SPACING + LL_START_X  + POLYLL_ELE_WIDTH;
 	var nextY = Math.floor((index1) / LL_ELEMS_PER_LINE) * LL_LINE_SPACING + LL_START_Y - 20;
 	
@@ -1328,6 +1350,8 @@ PolynomialLL.prototype.ifBothExpAreSame = function(operation, index1, index2) {
     this.cmd("Step");
     this.cmd("SetText", this.llNext[nodeCount], null);
     this.cmd("Step");
+    $("#preAddTerm").removeClass("hide");
+    this.introNextStep("#preAddTerm", "right", "hide");
     sum = this.addTerm(sum, t3);
 	this.cmd("Step");
 	
@@ -1397,7 +1421,7 @@ PolynomialLL.prototype.t2NextToT2 = function(index2) {
 	}
 	return index2;
 }
-
+/*
 function subtraction(head1, head2) {
     var sum =  null;
     t1 = head1;
@@ -1475,12 +1499,12 @@ function addterm(head, t) {
 function mul(head1, head2) { 
 	t1 = t2 = pro = null;
 	
-	/*
+	
 	 * t1 = head1; while (t1 != null) { t2 = head2; while (t2 != null) { t3 =
 	 * {}; t3["coeff"] = parseInt(t1["coeff"]) * parseInt(t2["coeff"]);
 	 * t3["exp"] = parseInt(t1["exp"]) + parseInt(t2["exp"]); t3["next"] = null;
 	 * pro = addterm(pro,t3); t2 = t2["next"]; } t1 = t1["next"]; }
-	 */
+	 
 	for(t1 = head1; t1 != null; t1 = t1["next"]) {
 		for(t2 = head2; t2 != null; t2 = t2["next"]) {
 			t3 = {};
@@ -1492,7 +1516,7 @@ function mul(head1, head2) {
 	}
 	return pro;
 }
-
+*/
 PolynomialLL.prototype.createNode = function() {
 	this.commands = new Array();
 	this.dummyCoeff = this.nextIndex++;
@@ -1590,6 +1614,7 @@ PolynomialLL.prototype.displayNodes = function() {
 
 PolynomialLL.prototype.commonCodeForAddAndSub = function(operation) {
 	flag = "addition";
+	btn = "add"
 	sum = null;
 	this.cmd("Step");
 	head3 = this.addition(head1, head2, operation);
