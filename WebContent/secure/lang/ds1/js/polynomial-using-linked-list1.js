@@ -1,5 +1,6 @@
-var lang, addressCount = 0, animationName;
-var printCount = outputCount = 1;
+var lang, addressCount = t1Nxt = t2Nxt = 0, animationName;
+var printCount = outputCount = addAddTerm = 1;
+var addTermAdd = []
 var polynomialUsingLinkedList = function() {
 	lang = getURLParameter("lang");
 	initIntroJS();
@@ -387,19 +388,36 @@ function initIntroJS() {
 				var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
 							+ "<span  id='tooltipFront'>p1</span> == NULL</span></li>";
 				tooltipBooletsAppendAndTypeText("#p1NdP2Init", "#ifp1EqNullBefore", text, "ul", function() {
-					trueOrFalseCondition("#ifp1EqNullBefore", "#tooltipFront", address.length == 1, "NULL", firstAdd, function() {
-						if (address.length == 1) {
-							$("#tmpToHead").addClass("background-color-yellow");
-							var text = 'Now, store <y>temp</y> value (i.e. <y>'+ randomAdd +'</y>) to <y>head</y>.';
-							tooltipBooletsAppendAndTypeText("#ifp1EqNullBefore", "#tmpToHead", text, "li", function() {
-								introNextSteps("#animationDiv", "storeTempToHead", "");
-								$('.introjs-nextbutton').show();
-							});
-						} else {
-							$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
-									+ "onclick='addTermElseCondition()'>Next &#8594;</a>");
-						}
-					});
+					if (buttonName == "addition") {
+						trueOrFalseCondition("#ifp1EqNullBefore", "#tooltipFront", addAddTerm == 1, "NULL", addTermAdd[0], function() {
+							if (addAddTerm == 1) {
+								$("#tmpToHead").addClass("background-color-yellow");
+								var text = 'Now, store <y>temp</y> value (i.e. <y>'+ addTermAdd[addAddTerm - 1] +'</y>) to <y>head</y>.';
+								tooltipBooletsAppendAndTypeText("#ifp1EqNullBefore", "#tmpToHead", text, "li", function() {
+									introNextSteps("#animationDiv", "storeTempToHead", "");
+									$('.introjs-nextbutton').show();
+								});
+							} else {
+								$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+										+ "onclick='addTermElseCondition()'>Next &#8594;</a>");
+							}
+							addAddTerm++;
+						});
+					} else {
+						trueOrFalseCondition("#ifp1EqNullBefore", "#tooltipFront", address.length == 1, "NULL", firstAdd, function() {
+							if (address.length == 1) {
+								$("#tmpToHead").addClass("background-color-yellow");
+								var text = 'Now, store <y>temp</y> value (i.e. <y>'+ randomAdd +'</y>) to <y>head</y>.';
+								tooltipBooletsAppendAndTypeText("#ifp1EqNullBefore", "#tmpToHead", text, "li", function() {
+									introNextSteps("#animationDiv", "storeTempToHead", "");
+									$('.introjs-nextbutton').show();
+								});
+							} else {
+								$(".introjs-tooltipbuttons").append("<a class='introjs-button user-btn' "
+										+ "onclick='addTermElseCondition()'>Next &#8594;</a>");
+							}
+						});
+					}
 				});
 			});
 		break;
@@ -581,10 +599,10 @@ function addAndSubtracrFirstWhileFalse() {
 	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
 				+ "<span  id='t1Val'>t1</span> != NULL</span>";
 	tooltipBooletsAppendAndTypeText("#addWhileLoop", "#addSecondWhileLoop", text, "li", function() {
-		var con = (value = (t1 != null) ? address1[0] : "NULL") != "NULL";
+		var value = (address1.length != indexM1) ? address1[indexM1] : "NULL";
 		travel("#ifT1NotNull", $(".introjs-tooltiptext ul li:last-child span"), function() {
 			flip("#t1Val", value, function() {
-				if (con) {
+				if ((address1.length != indexM1)) {
 					trueText("#trueOrFalse2", "addAndSubtracrSecondWhileTrue");
 				} else {
 					falseText("#trueOrFalse2", "addAndSubtracrSecondWhileFalse");
@@ -612,10 +630,12 @@ function addAndSubtracrSecondWhileFalse() {
 	var text = "<span id='tooltipCndtn' style='font-family: monospace; font-weight: bold;'>"
 				+ "<span  id='t2Val'>t2</span> != NULL</span>";
 	tooltipBooletsAppendAndTypeText("#addSecondWhileLoop", "#addSecondWhileLoop", text, "li", function() {
-		var con = (value = (t2 != null) ? address2[0] : "NULL") != "NULL";
+		var value = (address2.length != indexM2) ? address2[indexM2] : "NULL";
+		
+		//var con = (value = (t2 != null) ? address2[0] : "NULL") != "NULL";
 		travel("#ifT2NotNull", $(".introjs-tooltiptext ul li:last-child span"), function() {
 			flip("#t2Val", value, function() {
-				if (con) {
+				if ((address2.length != indexM2)) {
 					trueText("#trueOrFalse3", "addAndSubtracrThirdWhileTrue");
 				} else {
 					falseText("#trueOrFalse3", "addAndSubtracrThirdWhileFalse");
@@ -653,10 +673,11 @@ function addTermElseCondition() {
 	tooltipBooletsAppendAndTypeText("#ifp1EqNullBefore", "#whileP1NotNull", text, "li", function() {
 		travel('#whileP1NotNull', $(".introjs-tooltiptext ul li:last-child span"), function() {
 			flip("#pOneVal", firstAdd, function() {
-				flip("#p1ExpVal", firstExpVal, function() {
-					flip("#tempExpVal", arr[1], function() {
+				
+				flip("#p1ExpVal", (buttonName == "addition") ? listExp3[indexM1 - 1] : firstExpVal, function() {
+					flip("#tempExpVal", (buttonName == "addition") ? listExp3[indexM1] : arr[1], function() {
 						var text = "";
-						if (firstAdd != "null" && firstExpVal > parseInt(arr[1])) {
+						if (firstAdd != "null" && (buttonName == "addition") ? listExp3[indexM1 - 1] > listExp3[indexM1] : firstExpVal > parseInt(arr[1])) {
 							text = "Since it evaluates to <y>true</y>, so the control enters into <y>while-block</y>" 
 								+ " and repeat the loop until the while loop will evaluates to <y>false</y>."
 							$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
@@ -1000,9 +1021,14 @@ function addTermFunctionAnimation() {
 	$("#aCallHndT").addClass("background-color-yellow");
 	$(".introjs-tooltip").removeClass("hide");
 	if (buttonName == "addition") {
-		var text = "The <y>"+ firstAdd +"</y> value will be stored in <y>head</y> and <y>"+ address3[addressCount] 
-					+ "</y> value will be stored in <y>temp</y>.";
-		addressCount++;
+		if (addAddTerm == 1) {
+			var text = "The <y>NULL</y> will be stored in <y>head</y> and <y>"+ address3[addAddTerm - 1] 
+						+ "</y> value will be stored in <y>temp</y>.";
+		} else {
+			var text = "The <y>"+ address3[0] +"</y> will be stored in <y>head</y> and <y>"+ address3[addAddTerm - 1] 
+			+ "</y> value will be stored in <y>temp</y>.";
+		}
+		//addressCount++;
 	} else {
 		var text = "The <y>"+ firstAdd +"</y> value will be stored in <y>head</y> and <y>"+ randomAdd 
 					+ "</y> value will be stored in <y>temp</y>.";
@@ -1012,8 +1038,18 @@ function addTermFunctionAnimation() {
 		var text = "Here we are declaring two pointer variables <y>p1</y> and <y>p2</y>.";
 		tooltipBooletsAppendAndTypeText("#addTermFunName", "#p1ndp2Dec", text, "li", function() {
 			$("#p1NdP2Init").addClass("background-color-yellow");
-			var text = "Here we are initializing two pointer variables <y>p1</y> and <y>p2</y> to <y>head</y> value (i.e. <y>"+ 
-						firstAdd +"</y>).";
+			if (buttonName == "addition") {
+				if (addAddTerm == 1) {
+					var text = "Here we are initializing two pointer variables <y>p1</y> and <y>p2</y> to <y>head</y> value (i.e. <y>NULL</y>).";
+				} else {
+					var text = "Here we are initializing two pointer variables <y>p1</y> and <y>p2</y> to <y>head</y> value (i.e. <y>"+ 
+								address3[addAddTerm - 1] +"</y>).";
+				}
+				
+			} else {
+				var text = "Here we are initializing two pointer variables <y>p1</y> and <y>p2</y> to <y>head</y> value (i.e. <y>"+ 
+							firstAdd +"</y>).";
+			}
 			tooltipBooletsAppendAndTypeText("#p1ndp2Dec", "#p1NdP2Init", text, "li", function() {
 				introNextSteps("#animationDiv", "addTermVariablesDec", "");
 				$('.introjs-nextbutton').show();
@@ -1090,6 +1126,10 @@ function printfWhileLoopAnimation() {
 			}
 		});
 	});
+}
+
+function addTermInAddition() {
+	
 }
 
 function tooltipBooletsAppendAndTypeText(selector1, selector2, text, appendText, callBackFunction) {
