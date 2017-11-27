@@ -48,8 +48,8 @@ function getRandomInt(min, max) { //access random address
 }
 
 function createDynamicNodes(val) { //dynamically create a empty new node
-	fixedWidth();
 	var randomAddress = getRandomInt(1000, 5000);
+	fixedWidth();
 	var t = $('#posVal').text();
 	var x = '<div class="col-xs-2 nodes opacity00" id="node' + val + '" style="top: 0px; width: auto;"><div class="col-xs-12 padding00">'
 					+ '<div class="col-xs-4 ct-green-color ct-fonts text-center padding00">prev</div>'
@@ -101,7 +101,7 @@ function preCPPClass() {
 							+ '\tvoid insertAtPosition(int pos, int x);\n'
 							+ '\tvoid deleteAtEnd();\n'
 							+ '\tvoid deleteAtPosition(int pos);\n'
-							+ '\tvoid traverseList();\n'
+							+ '\tvoid traverseList();</span>\n'
 							+ '};');
 }
 
@@ -111,7 +111,7 @@ function preStructTypeList() {	//declare structure type and first node to null
 					+ '\tstruct list *prev;\n'
 					+ '\tstruct list *next;\n'
 					+ '};</span>\n'
-					+ '<span id="typeDefDec">typedef struct list* node;</span>\n'
+					+ '<span id="typeDefDec">typedef struct list *node;</span>\n'
 					+ '</span>');
 	if (lang == 'c') {
 		$('#typeDefDec').after('\n<span id="declareFirstNode">node first = NULL;</span>');
@@ -143,6 +143,7 @@ function preDcclD() {
 	$('#inMain').append('<div class="text-center ct-blue-color ct-fonts padding00">In main()</div>'
 					+ '<span id="objCallDcll" class="opacity00">Dcll d;</span>');
 }
+
 function preAddNodeMthdInMain() {	//addNodes() in main()
 	if (lang == 'c') {
 		$('#inMain').append('<div id="addNodesMainDiv"><div class="text-center ct-blue-color ct-fonts padding00">In main()</div>'
@@ -553,7 +554,8 @@ function initIntroJS() {
 				break;
 				case 'buttonDiv':
 					$('.introjs-tooltip').css({'min-width' : '200px'}).removeClass('hide');
-					typing('.introjs-tooltiptext', 'Choose any button.', function() {});
+					$('.introjs-tooltiptext').append('Choose any button.');
+					
 					lineFlag = false;
 					$('#animationDiv').removeClass('z-index1000000');
 					$('#buttonDiv, .btn, #insertAtPosition').removeClass('opacity00 disabled insert-position insert-endpos insert-middle');
@@ -679,7 +681,13 @@ function initIntroJS() {
 						break;
 						case "nodeMemAllo" :
 							$('.introjs-tooltip').removeClass("hide");
-							text = 'Let us assume <span class="ct-code-b-yellow">malloc()</span> allocates a memory '
+							var addressId;
+							if (lang == 'c') {
+								addressId = 'malloc()';
+							} else if (lang == 'cpp') {
+								addressId = 'new list';
+							}
+							text = 'Let us assume <span class="ct-code-b-yellow">' + addressId + '</span> allocates a memory '
 									+ 'to its members  <span class="ct-code-b-yellow">prev</span>, <span class="ct-code-b-yellow">data</span> and'
 									+ ' <span class="ct-code-b-yellow">next</span> at address'
 									+ ' <span class="ct-code-b-yellow">' + $("#dataAddress" + (nodeCount - 1)).text() +'</span>.';
@@ -707,7 +715,8 @@ function initIntroJS() {
 								fadeInBounceEffectWithTimelineMax('#firstNodeVal', '#firstVal', false, function() {
 									$('.fa, #line15, #line13, #line10').remove();
 									lineFlag = false;
-									if ($('#firstVal').text() != 'NULL' && $('#posVal').text() == 1) {
+									//if ($('#firstVal').text() != 'NULL' && $('#posVal').text() == 1) {
+									if ($('#firstVal').text() != 'NULL' && ($('#posVal').text() == 1 && buttonName != 'deleteAtPosition')) {
 										svgAnimatingLineRightToLeft('#animationDiv', '#firstDiv', '#prevDiv' + (nodeCount - 1), '#svgId',
 												'line10', 'arrow');
 									} else if ($('#firstVal').text() != 'NULL') {
@@ -1158,7 +1167,7 @@ function initIntroJS() {
 					} else if (lang == 'cpp') {
 						text = '<ul><li class = "opacity00" id="li1"><span class="ct-code-b-yellow">new</span> operator creates'
 								+ ' <span class="ct-code-b-yellow">dynamic memory</span> to the <span class="ct-code-b-yellow">struct list</span>.'
-								+ ' Which contains <span class="ct-code-b-yellow">three</span> fields <span class="ct-code-b-yellow">prev</span>'
+								+ ' Which contains <span class="ct-code-b-yellow">three</span> fields <span class="ct-code-b-yellow">prev</span>,'
 								+ ' <span class="ct-code-b-yellow">data</span> and <span class="ct-code-b-yellow">next</span>.</li>'
 								+ ' <li class = "opacity00" id="li2"><span class="ct-code-b-yellow">new</span> returns the'
 								+ ' <span class="ct-code-b-yellow">address</span> of the allocated memory that will be stored in'
@@ -1865,7 +1874,9 @@ function deleteAtBeginNodeIfLengthNotEqOne(pos, flag) {
 //arrows regenerate
 function regenerateArrows(callBackFunction) {
 	var len = $(".nodes").length;
-	svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1", "#svgId", "line10", "arrow");
+	if ((lang == 'c' && ($('#firstNodeVal').text() == $('#firstVal').text()) || ($('#firstNodeVal').text() == "")) || lang == 'cpp') {
+		svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1", "#svgId", "line10", "arrow");
+	}
 	if(buttonName == 'deleteAtEnd' || buttonName == 'deleteAtPosition') {
 		if (lang == 'c') {
 			svgAnimatingLineTopToBottom("#animationDiv", "#firstNode", "#dataDiv1", "#svgId", "line11", "arrow");
@@ -2120,9 +2131,15 @@ function displayNodeDataAndNext() {
 	$('.introjs-duplicate-nextbutton').remove();
 	transferEffect('#mallocMemoryAllocation', '#node'+(nodeCount - 1), function() {
 		nextBtnWithoutCalling(function() {
+			var addressId;
+			if (lang == 'c') {
+				addressId = 'malloc()';
+			} else if (lang == 'cpp') {
+				addressId = 'new list';
+			}
 			text = 'Now, the <span class="ct-code-b-yellow">address</span> (i.e. <span class="ct-code-b-yellow">'
 					+ $("#dataAddress" + (nodeCount - 1)).text() +')</span> of the memory allocated '
-					+ 'by the <span class="ct-code-b-yellow">malloc()</span> method is stored in <span class="ct-code-b-yellow">temp</span>.';
+					+ 'by the <span class="ct-code-b-yellow">' + addressId + '</span> method is stored in <span class="ct-code-b-yellow">temp</span>.';
 			typing('.introjs-tooltiptext' , text, function() {
 				nextBtnWithoutCalling(function() {
 					$('#tmpNdeVal').text($('#dataAddress' + (nodeCount - 1)).text());
@@ -2346,8 +2363,12 @@ function elseConText() {
 														polyline = 5;
 														assignValfromOneVarToAnotherVar('first -> next ', 'first', $('#next1').text(), function() {
 															fadeInBounceEffectWithTimelineMax('#next1', '#' + fstId, false, function() {
-																$('#line11, #line10').remove();
+																//$('#line11, #line10').remove();
+																if (lang == 'cpp') {
+																	$(' #line10').remove();
+																}
 																if (lang == 'c') {
+																	$('#line11').remove();
 																	svgAnimatingLineTopToBottom("#animationDiv", "#firstNode", "#dataDiv2", "#svgId",
 																			"line11", "arrow");
 																	$('#line1').remove();
@@ -3645,8 +3666,9 @@ function svgCurveDown(selector1, selector2, polyLineId, callBackFunction) {
 }
 
 function fixedWidth() {
-	if ($('.nodes').length == 5) {
-		var x = (($('#node4').offset().left + $('#node4').outerWidth()) - $("#dynamicNodes").offset().left) + $('#node1').width() / 2.5;
+	if ($('.nodes').length == 4) {
+		//var x = (($('#node4').offset().left + $('#node4').outerWidth()) - $("#dynamicNodes").offset().left) + $('#node1').width() / 2.5;
+		var x = (($('#node4').offset().left + $('#node4').outerWidth()) - $("#dynamicNodes").offset().left);
 		$('#dynamicNodes').css({'width' : x + 'px'});
 	}
 }

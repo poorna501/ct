@@ -1,6 +1,6 @@
 var currentAlg;
 
-var coount = 1
+var coount = 1, btnFlag;
 
 var LL_START_X = 0;
 var LL_START_Y = 210;
@@ -1134,7 +1134,11 @@ PolynomialLL.prototype.addition = function(head1, head2, operation) {
 	}
 	this.cmd("Step");
 	this.introNextStep("#additionInMain", "bottom", "hide");
-	this.createTempararyNodes("sum");
+	if (operation != "sub") {
+		this.createTempararyNodes("sum");
+	}	else {
+		this.createTempararyNodes("sub");
+	}
 	this.cmd("Step");
 	this.storeT1AndT2();
 	this.idChange();
@@ -1705,7 +1709,6 @@ PolynomialLL.prototype.addNodes = function() {
 	this.commands = new Array();
 	buttonName = "addition";
 	this.commonCodeForAddAndSub("sum");
-	
 	$("#preMain, #headsDes, #mainDiv").removeClass("hide");
 	this.introNextStep("#btnsDiv", "left", "hide");
 	this.cmd("Step");
@@ -1717,6 +1720,7 @@ PolynomialLL.prototype.subNodes = function() {
 	this.commands = new Array();
 	head3 = {};
 	buttonName = "addition";
+	btnFlag = false;
 	this.commonCodeForAddAndSub("sub");
 	//head3 = subtraction(head1, head2);
 	
@@ -1808,6 +1812,8 @@ PolynomialLL.prototype.multiplicationAnimation = function() {
 				t3["exp"] = parseInt(t1["exp"]) + parseInt(t2["exp"]);
 				t3["next"] = null;
 				
+				console.log(nodeCount);
+				console.log("in mult" + listCoeff3)
 				this.createAnEmptyNode();
 				this.cmd("Step");
 				this.coeffMultiplication();
@@ -1997,6 +2003,7 @@ PolynomialLL.prototype.addCallBack = function() {
 		return;
 	}
 	decSumAndSubValues();
+	btnFlag = true;
 	this.implementAction(this.addNodes.bind(this), "");
 }
 
@@ -2005,6 +2012,7 @@ PolynomialLL.prototype.subCallBack = function() {
 		return;
 	}
 	decSumAndSubValues();
+	btnFlag = false;
 	this.implementAction(this.subNodes.bind(this), "");
 }
 

@@ -527,12 +527,17 @@ function initIntroJS() {
 			$(".introjs-helperLayer").one("transitionend", function() {
 				$(".introjs-tooltip").removeClass("hide");
 				introjs.refresh();
-				if (btn == "add") {
-					var text = "Here, we are calling <y>print</y> method to print the polynomial list after performaing <y>addition</y> operation"
-						+ " and pass <y>head3</y> value (i.e. "+ sum +") as argument.";
-				} else {
+				if (btn == "mul") {
 					var text = "Here, we are calling <y>print</y> method to print the polynomial list after performaing <y>multiplication</y>"
-						+ " operation and pass <y>head3</y> value (i.e. "+ sum +") as argument.";
+								+ " operation and pass <y>head3</y> value (i.e. "+ sum +") as argument.";
+				} else {
+					if (btnFlag) {
+						var text = "Here, we are calling <y>print</y> method to print the polynomial after performaing <y>addition</y> operation"
+									+ " and pass <y>head3</y> value (i.e. "+ sum +") as argument.";
+					} else {
+						var text = "Here, we are calling <y>print</y> method to print the polynomial after performaing <y>subtraction</y> operation"
+									+ " and pass <y>head3</y> value (i.e. "+ sum +") as argument.";
+					}
 				}
 				tooltipBooletsAppendAndTypeText("#printCall2", "#printCall2", text, "ul", function() {
 					flip("#head3Name", (address3.length != 0) ? address3[0] : "NULL", function() {
@@ -1056,7 +1061,7 @@ function displayMethodDef() {
 
 function additionMethodDef() {
 	$("#structDiv, #preMain").addClass("hide");
-	var additionMethodCode = '<span id="methodName"><span id="additionMthdName">poly add(<span id="addHead1">head1</span>, '
+	var additionMethodCode = '<span id="methodName"><span id="additionMthdName">poly <span id="addvar">add</span>(<span id="addHead1">head1</span>, '
 		+ '<span id="addhead2">head2</span>) {</span>\n'
 		+ '\t<span id="decAddVar">poly t1, t2, <span id="addvar">sum</span> = NULL, t3;</span>\n'
         + '\t<span id="inilt1Val">t1 = head1;</span>\n'
@@ -1104,15 +1109,17 @@ function additionMethodDef() {
         + '\t}</span></span>\n'
         + '\t<span id="rtnSum">return sum;</span>\n'
         + '}</span>'
-        if (buttonName == "subtraction") {
-        	$("#addvar").text("sub");
-        	$("#addTwoCoeffValues").text('t3 -> coeff = t1 -> coeff - t2->coeff;'); 
-        	$("#rtnSum").text("return sub;");
-        	for (let i = 1; i <= 5; i++) {
-        		$("#callAddmthd" + i).text("sub = addterm(sub,t3);");
-        	}
-        }
+        console.log(btnFlag)
 	methodDefCommonCode("#preTemp", additionMethodCode);
+	if (btnFlag == false) {
+		console.log("in if btnFlag false");
+		$("#addvar").text("sub");
+		$("#addTwoCoeffValues").text('t3 -> coeff = t1 -> coeff - t2->coeff;'); 
+		$("#rtnSum").text("return sub;");
+		for (let i = 1; i <= 5; i++) {
+			$("#callAddmthd" + i).text("sub = addterm(sub,t3);");
+		}
+	}
 }
 
 function multiplicatopnMethodDef() {
@@ -1221,15 +1228,21 @@ function additionAndSubtractionAnimation() {
 	var text = 'Here we are storing <y>'+ value1 +'</y> to <y>head1</y> and <y>'+ value2 +'</y> to <y>head2</y>.';
 	tooltipBooletsAppendAndTypeText("#additionMthdName", "#additionMthdName", text, "ul", function() {
 		$("#decAddVar").addClass("background-color-yellow");
-		if (btn == "add") {
-			var text = 'Here we are declare pointer variables <y>t1</y>, <y>t2</y>, <y>t3</y> and <y>sum</y>,  the <y>sum</y> will be initialize'
-						+ ' with <y>NULL</y> value.';
-		} else {
+		if (btn == "mul") {
 			var text = 'Here we are declare pointer variables <y>t1</y>, <y>t2</y>, <y>t3</y> and <y>pro</y>,  the <y>pro</y> will be initialize'
 				+ ' with <y>NULL</y> value.';
+		} else {
+			if (btnFlag) {
+				var text = 'Here we are declare pointer variables <y>t1</y>, <y>t2</y>, <y>t3</y> and <y>sum</y>,  the <y>sum</y> will be initialize'
+					+ ' with <y>NULL</y> value.';
+			} else {
+				var text = 'Here we are declare pointer variables <y>t1</y>, <y>t2</y>, <y>t3</y> and <y>sub</y>,  the <y>sub</y> will be initialize'
+					+ ' with <y>NULL</y> value.';
+			}
+			
 		}
 		tooltipBooletsAppendAndTypeText("#additionMthdName", "#decAddVar", text, "li", function() {
-			if (btnsDiv == "add") {
+			if (btn == "add") {
 				$("#inilt1Val").addClass("background-color-yellow");
 				var text = 'Initialize <y>t1</y> with <y>head1</y> value (i.e. <y>'+ value1 +'</y>)';
 				tooltipBooletsAppendAndTypeText("#decAddVar", "#inilt1Val", text, "li", function() {

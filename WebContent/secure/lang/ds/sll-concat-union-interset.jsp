@@ -1,5 +1,4 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,7 +31,7 @@
 	min-width: -moz-max-content;
 }
 
-.introjs-duplicate-nextbutton {
+.user-btn {
 	margin: 0px !important;
 	background-color: green;
 }
@@ -40,11 +39,6 @@
 .box-border {
 	border-radius: 12px;
 	border: 2px solid gray;
-}
-
-.box-border1 {
-	border-radius: 12px;
-	border: 2px solid white;
 }
 
 .buttons-div {
@@ -59,9 +53,9 @@
 
 .creamPreTab {
 	tab-size: 2;
+	-moz-tab-size: 2;
 	margin: 2px;
 	padding: 5px;
-	-moz-tab-size: 2;
 	border-radius: 8px;
 	font-family: monospace;
 	background-color: #fffae6;
@@ -295,6 +289,12 @@
 .blue {
     color: blue;
 }
+
+.box-border1 {
+	border-radius: 12px;
+	border: 2px solid white;
+}
+
 </style>
 </head>
 <body>
@@ -326,8 +326,8 @@ $(document).ready(function() {
 						<div class="margin-top15 col-xs-12 opacity00 padding00" id="animationParent">
 							<div class="col-xs-12 margin-7 padding00" id="animatinDiv">
 								<div class="col-xs-12 animationDiv box-border">
-									<div class="col-xs-12 padding00 margin-top15 box-border1" id="NoOfLists"></div> <!-- poorna changed -->
-									<div class="col-xs-12 padding00 margin-top15 box-border1" id="NoOfListsInUnion"></div> <!-- poorna changed -->
+									<div class="col-xs-12 padding00 margin-top15 box-border1" id="NoOfLists"></div>
+									<div class="col-xs-12 padding00 margin-top15 box-border1" id="NoOfListsInUnion"></div>
 									<div class="col-xs-12 padding00 list1" id="firstList"></div>
 									<div class="col-xs-12 padding00" id="nodeAddress1"></div>
 									<div class="col-xs-12 padding00 list2" id="secondList"></div>
