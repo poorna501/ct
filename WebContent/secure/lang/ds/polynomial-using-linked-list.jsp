@@ -267,6 +267,11 @@ y {
 	color: yellow;
 }
 
+r {
+	font-weight: bold;
+	color: red;
+}
+
 .background-color-yellow {
 	background-color: yellow;
 }
@@ -382,7 +387,7 @@ $(document).ready(function() {
 										<div class="col-xs-2">
 											<div id="head1" class="col-xs-8 extraNode padding00 opacity00">
 												<div class="text-center col-xs-12 padding00 opacity00">head1</div>
-												<div class="col-xs-12 box padding00">
+												<div class="col-xs-12 box padding00" id="head1Div">
 													<span id="head1Val" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
 												</div>
 												<div class="text-center col-xs-12 padding00" id="head1InList1">head1</div>
@@ -394,7 +399,7 @@ $(document).ready(function() {
 										<div class="col-xs-12">
 											<div id="head" class="col-xs-1 col-xs-offset-1 extraNode padding00 opacity00">
 												<div class="text-center col-xs-12 padding00 opacity00">head</div>
-												<div class="col-xs-12 box padding00">
+												<div class="col-xs-12 box padding00" id="headDiv">
 													<span id="headVal" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
 												</div>
 												<div class="text-center col-xs-12 padding00" id="headNode">head</div>
@@ -427,7 +432,7 @@ $(document).ready(function() {
 										<div class="col-xs-2">
 											<div id="head2" class="col-xs-8 extraNode padding00 opacity00">
 												<div class="text-center col-xs-12 padding00 opacity00">head2</div>
-												<div class="col-xs-12 box padding00">
+												<div class="col-xs-12 box padding00" id="head2Div">
 													<span id="head2Val" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
 												</div>
 												<div class="text-center col-xs-12 padding00" id="head2InList2">head2</div>
@@ -449,12 +454,12 @@ $(document).ready(function() {
 									</div>
 									<div class="col-xs-12 padding00 list3 margin-btm8" id="thirdListParentDiv">
 										<div class="col-xs-2">
-											<div id="head3" class="col-xs-8 extraNode padding00 opacity00">
-												<div class="text-center col-xs-12 padding00 opacity00">head3</div>
+											<div id="result" class="col-xs-8 extraNode padding00 opacity00">
+												<div class="text-center col-xs-12 padding00 opacity00">result</div>
 												<div class="col-xs-12 box padding00">
-													<span id="head3Val" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
+													<span id="resultVal" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
 												</div>
-												<div class="text-center col-xs-12 padding00" id="head3InList3">head3</div>
+												<div class="text-center col-xs-12 padding00" id="resultName">result</div>
 											</div>
 										</div>
 										<div class="col-xs-10 padding00" id="thirdList"></div>
