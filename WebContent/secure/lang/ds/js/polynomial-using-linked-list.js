@@ -194,7 +194,7 @@ function introFunction() {
 						break;
 						case "memoryAllocationAndPrintReadCoeffAndExpVal" :
 							$("#MemoryAllocateInCreateMthd").addClass("z-index1000000");
-							$("#temparyPolyNode .nodes").removeClass("opacity00")
+							$("#temparyPolyNode, #temparyPolyNode .nodes").removeClass("opacity00")
 							$("#tempVal").text($("#temparyPolyNode #dataAddress"+ nodeCount).text());
 							fromEffectWithTweenMax("#temparyPolyNode #dataAddress"+ nodeCount, "#tempVal", false, function() {
 								$("#tempLine").remove();
@@ -241,14 +241,8 @@ function introFunction() {
 							$(".background-color-yellow").addClass("z-index1000000");
 							$("#tempDiv").effect( "highlight",{color: 'blue'}, 500);
 							fadeInBounceEffectWithTimelineMax("#tempDiv", "#headVal", "left", function() {
-								if (nodeCount == 1) {
-									nodeCount++;
-									if (createMethodCallCount == 1) {
-										orderingNodes(nodeCount - 1, "#firstList");
-									} else {
-										orderingNodes(nodeCount - 1, "#secondList");
-									}
-								}
+								nodeCount++;
+								orderingNodes(nodeCount - 1, (createMethodCallCount == 1) ? "#firstList" : "#secondList");
 							});
 						break;
 						case "storeChValue" :
@@ -266,24 +260,72 @@ function introFunction() {
 										+ createMethodCallCount +"Line", "arrow", function() {
 									$("#headVal, #head").addClass("opacity00");
 									$("#headLine").remove();
+									nodeCount = p1Count = p2Count = 1;
 									createMethodCallCount++;
-									if (createMethodCallCount == 2) {
+									customIntroNxtStep((createMethodCallCount == 2) ? "#printf2" : "#buttonsDiv");
+									/*if (createMethodCallCount == 2) {
 										customIntroNxtStep("#printf2");
 									} else {
 										customIntroNxtStep("#buttonsDiv");
-									}
+									}*/
 								});
 							});
 						break;
 						case "p1AndTempCoeffSame" :
 							$(".background-color-yellow").addClass("z-index1000000");
 							var selector = (createMethodCallCount == 1) ? "#firstList #coeff"+ p1Count : "#secondList #coeff" + p1Count;
-							fromEffectWithTweenMax("#temparyPolyNode #coeff"+ nodeCount, selector, true, function() {
-								$("#temparyPolyNode").addClass("opacity00");
-								$("#tempLine").remove();
-							  $(selector).text(parseInt($(selector).text()) + parseInt($("#temparyPolyNode #coeff"+ nodeCount).text()));
-							  nodeCount--;
-							  customIntroNxtStep("#polyOperationsPre", "retutnHead", "right");
+							var value  = parseInt($("#temparyPolyNode #coeff"+ nodeCount).text());
+							$("#p1Div").effect( "highlight",{color: 'blue'}, 500, function() {
+								var parentSelector = (createMethodCallCount == 1) ? "#firstList" : "#secondList"
+								if (createMethodCallCount == 1) {
+									svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", parentSelector +" #nextDiv" 
+											+ p1Count, "#svgId", "p1LineDuplicate", "arrow", function() {
+										$("#p1LineDuplicate").remove();
+										$(parentSelector + " #coeff" + p1Count).effect( "highlight",{color: 'blue'}, 500, function() {
+											addTermAdditionAnimation(selector, value);
+										});
+									});
+								} else {
+									svgAnimatingLineBottomToTop("#animationDiv", "#p1Div", parentSelector +" #nextDiv" 
+											+ p1Count, "#svgId", "p1LineDuplicate", "arrow", function() {
+										$("#p1LineDuplicate").remove();
+										$(selector + " #coeff" + p1Count).effect( "highlight",{color: 'blue'}, 500, function() {
+											addTermAdditionAnimation(selector, value);
+										});
+									});
+								}
+							});
+						break;
+						case "addTermWhileLoopAnimation" :
+							$(".background-color-yellow").addClass("z-index1000000");
+							p1Count = p2Count = 1;
+							var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList"
+							whileLoopAnimationFunction(selector);
+						break;
+						case "storeTempToP2NextAnimation" :
+							var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList"
+							$("#tempDiv").effect( "highlight",{color: 'blue'}, 500, function() {
+								if (createMethodCallCount == 1) {
+									svgAnimatingLineTopToBottom("#animationDiv", "#p2Div", selector +" #nextDiv" 
+											+ p2Count, "#svgId", "p2LineDuplicate", "arrow", function() {
+										$("#p2LineDuplicate").remove();
+										fadeInBounceEffectWithTimelineMax("#tempVal", selector + " #next" + p2Count, "top", function() {
+											console.log("nodeCount in while after : " + nodeCount);
+											nodeCount++;
+											orderingNodes(nodeCount - 1, selector);
+										});
+									});
+								} else {
+									svgAnimatingLineBottomToTop("#animationDiv", "#p2Div", selector +" #nextDiv" 
+											+ p2Count, "#svgId", "p2LineDuplicate", "arrow", function() {
+										$("#p2LineDuplicate").remove();
+										fadeInBounceEffectWithTimelineMax("#tempVal", selector + " #next" + p2Count, "top", function() {
+											console.log("nodeCount in while after : " + nodeCount);
+											nodeCount++;
+											orderingNodes(nodeCount - 1, selector);
+										});
+									});
+								}
 							});
 						break;
 					}
@@ -317,13 +359,13 @@ function introFunction() {
 							customIntroNxtStep("#assignHead"+ createMethodCallCount +"ToNull");
 						break;
 						case "printAndReadCoeffNdExpValues" :
+							$('.introjs-tooltip').removeClass("hide");
 							$("#MemoryAllocateInCreateMthd").removeClass("z-index1000000");
 							$("#printCoeffNdExpVal, #readCoeffNdExpVal").addClass("z-index1000000");
 							$('.output-console-body').append('<div id="outputCoeffAndExpValue'+ outputCount + '">Enter coeff, exp of node : '
 									+ ' <span id="input'+ outputCount+ '"><input class="output-scanf-line input" '
 									+ 'id="val'+ outputCount+ '" size="15" maxlength="6"/></span></div>');
 							$('#val' + outputCount).focus();
-							$('.introjs-tooltip').removeClass("hide");
 							var text = "Enter <y>coefficient</y> and <y>exponent</y> of the <y>polynomial</y> each separated number "
 									+ "by a <y>space</y>.";
 							typing(".introjs-tooltiptext",text,function() {
@@ -333,20 +375,21 @@ function introFunction() {
 							});
 						break;
 						case "printAndReadChValues" :
+							$('.introjs-tooltip').removeClass("hide");
 							$('.output-console-body').append('<div id="yesOrNoText'+ outputCount+ '">Do u want another node(y/n): '
 									+ ' <div class="position" id="yesOrNoDiv'+ outputCount+ '"><input class="output-scanf-line input" '
 									+ 'id="yesOrNoVal'+ outputCount+ '" size="15" maxlength="2"/></div></div>');
 							$('#yesOrNoVal' + outputCount).focus();
-							$(".introjs-tooltip").removeClass('hide');
 							if (nodeCount < 5) {
 								var text = "Enter <y>y/n</y> (or) <y>Y/N</y> to continue to insert node into the list.";
 							} else {
 								var text = "Enter <y>n</y> (or) <y>N</y> to exit the node insertion becauses here we restricted to allow only "
 											+ " <y>4</y> nodes in the list).";
 							}
-							introNextSteps("#animationDiv","storeChValue");
 							$("#consoleBodyDiv").scrollTo("#yesOrNoText"+ outputCount);
+							$('.introjs-tooltip').removeClass("hide");
 							typing(".introjs-tooltiptext",text,function() {
+								introNextSteps("#animationDiv","storeChValue");
 								readYesOrNoFromConsole('#yesOrNoVal' + outputCount);
 							});
 						break;
@@ -379,7 +422,7 @@ function introFunction() {
 							$("#polyOperationsDivPre").empty().addClass("opacity00");
 							$(".arrow, #tempLine").remove();
 							$(".intValues, .intVariables, #tempVal, #temp").addClass("opacity00");
-							nodeCount = 1;
+							p1Count = p2Count = 1;
 							customIntroNxtStep("#animationDiv", "returnHeadVal");
 						break;
 					}
@@ -429,6 +472,7 @@ function introFunction() {
 							$("#polyOperationsPre").empty();
 							$("#p1, #p1Val, #p2, #p2Val, #polyOperationsPre").addClass("opacity00");
 							$("#p1Line, #p2Line").remove();
+							p1Count = p2Count = 1;
 							introjs.refresh();
 							$("#callAddTermMethod").addClass("background-color-yellow");
 							arrow("#callAddTermMethod", "#callAddTermMethod", function() {
@@ -538,6 +582,10 @@ function introFunction() {
 								$(".introjs-nextbutton").show();
 							});
 						break;
+						case "afterWhileLoop" :
+							$(".introjs-tooltiptext").append("<ul></ul>");
+							addTermWhileConFalseAnimation();
+						break;
 					}
 				break;
 			}
@@ -638,26 +686,28 @@ function ifP1NotEqNullAnimation() {
 				+ '<span class="position" id="firstCon"><span class="position" id="tooltipP1Value">p1</span> != NULL</span> && '
 				+ '<span id="secondCon" class="position"><span id="p1Exp" class="position">p1 -> exp</span> &gt; <span class="position"'
 				+ ' id="tempExp">temp -> exp</span></span></span>';
-	$(".introjs-tooltiptext").append("<ul><li>"+ text +"</li></ul>");
 	$("#ifp1EqualToNullInAddTermFirstIf").removeClass("background-color-yellow");
 	arrow("#ifp1EqualToNullInAddTermFirstIf", "#whileLoopInAddTerm", function() {
 		$("#whileLoopInAddTerm").addClass("background-color-yellow");
 		$(".introjs-tooltip").removeClass("hide");
+		$(".introjs-tooltiptext ul").append("<li>"+ text +"</li>");
 		travel("#whileLoopInAddTerm", "#tooltipWhileCndn", function() {
 			flipEffectWithTweenMax("#tooltipP1Value", $("#p1Val").text().trim(), function() {
-				flipEffectWithTweenMax("#firstCon", $("#p1Val").text().trim() != "NULL", function() {
+				//flipEffectWithTweenMax("#firstCon", $("#p1Val").text().trim() != "NULL", function() {
 					if ($("#p1Val").text().trim() != "NULL") {
 						var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList";
-						var val1 = $(selector + " #exp" + p1Count).text().trim();
-						var val2 = $("#temparyPolyNode #exp" + nodeCount).text().trim();
+						var val1 = parseInt($(selector + " #exp" + p1Count).text().trim());
+						var val2 = parseInt($("#temparyPolyNode #exp" + nodeCount).text().trim());
 						flipEffectWithTweenMax("#p1Exp", val1, function() {
 							flipEffectWithTweenMax("#tempExp", val2, function() {
-								flipEffectWithTweenMax("#secondCon", val1 > val2, function() {
+								//flipEffectWithTweenMax("#secondCon", val1 > val2, function() {
 									if (val1 > val2) {
-										var text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
-											$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+										var text = "Since it evaluates to <y>true</y>, so the control enters into the body of <y>while-loop</y>.";
+										$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 										typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
-											
+											appendDuplicateNextBtnUsingClickFunction("", false, function() {
+												whileLoopTrueConditionAnimation(); 
+											});
 										});
 									} else {
 										var text = "Since it evaluates to <r>false</r>."
@@ -668,7 +718,7 @@ function ifP1NotEqNullAnimation() {
 											});
 										});
 									}
-								});
+								//});
 							});
 						});
 					} else {
@@ -680,7 +730,21 @@ function ifP1NotEqNullAnimation() {
 							});
 						});
 					}
-				});
+				//});
+			});
+		});
+	});
+}
+
+function whileLoopTrueConditionAnimation() {
+	var text = "Store the <y>p1</y> value into <y>p2</y>.";
+	tooltipBooletsAppendAndTypeText("#whileLoopInAddTerm", "#p1ToP2InAddTermWhileLoop", text, "li", function() {
+		var text = "Store the <y>next</y> field of <y>p1</y> to <y>p1</y>.";
+		tooltipBooletsAppendAndTypeText("#p1ToP2InAddTermWhileLoop", "#p1NxtTop1InAddTermWhile", text, "li", function() {
+			var text = "Repeat the loop until the condition <y>p1 != NULL && p1 -> exp > temp -> exp</y> is evaluates to <r>false</r>.";
+			tooltipBooletsAppendAndTypeText("#p1NxtTop1InAddTermWhile", "#whileLoopInAddTerm", text, "li", function() {
+				introNextSteps("#animationDiv", "addTermWhileLoopAnimation");
+				$(".introjs-nextbutton").show();
 			});
 		});
 	});
@@ -689,17 +753,20 @@ function ifP1NotEqNullAnimation() {
 function addTermWhileConFalseAnimation() {
 	var text = '<span id="tooltipP1Cndn" class="position" style="font-family: monospace; font-weight: bold;">'
 			+ '<span class="position" id="tooltipP1Valu">p1</span> != NULL</span>';
-	$(".introjs-tooltiptext").append("<ul><li>"+ text +"</li></ul>");
 	$("#whileLoopInAddTerm").removeClass("background-color-yellow");
 	arrow("#whileLoopInAddTerm", "#ifp1EqualToNullInAddTerm", function() {
 		$(".introjs-tooltip").removeClass("hide");
+		$(".introjs-tooltiptext ul").append("<li>"+ text +"</li>");
 		travel("#ifp1EqualToNullInAddTerm", "#tooltipP1Cndn", function() {
+			$("#ifp1EqualToNullInAddTerm").addClass("background-color-yellow");
 			flipEffectWithTweenMax("#tooltipP1Valu", $("#p1Val").text().trim(), function() {
 				if ($("#p1Val").text().trim() == "NULL") {
 					var text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
 						$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
-						
+						appendDuplicateNextBtnUsingClickFunction("", false, function() {
+							ifP1EqNullAfterWhileLoopAnimation(); 
+						});
 					});
 				} else {
 					var text = "Since it evaluates to <r>false</r>."
@@ -715,6 +782,15 @@ function addTermWhileConFalseAnimation() {
 	});
 }
 
+function ifP1EqNullAfterWhileLoopAnimation() {
+	$(".background-color-yellow").removeClass("background-color-yellow");
+	var text = "Store the <y>temp</y> value <y>"+ $("#tempVal").text() +"</y> into the <y>next</y> field of <y>p2</y>.";
+	tooltipBooletsAppendAndTypeText("#ifp1EqualToNullInAddTerm", "#tempToP2NxtInAddTerm", text, "li", function() {
+		introNextSteps("#animationDiv", "storeTempToP2NextAnimation");
+		$(".introjs-nextbutton").show();
+	});
+}
+
 function ifP1ExpAndTempExpAreSame() {
 	var text = '<span id="tooltipP1TempEqCndn" class="position" style="font-family: monospace; font-weight: bold;">'
 				+ '<span class="position" id="tooltipP1ExpValue">p1 -> exp</span> == <span id="tooltiptempExpValue" class="position">'
@@ -725,8 +801,8 @@ function ifP1ExpAndTempExpAreSame() {
 		$(".introjs-tooltip").removeClass("hide");
 		travel("#ifP1ExpEqToTempExpInAddTerm", "#tooltipP1TempEqCndn", function() {
 			var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList";
-			var val1 = $(selector + " #exp" + p1Count).text().trim();
-			var val2 = $("#temparyPolyNode #exp" + nodeCount).text().trim();
+			var val1 = parseInt($(selector + " #exp" + p1Count).text().trim());
+			var val2 = parseInt($("#temparyPolyNode #exp" + nodeCount).text().trim());
 			flipEffectWithTweenMax("#tooltipP1ExpValue", val1, function() {
 				flipEffectWithTweenMax("#tooltiptempExpValue", val2, function() {
 					if (val1 == val2) {
@@ -764,6 +840,86 @@ function ifP1ExpAndTempExpSameAnimation() {
 		$(".introjs-nextbutton").show();
 	});
 }
+
+function whileLoopAnimationFunction(selector) {
+	var val1 = parseInt($(selector + " #exp" + p1Count).text());
+	var val2 = parseInt($("#temparyPolyNode #exp" + nodeCount).text());
+	
+	if ($("#p1Val").text() != "NULL" &&  val1 > val2) {
+		p2Count = p1Count;
+		fadeInBounceEffectWithTimelineMax("#p1Val", "#p2Val", "right", function() {
+			$("#p2Line").remove();
+			addTermWhileLoopP1AndP2ValuesAnimation(selector, function() {
+				$(selector + " #nextDiv" + p1Count).effect( "highlight",{color: 'blue'}, 500, function() {
+					fadeInBounceEffectWithTimelineMax(selector + " #next" + p1Count, "#p1Val", "right", function() {
+						$("#p1Line").remove();
+						p1Count++;
+						if ($("#p1Val").text() != "NULL") {
+							if (createMethodCallCount == 1) {
+								svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", selector + " #nextDiv" + p1Count, "#svgId", "p1Line", "arrow", function() {
+									whileLoopAnimationFunction(selector);
+								});
+							} else {
+								svgAnimatingLineBottomToTop("#animationDiv", "#p1Div", selector + " #nextDiv" + p1Count, "#svgId", "p1Line", "arrow", function() {
+									whileLoopAnimationFunction(selector);
+								});
+							}
+						} else {
+							whileLoopAnimationFunction(selector);
+						}
+					});
+				});
+			});
+		});
+	} else {
+		customIntroNxtStep("#polyOperationsPre", "afterWhileLoop", "right");
+	}
+}
+
+function addTermWhileLoopP1AndP2ValuesAnimation(selector, callBackFunction) {
+	if (createMethodCallCount == 1) {
+		svgAnimatingLineTopToBottom("#animationDiv", "#p2Div", selector + " #nextDiv" + p2Count, "#svgId", "p2Line", "arrow", function() {
+			$("#p1Div").effect( "highlight",{color: 'blue'}, 500);
+			svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", selector + " #nextDiv" + p1Count, "#svgId", "p1LineDuplicate", "arrow", function() {
+				$("#p1LineDuplicate").remove();
+				if (typeof callBackFunction === "function") {
+					callBackFunction();
+				}
+			});
+		});
+	} else {
+		svgAnimatingLineBottomToTop("#animationDiv", "#p2Div", selector + " #nextDiv" + p2Count, "#svgId", "p2Line", "arrow", function() {
+			p2Count = p1Count;
+			$("#p1Div").effect( "highlight",{color: 'blue'}, 500);
+			svgAnimatingLineBottomToTop("#animationDiv", "#p1Div", selector + " #nextDiv" + p1Count, "#svgId", "p1LineDuplicate", "arrow", function() {
+				$("#p1LineDuplicate").remove();
+				if (typeof callBackFunction === "function") {
+					callBackFunction();
+				}
+			});
+		});
+	}
+} 
+
+function addTermAdditionAnimation(selector, value) {
+	fromEffectWithTweenMax("#temparyPolyNode #coeff"+ nodeCount, selector, true, function() {
+		$("#temparyPolyNode").addClass("opacity00");
+		$("#tempLine").remove();
+		$(selector).text(parseInt($(selector).text()) + value);
+		//nodeCount--;
+		customIntroNxtStep("#polyOperationsPre", "retutnHead", "right");
+	});
+	
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -816,15 +972,16 @@ function ifP1ExpAndTempExpSameAnimation() {
 
 
 function commonCodeForP1AndP2InAddTerm(selector, lineId, callBackFunction) {
+	var parentSelector = (createMethodCallCount == 1) ? "#firstList" : "#secondList"
 	if ($("#headVal").text() != "NULL") {
 		if (createMethodCallCount == 1) {
-			svgAnimatingLineTopToBottom("#animationDiv", selector, "#nextDiv1", "#svgId", lineId, "arrow", function() {
+			svgAnimatingLineTopToBottom("#animationDiv", selector, parentSelector + " #nextDiv1", "#svgId", lineId, "arrow", function() {
 				if (typeof callBackFunction === "function") {
 					callBackFunction();
 				}
 			});
 		} else {
-			svgAnimatingLineBottomToTop("#animationDiv", selector, "#nextDiv1", "#svgId", lineId, "arrow", function() {
+			svgAnimatingLineBottomToTop("#animationDiv", selector, parentSelector + " #nextDiv1", "#svgId", lineId, "arrow", function() {
 				if (typeof callBackFunction === "function") {
 					callBackFunction();
 				}
@@ -860,14 +1017,19 @@ function changeIdsAtBegin(val, selector, callBackFunction) {
 }
 
 function orderingNodes(count, selector) {//Changing node position from temparay place to list position
-	$(selector).append('<div class="opacity00 col-xs-2 nodes hide" id="node' + (count) 
-			+ '" style="top: 0px; width: auto;">' + $("#temparyPolyNode > #node" + (count)).html() + '</div>');
-	if (count == 1) {
+	if (count == 1 || $(selector +" .nodes").length + 1 == (count)) {
+		if (count == 1) {
+			$(selector).append('<div class="opacity00 col-xs-2 nodes hide" id="node' + (count) 
+					+ '" style="top: 0px; width: auto;">' + $("#temparyPolyNode > #node" + (count)).html() + '</div>');
+		} else {
+			$(selector + " .nodes:last").after('<div class="opacity00 col-xs-2 nodes hide" id="node' + (count) 
+					+ '" style="top: 0px; width: auto;">' + $("#temparyPolyNode > #node" + (count)).html() + '</div>');
+		}
 			setTimeout(function() {
 				$('.lines').remove();
 				positioningNodes(selector);
 			}, 2000);
-	}
+	} 
 	
 	/*$('#temparyPolyNode .nodes').attr('id', 'node' + count);
 	
@@ -945,30 +1107,32 @@ function movingNodes(val, nodeId, callBackFunction) {
 }
 
 function regenerateArrows(count, selector) {
-	if (count == 1) {
-		if (createMethodCallCount == 1) {
-			svgAnimatingLineTopToBottom("#animationDiv", "#headDiv", selector + " #coeffDiv" + (nodeCount - 1), "#svgId", "headLine", "arrow");
-			svgAnimatingLineTopToBottom("#animationDiv", "#tempDiv", selector + " #coeffDiv" + (nodeCount - 1), "#svgId", "tempLine", "arrow");
-			for(i = 1; i< $("#firstList .nodes").length; i++) {
-				svgAnimatingLineRightToLeft("#animationDiv", "#firstList #coeffDiv"+ i, "#firstList #coeffDiv"+ 
-						(i + 1), "#svgId", "line"+ i, "arrow");
-			}
-		} else {
-			svgAnimatingLineRightToLeft("#animationDiv", "#head1Div", "#firstList #coeffDiv1", "#svgId", "head1Line", "arrow");
-			if ($("#firstList .nodes").length != 1) {
-				for(i = 1; i< $("#firstList .nodes").length; i++) {
-					svgAnimatingLineRightToLeft("#animationDiv", "#firstList #coeffDiv"+ i, "#firstList #coeffDiv"+ 
-							(i + 1), "#svgId", "line"+ i, "arrow");
-				}
-			}
-			svgAnimatingLineBottomToTop("#animationDiv", "#headDiv", selector + " #coeffDiv" + (nodeCount - 1), "#svgId", "headLine", "arrow");
-			svgAnimatingLineBottomToTop("#animationDiv", "#tempDiv", selector + " #coeffDiv" + (nodeCount - 1), "#svgId", "tempLine", "arrow");
-		}
-		customIntroNxtStep("#polyOperationsPre", "retutnHead", "right");
-		
+	if (createMethodCallCount == 1) {
+		svgAnimatingLineTopToBottom("#animationDiv", "#headDiv", selector + " #coeffDiv1", "#svgId", "headLine", "arrow");
+		svgAnimatingLineTopToBottom("#animationDiv", "#tempDiv", selector + " #coeffDiv" + (nodeCount - 1), "#svgId", "tempLine", "arrow");
 	} else {
-		
+		svgAnimatingLineBottomToTop("#animationDiv", "#headDiv", selector + " #coeffDiv1", "#svgId", "headLine", "arrow");
+		svgAnimatingLineBottomToTop("#animationDiv", "#tempDiv", selector + " #coeffDiv" + (nodeCount - 1), "#svgId", "tempLine", "arrow");
 	}
+	
+	if ($("#firstList .nodes").length != 0 && $("#secondList .nodes").length == 0) {
+		for(i = 1; i< $(selector + " .nodes").length; i++) {
+			svgAnimatingLineRightToLeft("#animationDiv", selector + " #nextDiv"+ i, selector + " #coeffDiv"+ 
+					(i + 1), "#svgId", "line"+ i, "arrow");
+		}
+	} else {
+		svgAnimatingLineRightToLeft("#animationDiv", "#head1Div", "#firstList #coeffDiv1",  "#svgId", "head1Line", "arrow");
+		
+		for(i = 1; i< $(selector + " .nodes").length; i++) {
+			svgAnimatingLineRightToLeft("#animationDiv", selector + " #nextDiv"+ i, selector + " #coeffDiv"+ 
+					(i + 1), "#svgId", "line"+ i, "arrow");
+		}
+		for (i = 1; i < $("#firstList .nodes").length; i++) {
+			svgAnimatingLineRightToLeft("#animationDiv", "#firstList #nextDiv"+ i, "#firstList #coeffDiv"+ 
+					(i + 1), "#svgId", "line"+ i, "arrow");
+		}
+	}
+	customIntroNxtStep("#polyOperationsPre", "retutnHead", "right");
 }
 
 function trueOrFalseCondition(selector1, selector2, condition, value1, value2, callBackFunction) {
@@ -1081,7 +1245,7 @@ function readYesOrNoFromConsole(selector) { //Enter Yes or No Function
 			} else {
 				$('.length-error-text').remove();
 				$('.introjs-tooltiptext').append("<span class='ct-code-b-red length-error-text'><br/>Please enter (n (or) N). because "
-							+" we are restricted to allow list size to (<y>5</y> nodes) only</span>");
+							+" we are restricted to allow list size to (<y>4</y> nodes) only</span>");
 				$(".introjs-nextbutton").hide();
 			}
 		} 
@@ -1340,6 +1504,7 @@ function fromEffectWithTweenMax(selector1, selector2, flag, callBackFunction) { 
 	if (!flag) {
 		$(selector1).addClass('z-index1000000').parent().effect( "highlight",{color: 'blue'}, 500);
 	} else {
+		$(selector2).text($(selector1).text());
 		$(selector1).addClass('z-index1000000').effect( "highlight",{color: 'blue'}, 500);
 	}
 	TweenMax.from($(selector2), 1, {top: topLength, left: leftLength, onComplete: function() {
@@ -1494,11 +1659,11 @@ function fadeInBounceEffectWithTimelineMax(selector1, selector2, pos, callBackFu
 		$(selector2).text($(selector1).text());
 		TweenLite.from(selector2, 2.8, { ease:  Bounce.easeOut, top:l1.top-l2.top, left :l1.left-l2.left});
 		if (pos == "left") {
-			TweenLite.to($('#dummy'), 1.5, { ease: Sine.easeOut, left:-150 , delay : 1.1, opacity:0 , onComplete: function() {
+			TweenLite.to($('#dummy'), 1.5, { ease: Sine.easeOut, left: -150 , delay : 1.1, opacity:0 , onComplete: function() {
 				bounceCallBack(selector1, selector2, callBackFunction)
 			}});
 		} else if (pos == "right") {
-			TweenLite.to($('#dummy'), 1.5, { ease: Sine.easeOut, left: 350 , delay : 1.1, opacity:0 , onComplete: function() {
+			TweenLite.to($('#dummy'), 1.5, { ease: Sine.easeOut, left: 550 , delay : 1.1, opacity:0 , onComplete: function() {
 				bounceCallBack(selector1, selector2, callBackFunction)
 			}});
 		} else if (pos == "bottom") {
