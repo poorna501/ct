@@ -444,13 +444,41 @@ $(document).ready(function() {
 										<div class="col-xs-12">
 											<div id="t3" class="col-xs-1 col-xs-offset-1 extraNode padding00 opacity00">
 												<div class="text-center col-xs-12 padding00 opacity00">t3</div>
-												<div class="col-xs-12 box padding00">
+												<div class="col-xs-12 box padding00" id="t3Div">
 													<span id="t3Val" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
 												</div>
-												<div class="text-center col-xs-12 padding00" id="headNode">t3</div>
+												<div class="text-center col-xs-12 padding00" id="t3Node">t3</div>
 											</div>
-											<div class="col-xs-3" id="temparyPolyNodeForAddSunAndMull"></div>
-										</div>									
+											<div class="col-xs-3" id="temparyPolyNodeForPloy"></div>
+											<div id="headOp" class="col-xs-1 extraNode padding00 opacity00">
+												<div class="text-center col-xs-12 padding00 opacity00">head</div>
+												<div class="col-xs-12 box padding00" id="headInOP">
+													<span id="headOpVal" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
+												</div>
+												<div class="text-center col-xs-12 padding00" id="headOpNode">head</div>
+											</div>
+											<div id="sum" class="col-xs-1 extraNode padding00 opacity00">
+												<div class="text-center col-xs-12 padding00 opacity00">sum</div>
+												<div class="col-xs-12 box padding00" id="sumDiv">
+													<span id="sumVal" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
+												</div>
+												<div class="text-center col-xs-12 padding00" id="sumNode">sum</div>
+											</div>
+											<div id="headD1" class="col-xs-1 extraNode padding00 opacity00">
+												<div class="text-center col-xs-12 padding00 opacity00">head</div>
+												<div class="col-xs-12 box padding00" id="headDiv1">
+													<span id="headVal1" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
+												</div>
+												<div class="text-center col-xs-12 padding00" id="headNode1">head</div>
+											</div>
+											<div id="temp1" class="col-xs-1 extraNode padding00 opacity00">
+												<div class="text-center col-xs-12 padding00 opacity00">temp</div>
+												<div class="col-xs-12 box padding00" id="tempDiv1">
+													<span id="tempVal1" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
+												</div>
+												<div class="text-center col-xs-12 padding00" id="tempNode1">temp</div>
+											</div>	
+										</div>
 									</div>
 									<div class="col-xs-12 padding00 list3 margin-btm8" id="thirdListParentDiv">
 										<div class="col-xs-2">
