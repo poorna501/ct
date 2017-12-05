@@ -484,7 +484,7 @@ $(document).ready(function() {
 										<div class="col-xs-2">
 											<div id="result" class="col-xs-8 extraNode padding00 opacity00">
 												<div class="text-center col-xs-12 padding00 opacity00">result</div>
-												<div class="col-xs-12 box padding00">
+												<div class="col-xs-12 box padding00" id="resultDiv">
 													<span id="resultVal" class="extrNodeVal position ct-brown-color ct-fonts inline-style"></span>
 												</div>
 												<div class="text-center col-xs-12 padding00" id="resultName">result</div>
