@@ -329,7 +329,9 @@ r {
 	border: none;
 	background-color: black;
 }
-
+#row2 > .nodes {
+	float: right;
+}
 
 </style>
 </head>
@@ -490,7 +492,10 @@ $(document).ready(function() {
 												<div class="text-center col-xs-12 padding00" id="resultName">result</div>
 											</div>
 										</div>
-										<div class="col-xs-10 padding00" id="thirdList"></div>
+										<div class="col-xs-10 padding00" id="thirdList">
+											<!-- <div id="row1" class="col-xs-12 padding00"></div>
+											<div id="row2" class="col-xs-12 padding00"></div> -->
+										</div>
 									</div>
 									<div class="col-xs-12 padding00" id="nodeAddress3"></div>
 								</div>
