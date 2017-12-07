@@ -28,7 +28,7 @@ function preStructTypeList() {
 }
 
 function preMain() {
-	if (buttonName == "create") {
+	if (buttonName == "create") { //create method code Display in main()
 		var mainCodeForCreate = '<div class="text-center ct-blue-color ct-fonts padding00">In main()</div>'
 			+ '<span id="printf1">printf("Enter 1st polynomial: \\n");</span>\n'
 			+ '<span id="assignHead1ToNull">head1 = NULL;</span>\n'
@@ -36,14 +36,13 @@ function preMain() {
 			+ '<span id="printf2">printf("Enter 2nd polynomial: \\n");</span>\n'
 			+ '<span id="assignHead2ToNull">head2 = NULL;</span>\n'
 			+ '<span id="callCreateMethod2">head2 = create(head2);</span>'
-	} else if (buttonName == "print") {
+	} else if (buttonName == "print") {	//print method code display in main()
 		var mainCodeForCreate = '<div class="text-center ct-blue-color ct-fonts padding00">In main()</div>'
 			+ '<span id="callPrintMethod1">print(head1);</span>\n'
 			+ '<span id="callPrintMethod2">print(head2);</span>\n';
-	} else if (buttonName == "mul") {
-		
+	} else if (buttonName != "create" || buttonName != "print" ) { //mul and add and subtraction method code display in main method
 		var mainCodeForCreate = '<div class="text-center ct-blue-color ct-fonts padding00">In main()</div>'
-			+ '<span id="callMulMethod1">result = mul(head1,head2);</span>\n'
+			+ '<span id="callMulMethod1">result = '+ buttonName +'(head1,head2);</span>\n'
 			+ '<span id="callPrintMethod1">print(result);</span>\n'
 	}
 	$("#inMain").addClass("opacity00").text('').append(mainCodeForCreate);
@@ -71,6 +70,7 @@ function preCreateMethodCodeDisplay() {
 		        + '\t<span id="returnHeadInCreateMthd">return head;</span>\n'
 			+ '}</div>';
 	} else if (buttonName == "print") {
+		console.log("in  printMethod");
 		var preCodeForCreateMethod = '<div id="displayMethodDef">'
 			+ '<span id="nameOfDisplayMthd">void print(poly head) {</span>\n'
 		        + '\t<span id="varDecInCreate">poly temp = head;</span>\n'
@@ -98,6 +98,57 @@ function preCreateMethodCodeDisplay() {
 		        + '\t}\n'
 		        + '\t<span id="returnPro">return pro;</span>\n'
 		+'}</div>';
+	} else if (buttonName == "add" || buttonName == "sub") {
+		var preCodeForCreateMethod = '<div id="mulMethodDef">'
+			+ '<span id="nameOfMulMthd">poly '+ btn +'(poly head1, poly head2) {</span>\n'
+	        	+ '\t<span id="varDecInAdd">poly t1, t2, sum = NULL, temp = NULL;</span>\n'
+	        	+ '\t<span id="t1InilToHead1Val">t1 = head1;</span>\n'
+	        	+ '\t<span id="t2InitlToHead2Val">t2 = head2;</span>\n'
+	        	+ '\t<span id="firstWhile"><span id="firstWhileConInAdd">while(<span id="firstWhileCon">t1 != NULL && t2 != NULL</span>) {</span>\n'
+	        		+ '\t\t<span id="memoryAlloc1">temp = (poly)malloc(sizeof(struct polynomial));</span>\n'
+	             	+ '\t\t<span id="whileFirstIfConInAdd">if(<span id="whileFirstIfCon">t1 -> exp == t2 -> exp</span>) {</span>\n'
+                             + '\t\t\t<span id="additionSpan">temp -> coeff = t1 -> coeff + t2 -> coeff;</span>\n'
+                             + '\t\t\t<span id="t1ExpToTmpExp1">temp -> exp = t1 -> exp;</span>\n'
+                             + '\t\t\t<span id="tempNxtToNull1">temp -> next = NULL;</span>\n'
+                             + '\t\t\t<span id="callAddMethod1">sum = addterm(sum,temp);</span>\n'
+                             + '\t\t\t<span id="treavelT1ToT1Nxt">t1 = t1 -> next;</span>\n'
+                             + '\t\t\t<span id="treavelT2ToT2Nxt">t2 = t2 -> next;</span>\n'
+                   + '\t\t<span id="whileSecondIfConInAdd">} else if(<span id="whileSecondIfCon">t1 -> exp > t2 -> exp</span>) {</span>\n'
+	            	   + '\t\t\t<span id="tmpCoeffToT1Coeff1">temp -> coeff = t1 -> coeff;</span>\n'
+	            	   + '\t\t\t<span id="t1ExpToTmpExp2">temp -> exp = t1 -> exp;</span>\n'
+	            	   + '\t\t\t<span id="tempNxtToNull2">temp -> next = NULL;</span>\n'
+	            	   + '\t\t\t<span id="callAddMethod2">sum = addterm(sum,temp);</span>\n'
+	            	   + '\t\t\t<span id="treavelT1ToT1Nxt">t1 = t1 -> next;</span>\n'
+                   + '\t\t<span id="elseCon">} else {\n'
+                	   + '\t\t\t<span id="tmpCoeffToT2Coeff1">temp -> coeff = t2 -> coeff;</span>\n'
+                	   + '\t\t\t<span id="t2ExpToTmpExp1">temp -> exp = t2 -> exp;</span>\n'
+                	   + '\t\t\t<span id="tempNxtToNull3">temp -> next = NULL;</span>\n'
+                	   + '\t\t\t<span id="callAddMethod3">sum = addterm(sum,temp);</span>\n'
+                	   + '\t\t\t<span id="treavelT2ToT2Nxt">t2 = t2 -> next;</span>\n'
+                   + '\t\t}</span>\n'
+	         + '\t}</span>\n'
+	         + '\t<span id="secondWhile"><span id="secondWhileInAdd">while(<span id="secondWhileCon">t1 != NULL</span>) {</span>\n'
+	                   + '\t\t<span id="memoryAlloc2">temp = (poly)malloc(sizeof(struct polynomial));</span>\n'
+	                   + '\t\t<span id="tmpCoeffToT1Coeff2">temp -> coeff = t1 -> coeff;</span>\n'
+	                   + '\t\t<span id="t1ExpToTmpExp3">temp -> exp = t1 -> exp;</span>\n'
+	                   + '\t\t<span id="tempNxtToNull4">temp -> next = NULL;</span>\n'
+	                   + '\t\t<span id="callAddMethod4">sum = addterm(sum,temp);</span>\n'
+	                   + '\t\t<span id="treavelT1ToT1Nxt">t1 = t1 -> next;</span>\n'
+	         + '\t}</span>\n'
+	         + '\t<span id="thirdWhile"><span id="thirdWhileInAdd">while(<span id="thirdWhileCon">t2 != NULL</span>) {</span>\n'
+	        	 + '\t\t<span id="memoryAlloc3">temp = (poly)malloc(sizeof(struct polynomial));</span>\n'
+	        	 + '\t\t<span id="tmpCoeffToT2Coeff2">temp -> coeff = t2 -> coeff;</span>\n'
+	        	 + '\t\t<span id="t2ExpToTmpExp2">temp -> exp = t2 -> exp;</span>\n'
+	             + '\t\t<span id="tempNxtToNull5">temp -> next = NULL;</span>\n'
+	             + '\t\t<span id="callAddMethod5">sum = addterm(sum,temp);</span>\n'
+	             + '\t\t<span id="treavelT2ToT2Nxt">t2 = t2 -> next;</span>\n'
+	         + '\t}</span>\n'
+	         + '\t<span id="returnSum"> return sum;</span>\n'
+	    + '}</div>'
+	    
+		if (btn == "sub") {
+			$("#additionSpan").text("temp -> coeff = t1 -> coeff - t2 -> coeff;");
+		}
 	}
 	$("#polyOperationsDivPre").addClass("opacity00").empty("").append(preCodeForCreateMethod);
 }
@@ -288,14 +339,13 @@ function introFunction() {
 							});
 						break;
 						case "variableDecInAddTermMthd":
-							if (btn != "mul") {
+							if (btn == "create") {
 								zoomInEffect("#p1", function() {
 									zoomInEffect("#p2", function() {
 										addTermP1AndP2PointerVarDec();
 									});
 								});
 							} else {
-								console.log("in addtermDec");
 								$("#headNode1").text("p1");
 								$("#tempNode1").text("p2");
 								zoomInEffect("#headOp", function() {
@@ -312,7 +362,7 @@ function introFunction() {
 						break;
 						case "addTermP1EqNullFirstIf" :
 							var selector1, selector2;
-							if (btn != "mul") {
+							if (btn == "create") {
 								selector1 = "#tempDiv";
 								selector2 = "#headVal";
 							} else {
@@ -352,7 +402,7 @@ function introFunction() {
 							var selector = (createMethodCallCount == 1) ? "#firstList #coeff"+ p1Count : "#secondList #coeff" + p1Count;
 							var parentSelector = (createMethodCallCount == 1) ? "#firstList": "#secondList";
 							
-							if (btn == "mul") {
+							if (btn != "create") {
 								temporaryDiv = "#temparyPolyNodeForPloy";
 								p1DivId = "#headDiv1";
 								selector ="#thirdList #coeff"+ p1Count;
@@ -386,7 +436,7 @@ function introFunction() {
 							var tempVal = "#tempVal";
 							var p2Div = "#p2Div";
 							var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList";
-							if (btn == "mul") {
+							if (btn != "create") {
 								tempDiv = "#t3Div";
 								tempVal = "#t3Val";
 								p2Div = "#tempDiv1";
@@ -398,7 +448,6 @@ function introFunction() {
 											+ p2Count, "#svgId", "p2LineDuplicate", "arrow", function() {
 										$("#p2LineDuplicate").remove();
 										fadeInBounceEffectWithTimelineMax(tempVal, selector + " #next" + p2Count, "top", function() {
-											console.log("nodeCount in while after : " + nodeCount);
 											nodeCount++;
 											orderingNodes(nodeCount - 1);
 										});
@@ -408,7 +457,6 @@ function introFunction() {
 											+ p2Count, "#svgId", "p2LineDuplicate", "arrow", function() {
 										$("#p2LineDuplicate").remove();
 										fadeInBounceEffectWithTimelineMax(tempVal, selector + " #next" + p2Count, "top", function() {
-											console.log("nodeCount in while after : " + nodeCount);
 											nodeCount++;
 											orderingNodes(nodeCount - 1);
 										});
@@ -422,7 +470,7 @@ function introFunction() {
 							var p1Div = "#p1Div";
 							var temparyPolyNode = "#temparyPolyNode";
 							var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList";
-							if (btn == "mul") {
+							if (btn != "create") {
 								tempDiv = "#t3Div";
 								tempVal = "#t3Val";
 								p2Div = "#tempDiv1";
@@ -456,7 +504,7 @@ function introFunction() {
 							var temparyNode = "#temparyPolyNode";
 							var p1Value = "#p1Val";
 							var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList";
-							if (btn == "mul") {
+							if (btn != "create") {
 								tempDivValue = "#t3Div";
 								tempValue = "#t3Val";
 								p1DivValue = "#headDiv1";
@@ -492,7 +540,7 @@ function introFunction() {
 							var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList";
 							var value = $("#head"+ createMethodCallCount +"Val").text();
 							var selector1 = "#head"+ createMethodCallCount +"Val";
-							if (btn == "mul") {
+							if (btn != "print") {
 								head = "#headD1";
 								headVal = "#headVal1";
 								headDiv = "#headDiv1";
@@ -529,24 +577,44 @@ function introFunction() {
 						break;
 						case "variableDecInMulMthd" : //Multiplication Method cases
 							$("#t3Node").text("temp");
-							$("#sumNode").text("pro");
+							$("#sumNode").text((btn == "mul") ? "pro" : "sum");
 							zoomInEffect("#p1", function() {
 								zoomInEffect("#p2", function() {
 									zoomInEffect("#t3", function() {
 										zoomInEffect("#sum", function() {
-											$("#p1Val").text("NULL");
-											zoomInEffect("#p1Val", function() {
-												$("#p2Val").text("NULL");
-												zoomInEffect("#p2Val", function() {
-													$("#t3Val").text("NULL");
-													zoomInEffect("#t3Val", function() {
-														$("#sumVal").text("NULL");
-														zoomInEffect("#sumVal", function() {
-															customIntroNxtStep("#polyOperationsDivPre", "mulMainLogicExplanation", "right");
+											if (btn == "mul") {
+												$("#p1Val").text("NULL");
+												zoomInEffect("#p1Val", function() {
+													$("#p2Val").text("NULL");
+													zoomInEffect("#p2Val", function() {
+														$("#t3Val").text("NULL");
+														zoomInEffect("#t3Val", function() {
+															$("#sumVal").text("NULL");
+															zoomInEffect("#sumVal", function() {
+																customIntroNxtStep("#polyOperationsDivPre", "mulMainLogicExplanation", "right");
+															});
 														});
 													});
 												});
-											});
+											} else {//addition and subtraction variables
+												$("#t3Val").text("NULL");
+												zoomInEffect("#t3Val", function() {
+													$("#sumVal").text("NULL");
+													zoomInEffect("#sumVal", function() {
+														$("#p1Val").text($("#head1Val").text().trim())
+														fromEffectWithTweenMax("#head1Val", "#p1Val", false, function() {
+															if ($("#p1Val").text() != "NULL") {
+																svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", "#firstList #nextDiv1", "#svgId", "p1Line", "arrow");	
+															}
+															$("#p2Val").text($("#head2Val").text().trim());
+															fromEffectWithTweenMax("#head2Val", "#p2Val", false, function() {
+																svgAnimatingLineBottomToTop("#animationDiv", "#p2Div", "#secondList #nextDiv1", "#svgId", "p2Line", "arrow");
+																customIntroNxtStep("#polyOperationsDivPre", "addAndSubMainLogicExplanation", "right");
+															}); 
+														});
+													});
+												});
+											}
 										});
 									});
 								});
@@ -566,7 +634,7 @@ function introFunction() {
 						break;
 						case "returnProValAnimation" :
 							fadeInBounceEffectWithTimelineMax("#sumVal", "#resultVal", "right", function() {
-								$("#sum").addClass("opacity00");
+								$("#sum, #sumVal").addClass("opacity00");
 								$("#proLine").remove();
 								$(".arrow").remove();
 								if ($("#resultVal").text().trim() != "NULL") {
@@ -607,7 +675,17 @@ function introFunction() {
 								$("#tempLine").remove();
 								svgAnimatingLineRightToLeft("#animationDiv", "#t3Div", "#temparyPolyNodeForPloy #coeffDiv" + 
 									nodeCount, "#svgId", "tempLine", "arrow", function() {
-									customIntroNxtStep("#polyOperationsDivPre", "multiplicaitonOperation", "right");
+									if (btn == "mul") {
+										customIntroNxtStep("#polyOperationsDivPre", "multiplicaitonOperation", "right");
+									} else {
+										if ($("#p1Val").text() != "NULL" && $("#p2Val").text() != "NULL") {
+											customIntroNxtStep("#firstWhile", "firstIfCondition", "right");
+										} else if ($("#p1Val").text() != "NULL") {
+											customIntroNxtStep("#secondWhile", "secondWhileLoop", "right");
+										} else {
+											customIntroNxtStep("#thirdWhile", "thirdWhileLoop", "right");
+										}
+									}
 								});
 							});
 						break;
@@ -641,43 +719,37 @@ function introFunction() {
 									$("#headOpVal, #headOp").addClass("opacity00");
 									$("#headOpLine").remove();
 									p1Count = p2Count = 1;
-									customIntroNxtStep("#polyOperationsDivPre", "t2NxtToT2", "right");
+									if (btn == "mul") {
+										customIntroNxtStep("#polyOperationsDivPre", "t2NxtToT2", "right");
+									} else {
+										customIntroNxtStep("#firstWhile", "checkWhileLoop", "right");
+									}
 								});
 							});
 						break;
 						case "travelT2NxtToT2" :
-							$(".background-color-yellow").addClass("z-index1000000");
-							$("#p2Div").effect( "highlight",{color: 'blue'}, 500, function() {
-								fadeInBounceEffectWithTimelineMax("#secondList #nextDiv" + t2Count, "#p2Val", "right", function() {
-									$("#t2Line").remove();
-									t2Count++;
-									if ($("#p2Val").text().trim() != "NULL") {
-										svgAnimatingLineBottomToTop("#animationDiv", "#p2Div", "#secondList #nextDiv" + t2Count 
-												, "#svgId", "t2Line", "arrow", function() {
-											customIntroNxtStep("#polyOperationsDivPre", "secondForLoopConCheck", "right");
-										});
-									} else {
-										customIntroNxtStep("#polyOperationsDivPre", "secondForLoopConCheck", "right");
-									}
-								});
-								
-							});
+							travelT2NxtToT2();
 						break;
 						case "travelT1NxtToT1" :
-							$(".background-color-yellow").addClass("z-index1000000");
-							$("#p1Div").effect( "highlight",{color: 'blue'}, 500, function() {
-								fadeInBounceEffectWithTimelineMax("#firstList #nextDiv" + t1Count, "#p1Val", "right", function() {
-									$("#t1Line").remove();
-									t1Count++;
-									t2Count = 1;
-									if ($("#p1Val").text().trim() != "NULL") {
-										svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", "#firstList #nextDiv" + t1Count 
-												, "#svgId", "t1Line", "arrow", function() {
-											customIntroNxtStep("#polyOperationsDivPre", "firstForLoopConCheck", "right");
-										});
+							travelT1NxtT1();
+						break;
+						case "additionAndSubtractionOperation" :
+							fromEffectWithTweenMax("#firstList #coeff"+ t1Count, "#temparyPolyNodeForPloy #coeff"+ nodeCount, false, function() {
+								fromEffectWithTweenMax("#secondList #coeff"+ t2Count, "#temparyPolyNodeForPloy #coeff"+ nodeCount, true, function() {
+									var val1 = parseInt($("#firstList #coeff"+ t1Count).text());
+									var val2 = parseInt($("#secondList #coeff"+ t2Count).text());
+									if (btn = "add") {
+										$("#temparyPolyNodeForPloy #coeff"+ nodeCount).text(val1 + val2);
 									} else {
-										customIntroNxtStep("#polyOperationsDivPre", "firstForLoopConCheck", "right");
+										$("#temparyPolyNodeForPloy #coeff"+ nodeCount).text(val1 - val2);
 									}
+									$("#temparyPolyNodeForPloy #exp"+ nodeCount).text($("#firstList #exp"+ t1Count).text().trim());
+									fromEffectWithTweenMax("#firstList #exp"+ t1Count, "#temparyPolyNodeForPloy #exp"+ nodeCount, false, function() {
+										$("#temparyPolyNodeForPloy #next"+ nodeCount).text("NULL").addClass("opacity00");
+										zoomInEffect("#temparyPolyNodeForPloy #next"+ nodeCount, function() {
+											customIntroNxtStep("#polyOperationsDivPre", "callToAddTermMethod", "right");
+										});
+									});
 								});
 							});
 						break;
@@ -692,7 +764,7 @@ function introFunction() {
 						customIntroNxtStep("#printf1");
 					} else if (buttonName == "print") {//display method call in main
 						customIntroNxtStep("#callPrintMethod1", "callPrintMethod");
-					} else if (buttonName == "mul") { //multiplication method
+					} else if (buttonName != "create" || buttonName != "print") { //multiplication method && add & sub
 						customIntroNxtStep("#callMulMethod1", "callMulMethod");
 					}
 				break;
@@ -756,7 +828,7 @@ function introFunction() {
 							$("#head, #temp, #headVal, #tempVal, #headD1, #headVal, #tempVal1, #temp1").addClass("opacity00");
 							$("#headLine, #tempLine").remove();
 							
-							var selector = (btn == "mul") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
+							var selector = (btn != "print") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
 							if ($(selector + " .nodes").length == 0) {
 								$(".output-console-body").append('<div id="printNull'+ outputCount +'">NULL</div>');
 							} else {
@@ -764,7 +836,7 @@ function introFunction() {
 							}
 							$("#consoleBodyDiv").scrollTo('#printNull'+ outputCount);
 							outputCount++;
-							if (btn == "mul") {
+							if (btn != "print") {
 								customIntroNxtStep("#buttonsDiv");
 							} else {
 								if (createMethodCallCount == 1) {
@@ -811,6 +883,7 @@ function introFunction() {
 					}
 				break;
 				case "polyOperationsDivPre" :
+					$("#polyOperationsDivPre").removeClass("hide");
 					$(".z-index1000000, .background-color-yellow").removeClass("z-index1000000 background-color-yellow");
 					var animatedStep = introjs._introItems[introjs._currentStep].animateStep;
 					switch(animatedStep) {
@@ -841,12 +914,18 @@ function introFunction() {
 						case "callToAddTermMethod":
 							$(".introjs-tooltip").show();
 							$("#callAddTermMethod").addClass("background-color-yellow");
-							var selector1 = "#tmpNxtNull";
-							var selector2 = "#callToAddTermMthd";
+							var selector1 = "#tempNxtToNull1";
+							var selector2 = "#callAddMethod1";
 							var value1 = $("#sumVal").text();
 							var value2 = $("#t3Val").text();
-							var selectorName = "pro";
-							if (btn != "mul") {
+							var selectorName = "sum";
+							if (btn == "mul") {
+								selector2 = "#callToAddTermMthd";
+								selectorName = "pro";
+								selector1 = "#tmpNxtNull";	
+							}
+							
+							if (btn == "create") {
 								selector1 = "#storeNullToTemoNext";
 								selector2 = "#callAddTermMethod";
 								value1 = $("#head"+ createMethodCallCount +"Val").text();
@@ -917,6 +996,7 @@ function introFunction() {
 							});
 						break;
 						case "printMethodVarDec" : //printMethod call
+							$("#printMethodVarDec").removeClass("hide");
 							buttonName = "print";
 							preCreateMethodCodeDisplay();
 							$("#polyOperationsDivPre").removeClass("opacity00");
@@ -931,9 +1011,12 @@ function introFunction() {
 							$(".introjs-tooltiptext").append("<ul></ul>");
 							displayMethodPrintNull();
 						break;
-						case "mulMethodVarDec" : //Multiplication call
+						case "mulMethodVarDec" : //common for Multiplication && addition && subtraction call 
 							preCreateMethodCodeDisplay();
 							$("#polyOperationsDivPre").removeClass("opacity00");
+							if (buttonName == "add" || buttonName == "sub") {
+								$("#inMain, #structTypelist").addClass("hide");
+							}
 							introjs.refresh();
 							$(".introjs-tooltip").removeClass("hide");
 							mulMethodVariablesDeclaration();
@@ -960,30 +1043,21 @@ function introFunction() {
 							multiplcationAnimationFunction();
 						break;
 						case "storeRtnResultOfAddTerm" :
-							$(".introjs-tooltiptext").append("<ul></ul>");
-							$(".arrow").remove();
-							$("#polyOperationsPre").empty();
-							$("#headD1, #headVal1, #temp1, #tempVal1, #polyOperationsPre").addClass("opacity00");
-							$("#p1Line, #p2Line").remove();
-							p1Count = p2Count = 1;
-							introjs.refresh();
+							addTermReturnCode();
+							var text = "The <y>return</y> value of the <y>addTerm</y> (<y>"+ $("#headOpVal").text().trim() +"</y>)";
 							$("#callAddTermMethod").addClass("background-color-yellow");
 							$("#callAddTermMethod").removeClass("background-color-yellow");
-							var text = "The <y>return</y> value of the <y>addTerm</y> (<y>"+ $("#headOpVal").text().trim() +"</y>)";
 							tooltipBooletsAppendAndTypeText("#callToAddTermMthd", "#callToAddTermMthd", text, "ul", function() {
 								introNextSteps("#animationDiv", "returnProVal");
 								$(".introjs-nextbutton").show();
 							});
 						break;
 						case "t2NxtToT2" :
-							$(".introjs-tooltiptext").append("<ul></ul>");
-							var text = "Travel the <y>next</y> field of <y>t2</y> to <y>t2</y>";
-							tooltipBooletsAppendAndTypeText("#callToAddTermMthd", "#secondForLoop", text, "ul", function() {
-								$(".background-color-yellow").removeClass("background-color-yellow");
-								$("#t2NxtToT2").addClass("background-color-yellow");
-								introNextSteps("#animationDiv", "travelT2NxtToT2");
-								$(".introjs-nextbutton").show();
-							});
+							travelT2NxtToT2Text()
+							
+						break;
+						case "addAndSubMainLogicExplanation" : //addition and subtraction explanation
+							addAndSubFirstWhileLoop();
 						break;
 					}
 				break;
@@ -1001,7 +1075,7 @@ function introFunction() {
 						case "addTermIfConditions":
 							var selector = "#headDiv1";
 							var selector1 = "#t3Val";
-							if (btn != "mul") {
+							if (btn == "create") {
 								selector = "#p1Val";
 								selector1 = "#tempVal";
 							}
@@ -1057,7 +1131,7 @@ function introFunction() {
 							$(".introjs-tooltip").removeClass("hide");
 							var value = $("#head"+ createMethodCallCount +"Val").text().trim();
 							var selector = "head" + createMethodCallCount;
-							if (btn == "mul") {
+							if (btn != "print") {
 								value = $("#resultVal").text().trim();
 								selector = "result"
 							}
@@ -1089,11 +1163,73 @@ function introFunction() {
 							});
 						break;
 						case "returnResultVal" :
-							$("#p1, #p2, #t3").addClass("opacity00");
+							$("#p1, #p2, #t3, #p1Val, #p2Val, #t3Val").addClass("opacity00");
 							customIntroNxtStep("#animationDiv", "returnProValAnimation");
 						break;
 					}
-					
+				break;
+				case "secondWhile" :
+					$(".introjs-tooltip").removeClass("hide");
+					secondWhileLoopAnimationFuntion();
+				break;
+				case "thirdWhile" :
+					$(".introjs-tooltip").removeClass("hide");
+					thirdWhileLoopAnimationFuntion();
+				break;
+				case "returnSum" :
+					$(".introjs-tooltip").removeClass("hide");
+					$(".introjs-tooltiptext").append("<ul></ul>");
+					var text = "Return <y>sum</y> value <y>"+ $("#sumVal").text() +"</y>";
+					$(".background-color-yellow").removeClass("background-color-yellow");
+					tooltipBooletsAppendAndTypeText("#thirdWhileInAdd", "#returnSum", text, "li", function() {
+						$("#inMain").removeClass("hide");
+						introjs.refresh();
+						introNextSteps("#callMulMethod1", "returnResultVal", "right");
+						$(".introjs-nextbutton").show();
+					});
+				break;
+				case "firstWhile" :
+					var animatedStep = introjs._introItems[introjs._currentStep].animateStep;
+					switch(animatedStep) {
+						case "checkWhileLoop" :
+							alery("hello");
+						break;
+						case "firstIfCondition" :
+							$(".background-color-yellow").removeClass("z-index1000000 background-color-yellow");
+							$(".introjs-tooltip").removeClass("hide");
+							ifT1AndT2AreSame();
+						break;
+						case "storeRtnResultOfAddTermInAdd" :
+							addTermReturnCode();
+							var methodCallId;
+							var text = "The <y>return</y> value of the <y>addTerm</y> (<y>"+ $("#headOpVal").text().trim() +"</y>)";
+							if ($("#p1val").text() != "NULL" && $("#p2Val").text() != "NULL") {
+								var value1 = $("#firstList #exp" + t1Count).text().trim();
+								var value2 = $("#secondList #exp" + t2Count).text().trim();
+								if (value1 == value2) {
+									methodCallId = "#callAddMethod1";
+								} else if (value1 > value2) {
+									methodCallId = "#callAddMethod2";
+								} else {
+									methodCallId = "#callAddMethod3";
+								}
+							} else if ($("#p1val").text() != "NULL") {
+								methodCallId = "#callAddMethod4";
+							} else {
+								methodCallId = "#callAddMethod5";
+							}
+							$(methodCallId).addClass("background-color-yellow");
+							$(methodCallId).removeClass("background-color-yellow");
+							tooltipBooletsAppendAndTypeText(methodCallId, methodCallId, text, "ul", function() {
+								if (btn == "mul") {
+									introNextSteps("#animationDiv", "returnProVal");
+									$(".introjs-nextbutton").show();
+								} else {
+									t1NextToT1Animation();
+								}
+							});
+						break;
+					}
 				break;
 			}
 		});
@@ -1143,11 +1279,11 @@ function buttonsClick() {
 
 function addSunAndMulCommDivs(btnName) {
 	btn = btnName;
-	$("#thirdList").empty();
-	$("#resultLine").remove();
 	for (i = 1; i <= $("#thirdList .nodes").length; i++) {
 		$("#linee" + i).remove();
 	}
+	$("#resultLine").remove();
+	$("#thirdList").empty();
 	$("#resultVal").text("NULL");
 	$("#p1Node").text("t1");
 	$("#p2Node").text("t2");
@@ -1158,7 +1294,6 @@ function buttonNameAndCallFun(btnName) {
 	buttonName = btnName;
 	preMain();
 	customIntroNxtStep("#inMain");
-	console.log(btnName);
 }
 
 function createMethodAnimationFunction() {
@@ -1203,7 +1338,7 @@ function addTermMethodAnimationFunction() {
 	var value1 = $("#head"+ createMethodCallCount +"Val").text();
 	var value2 = $("#tempVal").text();
 	var headVal = "#headVal"
-	if (btn == "mul") {
+	if (btn != "create") {
 		value1 = $("#sumVal").text();
 		value2 = $("#t3Val").text();
 		headVal = "#resultVal";
@@ -1227,12 +1362,11 @@ function addTermP1AndP2PointerVarDec() {
 	var selector1 = "#headVal1";
 	var selector2 = "#tempVal1";
 	var selector3 = "#headOpVal"
-	if (btn != "mul") {
+	if (btn == "create") {
 		selector1 = "#p1Val";
 		selector2 = "#p2Val";
 		selector3 = "#headVal"
 	} 
-	console.log("in addtermDec pointer variable");
 	$(selector1).text($(selector3).text()).addClass("opacity00");
 	$(selector2).text($(selector3).text()).addClass("opacity00");
 	fromEffectWithTweenMax(selector3, selector1, false, function() {
@@ -1249,7 +1383,7 @@ function addTermP1AndP2PointerVarDec() {
 function ifP1NotEqNullAnimation() {
 	var temporaryNodeDiv = "#temparyPolyNode";
 	var p1Val = "#p1Val";
-	if (btn == "mul") {
+	if (btn != "create") {
 		temporaryNodeDiv = "#temparyPolyNodeForPloy";
 		p1Val = "#headDiv1";
 	} else {
@@ -1268,7 +1402,7 @@ function ifP1NotEqNullAnimation() {
 		travel("#whileLoopInAddTerm", "#tooltipWhileCndn", function() {
 			flipEffectWithTweenMax("#tooltipP1Value", $(p1Val).text().trim(), function() {
 				if ($(p1Val).text().trim() != "NULL") {
-					var selector = (btn == "mul") ? "#thirdList": (createMethodCallCount == 1) ? "#firstList" : "#secondList";
+					var selector = (btn != "create") ? "#thirdList": (createMethodCallCount == 1) ? "#firstList" : "#secondList";
 					var val1 = parseInt($(selector + " #exp" + p1Count).text().trim());
 					var val2 = parseInt($(temporaryNodeDiv + " #exp" + nodeCount).text().trim());
 					flipEffectWithTweenMax(p1Exp, val1, function() {
@@ -1323,7 +1457,7 @@ function whileLoopTrueConditionAnimation() {
 function addTermWhileConFalseAnimation() {
 	var temporaryNodeDiv = "#temparyPolyNode";
 	var p1Value = "#p1Val";
-	if (btn == "mul") {
+	if (btn != "create") {
 		temporaryNodeDiv = "#temparyPolyNodeForPloy";
 		p1Value = "#headDiv1";
 	}
@@ -1360,7 +1494,7 @@ function addTermWhileConFalseAnimation() {
 
 function ifP1EqNullAfterWhileLoopAnimation() {
 	var tempVal = "#tempVal"
-	if (btn == "mul") {
+	if (btn != "create") {
 		tempVal = "t3Val";
 	}
 	$(".background-color-yellow").removeClass("background-color-yellow");
@@ -1373,7 +1507,7 @@ function ifP1EqNullAfterWhileLoopAnimation() {
 
 function ifP1ExpAndTempExpAreSame() {
 	var tempPolyDiv = "#temparyPolyNode"; 
-	if (btn == "mul") {
+	if (btn != "create") {
 		tempPolyDiv = "#temparyPolyNodeForPloy";
 	}
 	var text = '<span id="tooltipP1TempEqCndn" class="position" style="font-family: monospace; font-weight: bold;">'
@@ -1384,7 +1518,7 @@ function ifP1ExpAndTempExpAreSame() {
 		$(".introjs-tooltip").removeClass("hide");
 		$(".introjs-tooltiptext ul").append("<li>"+ text +"</li>");
 		travel("#ifP1ExpEqToTempExpInAddTerm", "#tooltipP1TempEqCndn", function() {
-			var selector = (btn == "mul") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
+			var selector = (btn != "create") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
 			var val1 = parseInt($(selector + " #exp" + p1Count).text().trim());
 			var val2 = parseInt($(tempPolyDiv +" #exp" + nodeCount).text().trim());
 			flipEffectWithTweenMax("#tooltipP1ExpValue", val1, function() {
@@ -1414,7 +1548,7 @@ function ifP1ExpAndTempExpAreSame() {
 
 function ifP1ExpAndTempExpLessThan() {
 	var tempPolyDiv = "#temparyPolyNode"; 
-	if (btn == "mul") {
+	if (btn != "create") {
 		tempPolyDiv = "#temparyPolyNodeForPloy";
 	}
 	var text = '<span id="tooltipP1TempLessCndn" class="position" style="font-family: monospace; font-weight: bold;">'
@@ -1463,14 +1597,14 @@ function ifP1ExpAndTempExpSameAnimation() {
 }
 
 function whileLoopAnimationFunction() {
-	var selector = (btn == "mul") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
+	var selector = (btn != "create") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
 	
 	var val1 = parseInt($(selector + " #exp" + p1Count).text());
 	var val2 = parseInt($("#temparyPolyNode #exp" + nodeCount).text());
 	var p1Value = "#p1Val";
 	var p2Value = "#p2Val";
 	var p2DivId = "#p2Div"
-	if (btn == "mul") {
+	if (btn != "create") {
 		val2 = parseInt($("#temparyPolyNodeForPloy #exp" + nodeCount).text());
 		p1Value = "#headVal1";
 		p2Value = "#tempVal1";
@@ -1511,7 +1645,7 @@ function whileLoopAnimationFunction() {
 function addTermWhileLoopP1AndP2ValuesAnimation(selector, callBackFunction) {
 	var p2DivId = "#p2Div";
 	var p1DivId = "#p1Div";
-	if (btn == "mul") {
+	if (btn != "create") {
 		p1DivId = "#headDiv1";
 		p2DivId = "#tempDiv1"
 	}
@@ -1542,7 +1676,7 @@ function addTermWhileLoopP1AndP2ValuesAnimation(selector, callBackFunction) {
 
 function addTermAdditionAnimation(selector, value) {
 	var temporaryDiv = "#temparyPolyNode"
-	if (btn == "mul") {
+	if (btn != "create") {
 		temporaryDiv = "#temparyPolyNodeForPloy"
 	}
 	var add = parseInt($(selector).text()) + value;
@@ -1556,14 +1690,18 @@ function addTermAdditionAnimation(selector, value) {
 
 function returnAddTermHead() {
 	var arrowParentId;
-	if (btn == "mul") {
+	if (btn != "create") {
 		var text = "Return the <y>head</y> value <y>"+ $("#headOpVal").text() +"</y>.";
 	} else {
 		var text = "Return the <y>head</y> value <y>"+ $("#headVal").text() +"</y>.";
 	}
 	tooltipBooletsAppendAndTypeText("#returnHeadInAddTerm", "#returnHeadInAddTerm", text, "ul", function() {
-		if (btn == "mul") {
-			introNextSteps("#polyOperationsDivPre", "storeRtnResultOfAddTerm", "right");
+		if (btn != "create") {
+			if (btn == "mul") {
+				introNextSteps("#polyOperationsDivPre", "storeRtnResultOfAddTerm", "right");
+			} else {
+				introNextSteps("#firstWhile", "storeRtnResultOfAddTermInAdd", "right");
+			}
 		} else {
 			introNextSteps("#polyOperationsDivPre", "storeRtnValueOfAddTerm", "right");
 		}
@@ -1574,7 +1712,7 @@ function returnAddTermHead() {
 function ifP2IsEqToP1AnimationFunction() {
 	var p1Value = "#p1Val";
 	var p2Value = "#p2Val";
-	if(btn == "mul") {
+	if(btn != "create") {
 		p1Value = "#headVal1";
 		p2Value = "#tempVal1";
 	}
@@ -1586,7 +1724,7 @@ function ifP2IsEqToP1AnimationFunction() {
 		travel("#ifP2EqP2InAddTerm", "#toolP1EqP2Cndn", function() {
 			$(".introjs-tooltip").removeClass("hide");
 			$(".introjs-tooltiptext ul").append("<li>"+ text +"</li>");
-			var selector = (btn == "mul") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
+			var selector = (btn != "create") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
 			var val1 = parseInt($(p1Value).text().trim());
 			var val2 = parseInt($(p2Value).text().trim());
 			flipEffectWithTweenMax("#toolP1Value", val1, function() {
@@ -1618,7 +1756,7 @@ function ifP2IsEqToP1AnimationFunction() {
 function p2EqP1BodyAnimation() {
 	var p1Value = "#p1Val";
 	var tempValue = "#tempVal";
-	if(btn == "mul") {
+	if(btn != "create") {
 		p1Value = "#headVal1";
 		tempValue = "#t3Val";
 	}
@@ -1635,7 +1773,7 @@ function p2EqP1BodyAnimation() {
 function ifP2IsNotEqToP1AnimationFunction() {
 	var p1Value = "#p1Val";
 	var tempValue = "#tempVal";
-	if(btn == "mul") {
+	if(btn != "create") {
 		p1Value = "#headVal1";
 		tempValue = "#t3Val";
 	}
@@ -1652,7 +1790,7 @@ function ifP2IsNotEqToP1AnimationFunction() {
 //Display method animation functions
 function displayMethodAnimationFunction() {
 	var value, selector;
-	if (btn == "mul") {
+	if (btn != "print") {
 		value = $("#resultVal").text().trim();
 		selector = "result"
 	} else {
@@ -1677,7 +1815,7 @@ function printVariableDeclarationAnimation(selector) {
 	var tempDIvId = "#temp";
 	var tempValue = "#tempVal";
 	var tempDivId = "#tempDiv";
-	if (btn == "mul") {
+	if (btn != "print") {
 		var head = "#headD1";
 		var headValue = "#headVal1";
 		var headDiv = "#headDiv1";
@@ -1708,7 +1846,7 @@ function printVariableDeclarationAnimation(selector) {
 
 function displayWhileLoopAnimation() {
 	var tempValue = "#tempVal";
-	if (btn == "mul") {
+	if (btn != "print") {
 		tempValue = "#tempVal1";
 	}
 	var text = '<span id="tooltipCndtn" class="position" style="font-family: monospace; font-weight: bold;">'
@@ -1768,7 +1906,7 @@ function displayMethodPrintNodeValues() {
 }
 
 function printCoeffAndExpValueToConsole(printCount) {
-	var selector = (btn == "mul") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
+	var selector = (btn != "print") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
 	arrow("#printTempCoeffAndExpVal", "#printTempCoeffAndExpVal");
 	var tempVal = (btn != "mul") ? "#tempVal" : "#tempVal1";
 	var tempid = (btn != "mul") ? "#tempDiv" : "#tempDiv1";
@@ -1777,9 +1915,9 @@ function printCoeffAndExpValueToConsole(printCount) {
 			svgAnimatingLineTopToBottom("#animationDiv", "#tempDiv", selector + " #coeff" + printCount , "#svgId", "dummyTempLine", "arrow", function() {
 				$("#dummyTempLine").remove(); 
 				$(selector + " #coeff" + printCount).parent().effect( "highlight", {color: 'blue'}, 500, function() {
-					$("#printCoeffExpValues" + outputCount).append("<span id='values"+ printCount +"'>"+ 
+					$("#printCoeffExpValues" + outputCount).append("<span id='values"+ outputCount  +""+ printCount +"'>"+ 
 					$(selector + " #coeff" + printCount).text() + " X^ "+ $(selector + " #exp" + printCount).text() + " --> </span>");
-					travel($(selector + " #exp" + printCount).parent(), "#values" + printCount, function() {
+					travel($(selector + " #exp" + printCount).parent(), "#values"+ outputCount +"" + printCount, function() {
 						$("#consoleBodyDiv").scrollTo("#printCoeffExpValues" + outputCount);
 						arrow("#printTempCoeffAndExpVal", "#travelTempNctToTemp");
 						$("#tempDiv").effect( "highlight", {color: 'blue'}, 500, function() {
@@ -1789,7 +1927,6 @@ function printCoeffAndExpValueToConsole(printCount) {
 									fadeInBounceEffectWithTimelineMax(selector + " #next"+ printCount, tempVal, "left", function() {
 										$("#tempLine").remove();
 										if ($(tempVal).text().trim() != "NULL") {
-											console.log("hello poorna")
 											printCount++;
 											svgAnimatingLineTopToBottom("#animationDiv", tempid, selector + " #coeff" + printCount , "#svgId", "tempLine", "arrow", function() {
 												printCoeffAndExpValueToConsole(printCount)
@@ -1808,9 +1945,9 @@ function printCoeffAndExpValueToConsole(printCount) {
 			svgAnimatingLineBottomToTop("#animationDiv", tempid, selector + " #coeff" + printCount , "#svgId", "dummyTempLine", "arrow", function() {
 				$("#dummyTempLine").remove(); 
 				$(selector + " #coeff" + printCount).parent().effect( "highlight", {color: 'blue'}, 500, function() {
-					$("#printCoeffExpValues" + outputCount).append("<span id='values"+ printCount +"'>"+ 
+					$("#printCoeffExpValues" + outputCount).append("<span id='values"+ outputCount +""+ printCount +"'>"+ 
 					$(selector + " #coeff" + printCount).text() + " X^ "+ $(selector + " #exp" + printCount).text() + " --> </span>");
-					travel($(selector + " #exp" + printCount).parent(), "#values" + printCount, function() {
+					travel($(selector + " #exp" + printCount).parent(), "#values"+ outputCount +"" + printCount, function() {
 						arrow("#printTempCoeffAndExpVal", "#travelTempNctToTemp");
 						$(tempid).effect( "highlight", {color: 'blue'}, 500, function() {
 							svgAnimatingLineBottomToTop("#animationDiv", tempid, selector + " #coeff" + printCount , "#svgId", "dummyTempLine", "arrow");
@@ -1819,7 +1956,6 @@ function printCoeffAndExpValueToConsole(printCount) {
 								fadeInBounceEffectWithTimelineMax(selector + " #next"+ printCount, tempVal, "left", function() {
 									$("#tempLine").remove();
 									if ($(tempVal).text().trim() != "NULL") {
-										console.log("hello poorna")
 										printCount++;
 										svgAnimatingLineBottomToTop("#animationDiv", tempid, selector + " #coeff" + printCount , "#svgId", "tempLine", "arrow");
 										printCoeffAndExpValueToConsole(printCount)
@@ -1836,19 +1972,36 @@ function printCoeffAndExpValueToConsole(printCount) {
 	});
 }
 
+//Multiplication Method Animation
 function mulMethodVariablesDeclaration() {
 	var text = "The value (<y>"+ $("#head1Val").text().trim() +"</y>) of <y>head1</y> is passed into the formal argument <y>head1</y> and "
 				+" the value (<y>"+ $("#head2Val").text().trim() +"</y>) of <y>head2</y> is passed into the formal argument <y>head2</y>.";
 	tooltipBooletsAppendAndTypeText("#nameOfMulMthd", "#nameOfMulMthd", text, "ul", function() {
 		appendDuplicateNextBtnUsingClickFunction("", false, function() {
-			var text = "Declare four temporary pointer variables <y>t1</y>, <y>t2</y>, <y>temp</y> and <y>pro</y>.";
-			tooltipBooletsAppendAndTypeText("#nameOfMulMthd", "#varDecInMul", text, "li", function() {
-				var text = "Initialize the four pointer variables to <y>NULL</y>."
-				tooltipBooletsAppendAndTypeText("#varDecInMul", "#varIniInMul", text, "li", function() {
-					introNextSteps("#animationDiv", "variableDecInMulMthd");
-					$('.introjs-nextbutton').show();
+			if (btn == "mul") {
+				var text = "Declare four temporary pointer variables <y>t1</y>, <y>t2</y>, <y>temp</y> and <y>pro</y>.";
+				tooltipBooletsAppendAndTypeText("#nameOfMulMthd", "#varDecInMul", text, "li", function() {
+					var text = "Initialize the four pointer variables to <y>NULL</y>."
+						tooltipBooletsAppendAndTypeText("#varDecInMul", "#varIniInMul", text, "li", function() {
+							introNextSteps("#animationDiv", "variableDecInMulMthd");
+							$('.introjs-nextbutton').show();
+						});
 				});
-			});
+			} else {
+				console.log("in add method")
+				var text = "Declare four temporary pointer variables <y>t1</y>, <y>t2</y>, <y>temp</y> and <y>sum</y>.<br/>"
+							+ " Initialize the <y>temp</y> and <y>sum</y> variables to <y>NULL</y>.";
+				tooltipBooletsAppendAndTypeText("#nameOfMulMthd", "#varDecInAdd", text, "li", function() {
+					var text = "Initialize the <y>t1</y> variable to <y>"+ $("#head1Val").text().trim() +"</y>.";
+					tooltipBooletsAppendAndTypeText("#varDecInAdd", "#t1InilToHead1Val", text, "li", function() {
+						var text = "Initialize the <y>t2</y> variable to <y>"+ $("#head2Val").text().trim() +"</y>";
+						tooltipBooletsAppendAndTypeText("#t1InilToHead1Val", "#t2InitlToHead2Val", text, "li", function() {
+							introNextSteps("#animationDiv", "variableDecInMulMthd");
+							$('.introjs-nextbutton').show();
+						});
+					});
+				});
+			}
 		});
 	});
 }
@@ -1920,7 +2073,7 @@ function secondForLoopConditionChecking() {
 					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
 						appendDuplicateNextBtnUsingClickFunction("", false, function() {
-							allocateMemoryForMul();
+							allocateMemoryForMul("#secondForLoop", "#memoryAlloc")
 						});
 					});
 				} else {
@@ -1938,18 +2091,50 @@ function secondForLoopConditionChecking() {
 }
 
 function t1NextToT1Animation() {
+	var selector1 = "#secondForLoop";
+	var selector2 = "#firstForLoop";
+	if (btn != "mul") {
+		var selector1 = "#callAddMethod1";
+		var selector2 = "#treavelT1ToT1Nxt";
+	}
 	var text = "Travel the <y>next</y> field of <y>t1</y> to <y>t1</y>.";
-	tooltipBooletsAppendAndTypeText("#secondForLoop", "#firstForLoop", text, "li", function() {
+	tooltipBooletsAppendAndTypeText(selector1, selector2, text, "li", function() {
 		$(".background-color-yellow").addClass("background-color-yellow");
-		$("#t1NxtToT1").addClass("background-color-yellow");
-		introNextSteps("#animationDiv", "travelT1NxtToT1")
-		$(".introjs-nextbutton").show();
+		if (btn == "mul") {
+			$("#t1NxtToT1").addClass("background-color-yellow");
+			introNextSteps("#animationDiv", "travelT1NxtToT1")
+			$(".introjs-nextbutton").show();
+		} else {
+			travelT2NxtToT2Text()
+		}
 	});
 }
 
-function allocateMemoryForMul() {
+function travelT2NxtToT2Text() {
+	var selector1 = "#callToAddTermMthd";
+	var selector2 = "#secondForLoop";
+	if (btn != "mul") {
+		var selector1 = "#treavelT1ToT1Nxt";
+		var selector2 = "#treavelT2ToT2Nxt";
+	}
+	$(".introjs-tooltiptext").append("<ul></ul>");
+	var text = "Travel the <y>next</y> field of <y>t2</y> to <y>t2</y>";
+	tooltipBooletsAppendAndTypeText(selector1, selector2, text, "ul", function() {
+		$(".background-color-yellow").removeClass("background-color-yellow");
+		if (btn == "mul") {
+			$("#t2NxtToT2").addClass("background-color-yellow");
+			introNextSteps("#animationDiv", "travelT2NxtToT2");
+			$(".introjs-nextbutton").show();
+		} else {
+			introNextSteps("#animationDiv", "returnProVal");
+			$(".introjs-nextbutton").show();
+		}
+	});
+} 
+
+function allocateMemoryForMul(selector1, selector2) {
 	var text = "Allocate the polynomial <y>memory</y> to the <y>struct</y> variable <y>temp</y>.";
-	tooltipBooletsAppendAndTypeText("#secondForLoop", "#memoryAlloc", text, "li", function() {
+	tooltipBooletsAppendAndTypeText(selector1, selector2, text, "li", function() {
 		introNextSteps("#animationDiv", "allocateMemory")
 		$(".introjs-nextbutton").show();
 	});
@@ -1970,6 +2155,267 @@ function multiplcationAnimationFunction() {
 		});
 	});
 }
+
+function addAndSubFirstWhileLoop() { //addition and subtraction functions
+	$(".background-color-yellow").removeClass("background-color-yellow");
+	var text = '<span id="tooltipCndtn" class="position" style="font-family: monospace; font-weight: bold;">'
+				+ '<span class="position" id="tooltipT1Val">t1</span> != NULL && '
+				+ '<span class="position" id="tooltipT2Val">t2</span> != NULL</span></span>';
+	arrow("#t2InitlToHead2Val", "#firstWhileConInAdd", function() {
+		$("#firstWhileCon").addClass("background-color-yellow");
+		$(".introjs-tooltip").removeClass("hide");
+		travel("#firstWhileCon", "#tooltipCndtn", function() {
+			$(".introjs-tooltiptext").append("<ul><li>"+ text +"</li></ul>");
+			flipEffectWithTweenMax("#tooltipT1Val", $("#p1Val").text(), function() {
+				$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+				if ($("#p1Val").text().trim() != "NULL") {
+					flipEffectWithTweenMax("#tooltipT2Val", $("#p2Val").text(), function() {
+						if ($("#p2Val").text().trim() != "NULL") {
+							var text = "Since it evaluates to <y>true</y>, so the control enters into the body "
+										+ " of <y>while-loop</y>."
+							typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+								appendDuplicateNextBtnUsingClickFunction("", false, function() {
+									allocateMemoryForMul("#firstWhileConInAdd", "#memoryAlloc1")
+								});
+							});
+						} else {
+							firstWhileFalseCon("#secondWhile");
+						}
+					});
+				} else {
+					firstWhileFalseCon("#secondWhile");
+				}
+			});
+		});
+	});
+}
+
+function firstWhileLoopTrueConditon() {
+	var text = "Allocate the polynomial <y>memory</y> to the <y>struct</y> variable <y>temp</y>.";
+	tooltipBooletsAppendAndTypeText("#firstWhileConInAdd", "#memoryAlloc1", text, "li", function() {
+		
+	});
+}
+
+function firstWhileFalseCon(stepName) {
+	var text = "Since, the condition is evaluates to <r>false</r>.";
+	typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+		introNextSteps(stepName, "", "right");
+		$(".introjs-nextbutton").show();
+	});
+}
+
+function secondWhileLoopAnimationFuntion() {
+	$(".background-color-yellow").removeClass("background-color-yellow");
+	var text = '<span id="tooltipCndtn" class="position" style="font-family: monospace; font-weight: bold;">'
+			+ '<span class="position" id="tooltipT1Val">t1</span> != NULL</span>';
+		arrow("#firstWhileConInAdd", "#secondWhileInAdd", function() {
+			$("#secondWhileCon").addClass("background-color-yellow");
+			$(".introjs-tooltip").removeClass("hide");
+			$(".introjs-tooltiptext").append("<ul><li>"+ text +"</li></ul>");
+			travel("#secondWhileCon", "#tooltipCndtn", function() {
+				flipEffectWithTweenMax("#tooltipT1Val", $("#p1Val").text(), function() {
+					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+					if ($("#p1Val").text().trim() != "NULL") {
+						var text = "Since it evaluates to <y>true</y>, so the control enters into the body "
+									+ " of<y>while-loop</y>."
+						typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+							appendDuplicateNextBtnUsingClickFunction("", false, function() {
+								
+						});
+					});
+				} else {
+					firstWhileFalseCon("#thirdWhile");
+				}
+			});
+		});
+	});
+}
+
+function thirdWhileLoopAnimationFuntion() {
+	$(".background-color-yellow").removeClass("background-color-yellow");
+	var text = '<span id="tooltipCndtn" class="position" style="font-family: monospace; font-weight: bold;">'
+				+ '<span class="position" id="tooltipT2Val">t2</span> != NULL</span>';
+	arrow("#secondWhileInAdd", "#thirdWhileInAdd", function() {
+		$("#thirdWhileInAdd").addClass("background-color-yellow");
+		$(".introjs-tooltip").removeClass("hide");
+		$(".introjs-tooltiptext").append("<ul><li>"+ text +"</li></ul>");
+		travel("#thirdWhileInAdd", "#tooltipCndtn", function() {
+			flipEffectWithTweenMax("#tooltipT2Val", $("#p2Val").text(), function() {
+				$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+				if ($("#p2Val").text().trim() != "NULL") {
+					var text = "Since it evaluates to <y>true</y>, so the control enters into the body "
+								+ " of<y>while-loop</y>."
+					typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+						appendDuplicateNextBtnUsingClickFunction("", false, function() {
+						});
+					});
+				} else {
+					firstWhileFalseCon("#returnSum");
+				}
+			});
+		});
+	});
+}
+
+function ifT1AndT2AreSame() {
+	$(".background-color-yellow").removeClass("background-color-yellow");
+	var text = '<span id="tooltipCndtn" class="position" style="font-family: monospace; font-weight: bold;">'
+				+ '<span class="position" id="tooltipT1Exp">t1 -> exp</span> == <span class="position" '
+				+ 'id="tooltipT2Exp">t2 -> exp</span></span>';
+	arrow("#memoryAlloc1", "#whileFirstIfConInAdd", function() {
+		$("#whileFirstIfConInAdd").addClass("background-color-yellow");
+		$(".introjs-tooltip").removeClass("hide");
+		$(".introjs-tooltiptext").append("<ul><li>"+ text +"</li></ul>");
+		travel("#whileFirstIfCon", "#tooltipCndtn", function() {
+			flipEffectWithTweenMax("#tooltipT1Exp", $("#firstList #exp"+t1Count).text().trim(), function() {
+				flipEffectWithTweenMax("#tooltipT2Exp", $("#secondList #exp"+t2Count).text().trim(), function() {
+					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+					var value1 = $("#firstList #exp"+t1Count).text().trim();
+					var value2 = $("#secondList #exp"+t2Count).text().trim()
+					if (value1 == value2) {
+						var text = "Since it evaluates to <y>true</y>, so the control enters into the body of<y>while-loop</y>."
+						typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+							appendDuplicateNextBtnUsingClickFunction("", false, function() {
+								ifBothNodeExpAreSameAnimation();
+							});
+						});
+					} else {
+						var text = "Since it evaluates to <y>false</y>."
+						typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+							appendDuplicateNextBtnUsingClickFunction("", false, function() {
+								ifBothNodeExpAreNotSameAnimation();
+							});
+						});
+					}
+				});
+			});
+		});
+	});
+}
+
+function ifBothNodeExpAreSameAnimation() {
+	var operation = (btn == "add") ? "addition" : "subtraction";
+	var text = "Perform <y>"+ operation +"</y> operation on the <y>coeff</y> field of <y>t1</y> and the <y>coeff</y> "
+				+"field of <y>t2</y> finally the <y>result</y> will be stored in the <y>coeff</y> field of <y>temp</y>.";
+	tooltipBooletsAppendAndTypeText("#whileFirstIfConInAdd", "#additionSpan", text, "li", function() {
+		var text = "Store the value of  <y>exp</y> field of <y>t1</y>. to <y>exp</y> filed of </y>temp</y>.";
+		tooltipBooletsAppendAndTypeText("#additionSpan", "#t1ExpToTmpExp1", text, "li", function() {
+			var text = "Assign <y>NULL</y> to the <y>next</y> field of <y>temp</y>.";
+			tooltipBooletsAppendAndTypeText("#t1ExpToTmpExp1", "#tempNxtToNull1", text, "li", function() {
+				introNextSteps("#animationDiv", "additionAndSubtractionOperation");
+				$(".introjs-nextbutton").show();
+			});
+		});
+	});
+}
+
+function ifBothNodeExpAreNotSameAnimation() {
+	$(".background-color-yellow").removeClass("background-color-yellow");
+	var text = '<span id="tooltipCon" class="position" style="font-family: monospace; font-weight: bold;">'
+				+ '<span class="position" id="t1Exp">t1 -> exp</span> == <span class="position" '
+				+ 'id="t2Exp">t2 -> exp</span></span>';
+	arrow("#whileFirstIfConInAdd", "#whileSecondIfConInAdd", function() {
+		$("#whileSecondIfConInAdd").addClass("background-color-yellow");
+		$(".introjs-tooltip").removeClass("hide");
+		$(".introjs-tooltiptext").append("<ul><li>"+ text +"</li></ul>");
+		travel("#whileSecondIfConInAdd", "#whileSecondIfCon", function() {
+			flipEffectWithTweenMax("#t1Exp", $("#firstList #exp"+t1Count).text().trim(), function() {
+				flipEffectWithTweenMax("#t2Exp", $("#secondList #exp"+t2Count).text().trim(), function() {
+					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
+					var value1 = $("#firstList #exp"+t1Count).text().trim();
+					var value2 = $("#secondList #exp"+t2Count).text().trim()
+					if (value1 > value2) {
+						var text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
+							typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+								appendDuplicateNextBtnUsingClickFunction("", false, function() {
+									//ifBothNodeExpAreSameAnimation();
+								});
+							});
+					} else {
+						var text = "Since it evaluates to <y>false</y>."
+						typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
+							appendDuplicateNextBtnUsingClickFunction("", false, function() {
+								ifT1ExpGreaterThanT2ExpAnimation();
+							});
+						});
+					}
+				});
+			});
+		});
+	});
+}
+
+function ifT1ExpGreaterThanT2ExpAnimation() {
+	
+}
+
+
+
+
+function travelT2NxtToT2() {
+	$(".background-color-yellow").addClass("z-index1000000");
+	$("#p2Div").effect( "highlight",{color: 'blue'}, 500, function() {
+		fadeInBounceEffectWithTimelineMax("#secondList #nextDiv" + t2Count, "#p2Val", "right", function() {
+			$("#t2Line").remove();
+			t2Count++;
+			if ($("#p2Val").text().trim() != "NULL") {
+				svgAnimatingLineBottomToTop("#animationDiv", "#p2Div", "#secondList #nextDiv" + t2Count 
+						, "#svgId", "t2Line", "arrow", function() {
+					customIntroNxtStep("#polyOperationsDivPre", "secondForLoopConCheck", "right");
+				});
+			} else {
+				customIntroNxtStep("#polyOperationsDivPre", "secondForLoopConCheck", "right");
+			}
+		});
+		
+	});
+}
+
+function travelT1NxtT1() {
+	$(".background-color-yellow").addClass("z-index1000000");
+	$("#p1Div").effect( "highlight",{color: 'blue'}, 500, function() {
+		fadeInBounceEffectWithTimelineMax("#firstList #nextDiv" + t1Count, "#p1Val", "right", function() {
+			$("#t1Line").remove();
+			t1Count++;
+			t2Count = 1;
+			if ($("#p1Val").text().trim() != "NULL") {
+				svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", "#firstList #nextDiv" + t1Count 
+						, "#svgId", "t1Line", "arrow", function() {
+					customIntroNxtStep("#polyOperationsDivPre", "firstForLoopConCheck", "right");
+				});
+			} else {
+				customIntroNxtStep("#polyOperationsDivPre", "firstForLoopConCheck", "right");
+			}
+		});
+	});
+}
+
+function addTermReturnCode() {
+	$(".introjs-tooltiptext").append("<ul></ul>");
+	$(".arrow").remove();
+	$("#polyOperationsPre").empty();
+	$("#headD1, #headVal1, #temp1, #tempVal1, #polyOperationsPre").addClass("opacity00");
+	$("#p1Line, #p2Line").remove();
+	p1Count = p2Count = 1;
+	introjs.refresh();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2075,7 +2521,7 @@ function multiplcationAnimationFunction() {
 
 
 function commonCodeForP1AndP2InAddTerm(selector, lineId, callBackFunction) {
-	var parentSelector = (btn == "mul") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList"
+	var parentSelector = (btn != "create") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList"
 	if ($(selector).text() != "NULL") {
 		if (createMethodCallCount == 1 && btn != "mul") {
 			svgAnimatingLineTopToBottom("#animationDiv", selector, parentSelector + " #nextDiv1", "#svgId", lineId, "arrow", function() {
@@ -2121,15 +2567,15 @@ function changeIdsAtBegin(val, selector, callBackFunction) {
 
 function orderingNodes(count) {//Changing node position from temparay place to list position
 	var p1CountVal = p1Count;
-	var selector1 = (btn == "mul" ? "#headVal1" : "#p1Val");
+	var selector1 = (btn != "create" ? "#headVal1" : "#p1Val");
 	var temporaryNode;
 	var con
 	
-	selector = (btn == "mul") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList"
+	selector = (btn != "create") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList"
 	if ($(selector1).text().trim() == "NULL") {
 		p1CountVal = p1Count - 1;
 	}
-	if (btn != "mul") {
+	if (btn == "create") {
 		con = parseInt($("#expVal").text()) < parseInt($(selector + " #exp" + p1CountVal).text().trim());
 	} else {
 		con = parseInt($("#temparyPolyNodeForPloy #exp" + count).text().trim()) < parseInt($(selector + " #exp" + p1CountVal).text().trim());
@@ -2137,7 +2583,7 @@ function orderingNodes(count) {//Changing node position from temparay place to l
 	
 	if (count == 1 || con) {
 		if (count == 1) {
-			if (btn != "mul") {
+			if (btn == "create") {
 				$(selector).append('<div class="opacity00 col-xs-2 nodes hide" id="node' + (count) 
 						+ '" style="top: 0px; width: auto;">' + $("#temparyPolyNode > #node" + (count)).html() + '</div>');
 			} else {
@@ -2145,7 +2591,7 @@ function orderingNodes(count) {//Changing node position from temparay place to l
 						+ '" style="top: 0px; width: auto;">' + $("#temparyPolyNodeForPloy > #node" + (count)).html() + '</div>');
 			}
 		} else {
-			if (btn != "mul") {
+			if (btn == "create") {
 				$(selector + " .nodes:last").after('<div class="opacity00 col-xs-2 nodes hide" id="node' + (count) 
 						+ '" style="top: 0px; width: auto;">' + $("#temparyPolyNode > #node" + (count)).html() + '</div>');
 			} else {
@@ -2158,9 +2604,8 @@ function orderingNodes(count) {//Changing node position from temparay place to l
 			positioningNodes(selector);
 		}, 2000);
 	}  else {
-		alert("Else Condition");
 		var con1, con2;
-		if (btn != "mul") {
+		if (btn == "create") {
 			$(selector + " #node" + p1Count).before('<div class="opacity00 col-xs-2 nodes hide" id="node' + (count) 
 					+ '" style="top: 0px; width: auto;">' + $("#temparyPolyNode > #node" + (count)).html() + '</div>');
 			con1 = parseInt($(selector + " #exp" + p1Count).text().trim()) < parseInt($("#expVal").text());
@@ -2171,7 +2616,7 @@ function orderingNodes(count) {//Changing node position from temparay place to l
 			con2 = parseInt($(selector + " #exp" + p1Count).text().trim()) < parseInt($("#temparyPolyNodeForPloy #exp" + count).text());
 		}
 		
-		var condition = (btn != "mul") ?  con1 : con2;  
+		var condition = (btn == "create") ?  con1 : con2;  
 		if (condition) {
 			movingNodes(count, selector, function() {
 				setTimeout(function() {
@@ -2185,7 +2630,7 @@ function orderingNodes(count) {//Changing node position from temparay place to l
 
 function positioningNodes(selector) {
 	var selectorId;
-	if (btn != "mul") {
+	if (btn == "create") {
 		var l2 = $(selector + " #node" + (nodeCount - 1)).removeClass("hide");
 		var l1 = $("#temparyPolyNode #node" + (nodeCount - 1)).offset();
 		var l2 = $(selector + " #node" + (nodeCount - 1)).offset();
@@ -2234,7 +2679,6 @@ function movingNodes(val, selector, callBackFunction) {
 		val++;
 		movingNodes(val, selector, callBackFunction);
 	} else {
-		console.log("move 5 if : " + val);
 		if (typeof callBackFunction === 'function') {
 			callBackFunction();
 		}
@@ -2243,7 +2687,7 @@ function movingNodes(val, selector, callBackFunction) {
 
 function regenerateArrows(count, selector) {
 	$(".lines").remove();
-	if (btn == "mul") {
+	if (btn != "create") {
 		svgAnimatingLineRightToLeft("#animationDiv", "#head1Div", "#firstList #coeffDiv1",  "#svgId", "head1Line", "arrow");
 		svgAnimatingLineRightToLeft("#animationDiv", "#head2Div", "#secondList #coeffDiv1",  "#svgId", "head2Line", "arrow");
 		svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", "#firstList #nextDiv" + t1Count,  "#svgId", "t1Line", "arrow");
