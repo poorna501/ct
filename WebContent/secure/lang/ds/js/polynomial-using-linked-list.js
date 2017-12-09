@@ -739,7 +739,11 @@ function introFunction() {
 									if (btn == "mul") {
 										customIntroNxtStep("#polyOperationsDivPre", "t2NxtToT2", "right");
 									} else {
-										travelT1NxtT1();
+										if (tag == "same" || tag == "greaterThan" || tag == "secondWhileLoop") {
+											travelT1NxtT1();
+										} else {
+											travelT2NxtToT2();
+										}
 									}
 								});
 							});
@@ -751,6 +755,7 @@ function introFunction() {
 							travelT1NxtT1();
 						break;
 						case "additionAndSubtractionOperation" :
+							$("#temparyPolyNodeForPloy #coeff"+ nodeCount).text($("#firstList #coeff"+ t1Count).text().trim());
 							fromEffectWithTweenMax("#firstList #coeff"+ t1Count, "#temparyPolyNodeForPloy #coeff"+ nodeCount, false, function() {
 								fromEffectWithTweenMax("#secondList #coeff"+ t2Count, "#temparyPolyNodeForPloy #coeff"+ nodeCount, true, function() {
 									var val1 = parseInt($("#firstList #coeff"+ t1Count).text());
@@ -1176,7 +1181,6 @@ function introFunction() {
 					var animatedStep = introjs._introItems[introjs._currentStep].animateStep;
 					switch(animatedStep) {
 						case "checkWhileLoop" :
-							alert("hello");
 							addAndSubFirstWhileLoop();
 						break;
 						case "firstIfCondition" :
@@ -1191,11 +1195,11 @@ function introFunction() {
 							} else if (tag == "greaterThan") {
 								methodCallId = "#callAddMethod2";
 							} else if (tag == "lessThan") {
-								methodCallId == "#callAddMethod3";
+								methodCallId = "#callAddMethod3";
 							} else if (tag == "secondWhileLoop") {
-								methodCallId == "#callAddMethod4";
+								methodCallId = "#callAddMethod4";
 							} else {
-								methodCallId == "#callAddMethod5";
+								methodCallId = "#callAddMethod5";
 							}
 							$(methodCallId).addClass("background-color-yellow");
 							$(methodCallId).removeClass("background-color-yellow");
@@ -1232,6 +1236,16 @@ function introFunction() {
 						case "fillTempNodeWithCoeffExpNdNect" :
 							ifT1ExpGreaterThanTrueT2ExpAnimation("t1", "#memoryAlloc2", "#tmpCoeffToT1Coeff2", "#t1ExpToTmpExp3", "#tempNxtToNull4");
 						break;
+						case "storeRtnResultOfAddTermInAdd" :
+							addTermReturnCode();
+							var methodCallId= "#callAddMethod4";
+							$(methodCallId).addClass("background-color-yellow");
+							$(methodCallId).removeClass("background-color-yellow");
+							var text = "The <y>return</y> value of the <y>addTerm</y> (<y>"+ $("#headOpVal").text().trim() +"</y>)";
+							tooltipBooletsAppendAndTypeText(methodCallId, methodCallId, text, "li", function() {
+								t1NextToT1Animation();
+							});
+						break;
 					}
 				break;
 				case "thirdWhile" :
@@ -1244,6 +1258,16 @@ function introFunction() {
 						break;
 						case "fillTempNodeWithCoeffExpNdNect" :
 							ifT1ExpGreaterThanTrueT2ExpAnimation("t2", "#memoryAlloc3", "#tmpCoeffToT2Coeff2", "#t2ExpToTmpExp2", "#tempNxtToNull5");
+						break;
+						case "storeRtnResultOfAddTermInAdd" :
+							addTermReturnCode();
+							var methodCallId= "#callAddMethod5";
+							$(methodCallId).addClass("background-color-yellow");
+							$(methodCallId).removeClass("background-color-yellow");
+							var text = "The <y>return</y> value of the <y>addTerm</y> (<y>"+ $("#headOpVal").text().trim() +"</y>)";
+							tooltipBooletsAppendAndTypeText(methodCallId, methodCallId, text, "li", function() {
+								travelT2NxtToT2Text();
+							});
 						break;
 					}					
 				break;
@@ -1575,7 +1599,7 @@ function ifP1ExpAndTempExpLessThan() {
 		$(".introjs-tooltip").removeClass("hide");
 		$(".introjs-tooltiptext ul").append("<li>"+ text +"</li>");
 		travel("#ifP1ExpLessThanTempExpInAddTerm", "#tooltipP1TempLessCndn", function() {
-			var selector = (createMethodCallCount == 1) ? "#firstList" : "#secondList";
+			var selector = (btn != "create") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList";
 			var val1 = parseInt($(selector + " #exp" + p1Count).text().trim());
 			var val2 = parseInt($(tempPolyDiv+ " #exp" + nodeCount).text().trim());
 			flipEffectWithTweenMax("#tooltipP1Exp", val1, function() {
@@ -1637,7 +1661,7 @@ function whileLoopAnimationFunction() {
 						p1Count++;
 						if ($(p1Value).text() != "NULL") {
 							$("#p1Line").remove();
-							if (createMethodCallCount == 1 && btn != "mul") {
+							if (createMethodCallCount == 1 && btn == "create") {
 								svgAnimatingLineTopToBottom("#animationDiv", p2DivId, selector + " #nextDiv" + p1Count, "#svgId", "p1Line", "arrow", function() {
 									whileLoopAnimationFunction();
 								});
@@ -1716,7 +1740,13 @@ function returnAddTermHead() {
 			if (btn == "mul") {
 				introNextSteps("#polyOperationsDivPre", "storeRtnResultOfAddTerm", "right");
 			} else {
-				introNextSteps("#firstWhile", "storeRtnResultOfAddTermInAdd", "right");
+				if (tag == "same" || tag == "greaterThan" || tag == "lessThan") {
+					introNextSteps("#firstWhile", "storeRtnResultOfAddTermInAdd", "right");
+				} else if (tag = "thirdWhileLoop") {//pending*************
+					introNextSteps("#thirdWhile", "storeRtnResultOfAddTermInAdd", "right");
+				} else {
+					introNextSteps("#secondWhile", "storeRtnResultOfAddTermInAdd", "right");
+				}
 			}
 		} else {
 			introNextSteps("#polyOperationsDivPre", "storeRtnValueOfAddTerm", "right");
@@ -2147,8 +2177,16 @@ function travelT2NxtToT2Text() {
 	var selector1 = "#callToAddTermMthd";
 	var selector2 = "#secondForLoop";
 	if (btn != "mul") {
-		var selector1 = "#treavelT1ToT1Nxt1";
-		var selector2 = "#treavelT2ToT2Nxt1";
+		if (tag == "same") {
+			selector1 = "#treavelT1ToT1Nxt1";
+			selector2 = "#treavelT2ToT2Nxt1";
+		} else if (tag == "lessThan") {
+			selector1 = "#callAddMethod3";
+			selector2 = "#treavelT2ToT2Nxt2";
+		} else {
+			selector1 = "#callAddMethod5";
+			selector2 = "#treavelT2ToT2Nxt3";
+		}
 	}
 	$("#t2NxtToT2, #treavelT2ToT2Nxt1").addClass("background-color-yellow");
 	$(".introjs-tooltiptext").append("<ul></ul>");
@@ -2199,7 +2237,8 @@ function addAndSubFirstWhileLoop() { //addition and subtraction functions
 		$("#firstWhileCon").addClass("background-color-yellow");
 		$(".introjs-tooltip").removeClass("hide");
 		travel("#firstWhileCon", "#tooltipCndtn", function() {
-			$(".introjs-tooltiptext").append("<ul><li>"+ text +"</li></ul>");
+			$(".introjs-tooltiptext").append("<ul></ul>");
+			$(".introjs-tooltiptext ul").append("<li>"+ text +"</li>");
 			flipEffectWithTweenMax("#tooltipT1Val", $("#p1Val").text(), function() {
 				$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 				if ($("#p1Val").text().trim() != "NULL") {
@@ -2312,7 +2351,7 @@ function ifT1AndT2AreSame() {
 							});
 						});
 					} else {
-						var text = "Since it evaluates to <y>false</y>."
+						var text = "Since it evaluates to <r>false</r>."
 						typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
 							appendDuplicateNextBtnUsingClickFunction("", false, function() {
 								ifBothNodeExpAreNotSameAnimation();
@@ -2354,8 +2393,8 @@ function ifBothNodeExpAreNotSameAnimation() {
 			flipEffectWithTweenMax("#t1Exp", $("#firstList #exp"+t1Count).text().trim(), function() {
 				flipEffectWithTweenMax("#t2Exp", $("#secondList #exp"+t2Count).text().trim(), function() {
 					$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
-					var value1 = $("#firstList #exp" + t1Count).text().trim();
-					var value2 = $("#secondList #exp" + t2Count).text().trim()
+					var value1 = parseInt($("#firstList #exp" + t1Count).text().trim());
+					var value2 = parseInt($("#secondList #exp" + t2Count).text().trim());
 					if (value1 > value2) {
 						tag = "greaterThan";
 						var text = "Since it evaluates to <y>true</y>, so the control enters into <y>if-block</y>."
@@ -2365,8 +2404,8 @@ function ifBothNodeExpAreNotSameAnimation() {
 								});
 							});
 					} else {
-						tag == "lessThan";
-						var text = "Since it evaluates to <y>false</y>."
+						tag = "lessThan";
+						var text = "Since it evaluates to <r>false</r>."
 						typing($(".introjs-tooltiptext ul li:last-child div").last(), text, function() {
 							appendDuplicateNextBtnUsingClickFunction("", false, function() {
 								ifT1ExpGreaterThanTrueT2ExpAnimation("t2", "#whileSecondIfConInAdd", "#tmpCoeffToT2Coeff1", "#t2ExpToTmpExp1", "#tempNxtToNull3");
@@ -2408,6 +2447,14 @@ function travelT2NxtToT2() {
 						customIntroNxtStep("#polyOperationsDivPre", "secondForLoopConCheck", "right");
 					} else {
 						$(".z-index1000000").removeClass("z-index1000000 background-color-yellow");
+						
+						if (tag == "greaterThan" || tag == "lessThan" || tag == "same") {
+							customIntroNxtStep("#firstWhile", "checkWhileLoop", "right");
+						} else if (tag == "secondWhileLoop") {
+							customIntroNxtStep("#secondWhile", "secondConCheck", "right");
+						} else {
+							customIntroNxtStep("#thirdWhile", "thirdConCheck", "right");	
+						}
 						customIntroNxtStep("#firstWhile", "checkWhileLoop", "right");
 					}
 				});
@@ -2416,7 +2463,13 @@ function travelT2NxtToT2() {
 					customIntroNxtStep("#polyOperationsDivPre", "secondForLoopConCheck", "right");
 				} else {
 					$(".z-index1000000").removeClass("z-index1000000 background-color-yellow");
-					customIntroNxtStep("#firstWhile", "checkWhileLoop", "right");
+					if (tag == "greaterThan" || tag == "lessThan" || tag == "same") {
+						customIntroNxtStep("#firstWhile", "checkWhileLoop", "right");
+					} else if (tag == "secondWhileLoop") {
+						customIntroNxtStep("#secondWhile", "secondConCheck", "right");
+					} else {
+						customIntroNxtStep("#thirdWhile", "thirdConCheck", "right");	
+					}
 				}
 			}
 		});
@@ -2429,14 +2482,24 @@ function travelT1NxtT1() {
 		fadeInBounceEffectWithTimelineMax("#firstList #nextDiv" + t1Count, "#p1Val", "right", function() {
 			$("#t1Line").remove();
 			t1Count++;
-			t2Count = 1;
+			if (btn == "mul") {
+				t2Count = 1;
+			}
 			if ($("#p1Val").text().trim() != "NULL") {
 				svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", "#firstList #nextDiv" + t1Count 
 						, "#svgId", "t1Line", "arrow", function() {
 					if(btn == "mul") {
 						customIntroNxtStep("#polyOperationsDivPre", "firstForLoopConCheck", "right");
 					} else {
-						travelT2NxtToT2();
+						if (tag == "same") {
+							travelT2NxtToT2();
+						} else if (tag == "greaterThan" || tag == "lessThan") {
+							customIntroNxtStep("#firstWhile", "checkWhileLoop", "right");
+						} else if (tag == "secondWhileLoop") {
+							customIntroNxtStep("#secondWhile", "secondConCheck", "right");
+						} else {
+							customIntroNxtStep("#thirdWhile", "thirdConCheck", "right");	
+						}
 					}
 				});
 			} else {
