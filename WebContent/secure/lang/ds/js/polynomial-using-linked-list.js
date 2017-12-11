@@ -695,7 +695,7 @@ function introFunction() {
 									if (btn == "mul") {
 										customIntroNxtStep("#polyOperationsDivPre", "multiplicaitonOperation", "right");
 									} else {
-										if ($("#p1Val").text().trim() != "NULL" && $("#p2Val").text().trim != "NULL") {
+										if ($("#p1Val").text().trim() != "NULL" && $("#p2Val").text().trim() != "NULL") {
 											customIntroNxtStep("#firstWhile", "firstIfCondition", "right");
 										} else if ($("#p1Val").text().trim() != "NULL") {
 											customIntroNxtStep("#secondWhile", "fillTempNodeWithCoeffExpNdNect", "right");
@@ -1742,7 +1742,7 @@ function returnAddTermHead() {
 			} else {
 				if (tag == "same" || tag == "greaterThan" || tag == "lessThan") {
 					introNextSteps("#firstWhile", "storeRtnResultOfAddTermInAdd", "right");
-				} else if (tag = "thirdWhileLoop") {//pending*************
+				} else if (tag == "thirdWhileLoop") {//pending*************
 					introNextSteps("#thirdWhile", "storeRtnResultOfAddTermInAdd", "right");
 				} else {
 					introNextSteps("#secondWhile", "storeRtnResultOfAddTermInAdd", "right");
@@ -2141,17 +2141,17 @@ function t1NextToT1Animation() {
 	var selector2 = "#firstForLoop";
 	if (btn != "mul") {
 		if (tag == "same") {
-			var selector1 = "#callAddMethod1";
-			var selector2 = "#treavelT1ToT1Nxt1";
+			selector1 = "#callAddMethod1";
+			selector2 = "#treavelT1ToT1Nxt1";
 		} else if (tag == "greaterThan") {
-			var selector1 = "#callAddMethod2";
-			var selector2 = "#treavelT1ToT1Nxt2";
+			selector1 = "#callAddMethod2";
+			selector2 = "#treavelT1ToT1Nxt2";
 		} else if (tag == "secondWhileLoop") {
-			var selector1 = "#callAddMethod4";
-			var selector2 = "#treavelT1ToT1Nxt4";
+			selector1 = "#callAddMethod4";
+			selector2 = "#treavelT1ToT1Nxt3";
 		} else {
-			var selector1 = "#callAddMethod5";
-			var selector2 = "#treavelT2ToT2Nxt3";
+			selector1 = "#callAddMethod5";
+			selector2 = "#treavelT2ToT2Nxt3";
 		}
 	}
 	var text = "Travel the <y>next</y> field of <y>t1</y> to <y>t1</y>.";
@@ -2239,10 +2239,10 @@ function addAndSubFirstWhileLoop() { //addition and subtraction functions
 		travel("#firstWhileCon", "#tooltipCndtn", function() {
 			$(".introjs-tooltiptext").append("<ul></ul>");
 			$(".introjs-tooltiptext ul").append("<li>"+ text +"</li>");
-			flipEffectWithTweenMax("#tooltipT1Val", $("#p1Val").text(), function() {
+			flipEffectWithTweenMax("#tooltipT1Val", $("#p1Val").text().trim(), function() {
 				$(".introjs-tooltiptext ul li:last-child").append("<div></div>");
 				if ($("#p1Val").text().trim() != "NULL") {
-					flipEffectWithTweenMax("#tooltipT2Val", $("#p2Val").text(), function() {
+					flipEffectWithTweenMax("#tooltipT2Val", $("#p2Val").text().trim(), function() {
 						if ($("#p2Val").text().trim() != "NULL") {
 							var text = "Since it evaluates to <y>true</y>, so the control enters into the body "
 										+ " of <y>while-loop</y>."
@@ -2745,12 +2745,12 @@ function orderingNodes(count) {//Changing node position from temparay place to l
 	var temporaryNode;
 	var con
 	
-	selector = (btn != "create") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList"
+	var selector = (btn != "create") ? "#thirdList" : (createMethodCallCount == 1) ? "#firstList" : "#secondList"
 	if ($(selector1).text().trim() == "NULL") {
 		p1CountVal = p1Count - 1;
 	}
 	if (btn == "create") {
-		con = parseInt($("#expVal").text()) < parseInt($(selector + " #exp" + p1CountVal).text().trim());
+		con = parseInt($("#expVal").text().trim()) < parseInt($(selector + " #exp" + p1CountVal).text().trim());
 	} else {
 		con = parseInt($("#temparyPolyNodeForPloy #exp" + count).text().trim()) < parseInt($(selector + " #exp" + p1CountVal).text().trim());
 	}
@@ -2867,18 +2867,11 @@ function regenerateArrows(count, selector) {
 		if ($("#p1Val").text().trim() != "NULL") {
 			svgAnimatingLineTopToBottom("#animationDiv", "#p1Div", "#firstList #nextDiv" + t1Count,  "#svgId", "t1Line", "arrow");
 		}
-		svgAnimatingLineBottomToTop("#animationDiv", "#p2Div", "#secondList #nextDiv" + t2Count,  "#svgId", "t2Line", "arrow");
+		if ($("#p2Val").text().trim() != "NULL") {
+			svgAnimatingLineBottomToTop("#animationDiv", "#p2Div", "#secondList #nextDiv" + t2Count,  "#svgId", "t2Line", "arrow");
+		}
 		svgAnimatingLineBottomToTop("#animationDiv", "#headInOP", "#thirdList #nextDiv1",  "#svgId", "headOpLine", "arrow");
 		
-		
-		for(i = 1; i< $("#secondList .nodes").length; i++) {
-			svgAnimatingLineRightToLeft("#animationDiv", "#secondList #nextDiv"+ i, "#secondList #coeffDiv"+ 
-					(i + 1), "#svgId", "lines"+ i, "arrow");
-		}
-		for(i = 1; i< $("#firstList .nodes").length; i++) {
-			svgAnimatingLineRightToLeft("#animationDiv", "#firstList #nextDiv"+ i, "#firstList #coeffDiv"+ 
-					(i + 1), "#svgId", "line"+ i, "arrow");
-		}
 		for(i = 1; i < $("#thirdList .nodes").length; i++) {
 			if (i == 4) {
 				svgAnimatingLineLeftToRight("#animationDiv", "#thirdList #coeffDiv"+ i, "#thirdList #nextDiv"+ 
@@ -2888,6 +2881,16 @@ function regenerateArrows(count, selector) {
 						(i + 1), "#svgId", "linee"+ i, "arrow");
 			}
 		}
+		
+		for(i = 1; i< $("#secondList .nodes").length; i++) {
+			svgAnimatingLineRightToLeft("#animationDiv", "#secondList #nextDiv"+ i, "#secondList #coeffDiv"+ 
+					(i + 1), "#svgId", "lines"+ i, "arrow");
+		}
+		for(i = 1; i< $("#firstList .nodes").length; i++) {
+			svgAnimatingLineRightToLeft("#animationDiv", "#firstList #nextDiv"+ i, "#firstList #coeffDiv"+ 
+					(i + 1), "#svgId", "line"+ i, "arrow");
+		}
+		
 	} else {
 		if (createMethodCallCount == 1) {
 			svgAnimatingLineTopToBottom("#animationDiv", "#headDiv", selector + " #coeffDiv1", "#svgId", "headLine", "arrow");
