@@ -548,7 +548,7 @@ function AnimationManager(objectManager) {
 				undoBlock.push(new UndoCreate(parseInt(nextCommand[1])));
 
 			} else if (nextCommand[0].toUpperCase() == "DRAWLINE") {
-				//console.log(nextCommand.length);
+				console.log(nextCommand.length);
 				if (nextCommand.length > 7) {
 					this.animatedObjects.drawLine(parseInt(nextCommand[1]),
 							parseInt(nextCommand[2]), parseInt(nextCommand[3]),
@@ -568,7 +568,7 @@ function AnimationManager(objectManager) {
 				undoBlock.push(new UndoCreate(parseInt(nextCommand[1])));
 				
 			} else if (nextCommand[0].toUpperCase() == "CONNECT") {
-
+				console.log(nextCommand.length);
 				if (nextCommand.length > 7) {
 					this.animatedObjects.connectEdge(parseInt(nextCommand[1]),
 							parseInt(nextCommand[2]), this

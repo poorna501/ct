@@ -16,7 +16,7 @@
 <script src="/js/typewriting.min.js"></script>
 <script src="/js/gs/TweenMax.min.js"></script>
 <script src="/js/jquery.scrollTo.js"></script>
-<script src="/secure/lang/ds/js/polynomial-using-linked-list.js"></script>
+<script src="js/polynomial-using-linked-list.js"></script>
 
 
 <title>Polynomial-Using-Linked-List</title>

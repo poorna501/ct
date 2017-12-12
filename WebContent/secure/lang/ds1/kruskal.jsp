@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Breadth First Search</title>
+<title>Kruskal's algorithm</title>
 
 <link rel="stylesheet" href="/css/bootstrap.css">
 <link rel="stylesheet" href="/css/jquery-ui.css">
@@ -22,22 +22,22 @@
 <script type="text/javascript" src="/js/intro.js"></script>
 <script type="text/javascript" src="/js/jquery.scrollTo.js"></script>
 
-<script type="text/javascript" src="../js/an-li/custom-events.js"></script>
-<script type="text/javascript" src="../js/an-li/undo-functions.js"></script>
-<script type="text/javascript" src="../js/an-li/animated-object.js"></script>
-<script type="text/javascript" src="../js/an-li/animated-circle.js"></script>
-<script type="text/javascript" src="../js/an-li/animated-rectangle.js"></script>
-<script type="text/javascript" src="../js/an-li/animated-linked-list.js"></script>
-<script type="text/javascript" src="../js/an-li/highlight-circle.js"></script>
-<script type="text/javascript" src="../js/an-li/line.js"></script>
-<script type="text/javascript" src="../js/an-li/draw-line.js"></script>
-<script type="text/javascript" src="../js/an-li/object-manager.js"></script>
-<script type="text/javascript" src="../js/an-li/animated-label.js"></script>
-<script type="text/javascript" src="../js/an-li/animation-main.js"></script>
-<script type="text/javascript" src="../js/al-li/algorithm.js"></script>
+<script type="text/javascript" src="js/an-li/custom-events.js"></script>
+<script type="text/javascript" src="js/an-li/undo-functions.js"></script>
+<script type="text/javascript" src="js/an-li/animated-object.js"></script>
+<script type="text/javascript" src="js/an-li/animated-circle.js"></script>
+<script type="text/javascript" src="js/an-li/animated-rectangle.js"></script>
+<script type="text/javascript" src="js/an-li/animated-linked-list.js"></script>
+<script type="text/javascript" src="js/an-li/highlight-circle.js"></script>
+<script type="text/javascript" src="js/an-li/line.js"></script>
+<script type="text/javascript" src="js/an-li/draw-line.js"></script>
+<script type="text/javascript" src="js/an-li/object-manager.js"></script>
+<script type="text/javascript" src="js/an-li/animated-label.js"></script>
+<script type="text/javascript" src="js/an-li/animation-main.js"></script>
+<script type="text/javascript" src="js/al-li/algorithm.js"></script>
 
-<script type="text/javascript" src="../js/al-li/bfs.js"></script>
-<script type="text/javascript" src="../js/breadth-first-search.js"></script>
+<script type="text/javascript" src="js/al-li/kruskals-alg.js"></script>
+<script type="text/javascript" src="js/kruskal.js"></script>
 
 <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
@@ -241,69 +241,37 @@ canvas {
 	position: relative;
 	z-index: 1;
 }
+
+td:first-child {
+	width : 100px;
+}
+
+.input-edge {
+	margin-left: 6px;
+	margin-right: 6px;
+}
+
 </style>
 
 </head>
 <body onload="init()">
 	<div id="container">
 		<div class='col-xs-12 text-center' style="margin-top: 20px;">
-			<h1 class='label label-default ct-demo-heading'>Breadth First
-				Search</h1>
+			<h1 class='label label-default ct-demo-heading'>Kruskal's Algorithm</h1>
 		</div>
 
 		<div id="mainContent" class='col-xs-12 margin-top-20 padding0'>
 			<div class='col-xs-3' style="padding-right: 0;">
 				<div class='col-xs-12 box-border' style="padding: 5px;">
 
-					<div id='bfsDiv'>
-						<span class='btn btn-primary' data-toggle='collapse' data-target='#codeDiv' style="margin-bottom: 5px;">BFS</span>
+					<div id='kruskalDiv'>
+						<span class='btn btn-primary' data-toggle='collapse' data-target='#codeDiv' style="margin-bottom: 5px;">Kruskal's</span>
 						<div id='codeDiv' class='collapse'>
-							<pre class='creampretab4'>void breadthFirstSearch() {
-	for (i = 0; i < n; i++) {
-		visited[i] = -1;
-	}
-	visit = visited;
-	currentVertex = startingVertex;
-	fp = (struct queue *)malloc(
-				sizeof(struct queue));
-	np = fp;
-	fp -> data = currentVertex;
-	fp -> next = NULL;
-	pp = fp;
-	while (fp != NULL) {
-		currentVertex = fp -> data;
-		if (seqSearch(visit, n, currentVertex) == 0) {
-			insert(visit, n, currentVertex);
-			for (i = 0; i < n; i++) {
-				if (adj[currentVertex][i] == 1) {
-					pp -> next = (struct queue *)malloc(
-							sizeof(struct queue));
-					np = pp -> next;
-					np -> data = i;
-					np -> next = NULL;
-					pp = np;
-				}
-			}
-		}
-		fp = fp -> next;
-	}
+							<pre class='creampretab4'>void KruskalsAlgorithm() {
 }</pre>
-
-
 						</div>
 					</div>
-
-
 				</div>
-				<!-- <div id="outputDiv" class='opacity00 col-xs-12 padding0 margin-top-20'>
-					<div class="output-console-title-bar">
-						<span class="title">Output</span>
-					</div>
-					<div class="output-console-body">
-						<span id="output"></span>
-					</div>
-				</div> -->
-
 			</div>
 			<div class='col-xs-9'>
 				<div class='col-xs-12 padding0 box-border'
@@ -351,6 +319,15 @@ canvas {
 													</div>
 												</td>
 											</tr>
+											<tr>
+												<td><b style="font-family: monospace;">Edge weight&emsp;: </b></td>
+												<td>
+													<div class="input-edge">
+														<input class="form-control input-sm" id="edgeWeight" name="inject" 
+														type="text" size="6" maxlength="3"/> 
+													</div>
+												</td>
+											</tr>
 										</table>
 									</div>
 
@@ -366,63 +343,10 @@ canvas {
 									</div>
 								</div>
 							</div>
-							
-							
-							<div class='col-xs-4'>
-								<div id='bfsBtnDiv' class='vertical-center box-border padding10'>
-									<!-- <div class='col-xs-12'>
-										<b style="font-family: monospace;">Starting Vertex : </b>
-										<div class="dropdown dropdown-select" id='bfsVal'>
-											<button class="btn dropdown-toggle btn-info btn-xs"
-												type="button" data-toggle="dropdown">
-												vertex &nbsp;<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu"></ul>
-										</div>
-									</div> -->
-									
-									<table>
-										<tr>
-											<td><b style="font-family: monospace;">Starting Vertex : </b></td>
-											<td>
-												<div class="dropdown dropdown-select" id='bfsVal'>
-													<button class="btn dropdown-toggle btn-info btn-xs"
-														type="button" data-toggle="dropdown">
-														vertex &nbsp;<span class="caret"></span>
-													</button>
-													<ul class="dropdown-menu"></ul>
-												</div>
-											</td>
-											<td>
-												<div class="input-group">
-													<span class="input-group-addon input-group-addon-border">
-														<span id="bfsBtn" class="btn btn-sm btn-success">Start</span>
-													</span>
-												</div>
-											</td>
-										</tr>
-									</table>
-									<!-- <div class='col-sm-12' style="">
-										<div class="input-group" id='bfsBtnDiv'>
-											<input class="form-control input-sm" id="bfsVal" name="bfs"
-												type="text" /> <span class="input-group-addon"> <span
-												id="bfsBtn" class="btn btn-sm btn-success">BFS</span>
-											</span>
-										</div>
-									</div> -->
-								</div>
-							</div>
-
-
-							<!-- <div class="btn-css">
-								<div class='col-sm-12'>
-									<input id='code' checked data-toggle="toggle" data-on="With Code" data-off="Without Code" data-onstyle="success" data-offstyle="danger" type="checkbox">
-								</div>
-							</div> -->
 						</div>
 					</div>
 					<div class='col-xs-12' style="padding: 0;">
-						<canvas id="canvas" width="1000" height="500"></canvas>
+						<canvas id="canvas" width="950" height="500"></canvas>
 						<div id='canvasExpDiv'>
 							<div class="canvas-tooltip" style="opacity: 0;">
 								<div class='canvas-tooltip-text'></div>
@@ -441,7 +365,7 @@ canvas {
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("#bfsDiv").on("click", function() {
+			$("#Kruskal").on("click", function() {
 				$(this).find(".code").addClass("active");
 			});
 
@@ -456,7 +380,7 @@ canvas {
 				$(this).parent('li').addClass('active');
 				$(this).parents('.dropdown-select').find('.dropdown-toggle').html($(this).text() + ' &nbsp;<span class="caret"></span>');
 			});
-			introGuide();
+			//introGuide();
 		});
 	</script>
 </body>
