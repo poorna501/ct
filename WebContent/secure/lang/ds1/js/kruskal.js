@@ -10,12 +10,6 @@ var edgeWeight = {};
 var VERTICES_FIXID_X_POS = [ 220, 145, 295, 70, 370, 145, 295, 220 ];
 var VERTICES_FIXID_Y_POS = [ 50, 150, 150, 250, 250, 350, 350, 450 ];
 
-var LINE_X_AXIS = [204, 167, ];
-var LINE_Y_AXIS = [60];
-var LINE_X1_AXIS = [0, 150];
-var LINE_Y1_AXIS = [0, 130];
-
-
 var HIGHLIGHT_LABEL_COLOR = "#FF0000"
 var HIGHLIGHT_LINK_COLOR = "#FF0000"
 
@@ -75,13 +69,12 @@ Kruskal.prototype.addControls = function() {
 Kruskal.prototype.setup = function() {
 	this.vertices = new Array(MAX_VERTICES_SIZE);
 	this.verticesEdges = new Array(MAX_VERTICES_SIZE);
-	this.edgeWeight = new Array(MAX_VERTICES_SIZE * 3);
+	this.edgeWeight = new Array(MAX_VERTICES_SIZE * 5);
+	this.edgeLine = new Array(MAX_VERTICES_SIZE * 5);
 	
-	for (var i = 0; i < MAX_VERTICES_SIZE * 3; i++) {
+	for (var i = 0; i < MAX_VERTICES_SIZE * 5; i++) {
 		this.vertices[i] = this.nextIndex++;
-	}
-	
-	for (var i = 0; i < MAX_VERTICES_SIZE; i++) {
+		this.edgeLine[i] = this.nextIndex++;
 		this.edgeWeight[i] = this.nextIndex++;
 	}
 	
@@ -141,48 +134,65 @@ Kruskal.prototype.vertex = function() {
  
 Kruskal.prototype.edge = function() {
 	this.commands = new Array();
+	this.weightRect = this.nextIndex++;
+	this.edgeRect = this.nextIndex++;
+	
 	
 	var fromEdge = parseInt($("#fromID .active").text());
 	var toEdge = parseInt($("#toID .active").text());
 	
-	//adj[fromEdge][toEdge] = 1;
 	if (edgesMap[fromEdge + "-" + toEdge] == undefined) {
 		var key = fromEdge + "-" + toEdge;
-		console.log("Hello");
 		if (fromEdge == toEdge) {
 			alert("not possible to draw line");
 		} else {
-			if ((key == "0-3" || key == "3-0") || (key == "0-4" || key == "4-0")
-					|| (key == "3-7" || key == "7-3")  || (key == "4-7" || key == "7-4") ) {
-				this.cmd("Connect", this.vertices[fromEdge], this.vertices[toEdge]);
+			if ((key == "0-3" || key == "3-0")) {
+				this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[0] - 20, VERTICES_FIXID_Y_POS[0], 
+						VERTICES_FIXID_X_POS[3], VERTICES_FIXID_Y_POS[3], "", 0.5);
+			} else if ((key == "7-3" || key == "3-7")) {
+				this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[3], VERTICES_FIXID_Y_POS[3] + 20, 
+						VERTICES_FIXID_X_POS[7], VERTICES_FIXID_Y_POS[7], "", 0.5);
+			} else if ((key == "0-4" || key == "4-0")) {
+				this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[0] + 20, VERTICES_FIXID_Y_POS[0], 
+						VERTICES_FIXID_X_POS[4] , VERTICES_FIXID_Y_POS[4], "", -0.5);
+			} else if ((key == "7-4" || key == "4-7")) {
+				this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[4], VERTICES_FIXID_Y_POS[4], 
+						VERTICES_FIXID_X_POS[7], VERTICES_FIXID_Y_POS[7], "", -0.5);
+			} else if ((key == "0-7") || key == "7-0") {
+				this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[0], VERTICES_FIXID_Y_POS[0] + 20, 
+						VERTICES_FIXID_X_POS[7], VERTICES_FIXID_Y_POS[7] + 20);
+			} else {
+					this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[fromEdge], VERTICES_FIXID_Y_POS[fromEdge], 
+							VERTICES_FIXID_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
+			}
+			var xPos;
+			var yPos = (VERTICES_FIXID_Y_POS[fromEdge] + VERTICES_FIXID_Y_POS[toEdge]) / 2;
+			if (key == "0-3" || key == "3-0" || key == "3-7" || key == "7-3") {
+				xPos= ((VERTICES_FIXID_X_POS[fromEdge] + VERTICES_FIXID_X_POS[toEdge]) / 2) - 90;
+			} else if (key == "0-4" || key == "4-0" || key == "4-7" || key == "7-4") {
+				xPos= ((VERTICES_FIXID_X_POS[fromEdge] + VERTICES_FIXID_X_POS[toEdge]) / 2) + 90;
+			} else if (key == "1-2" || key == "2-1" || key == "4-3" || key == "3-4" || key == "5-6" || key == "6-5" || key=="1-5" || key=="5-1" ||key=="2-6"|| key=="6-2") {
+				xPos= ((VERTICES_FIXID_X_POS[fromEdge] + VERTICES_FIXID_X_POS[toEdge]) / 2) - 20;
+				yPos = (VERTICES_FIXID_Y_POS[fromEdge] + VERTICES_FIXID_Y_POS[toEdge]) / 2 + 10;
+			} else if (key == "0-7" || key == "7-0") {
+				xPos= ((VERTICES_FIXID_X_POS[fromEdge] + VERTICES_FIXID_X_POS[toEdge]) / 2) + 20;
+				yPos = (VERTICES_FIXID_Y_POS[fromEdge] + VERTICES_FIXID_Y_POS[toEdge]) / 2 - 20;
+			} else if ( key == "0-1" || key == "1-0" || key == "1-3" || key == "3-1" || key == "3-5" || key=="5-3" || key=="5-7" || key=="7-5") {
+				xPos= ((VERTICES_FIXID_X_POS[fromEdge] + VERTICES_FIXID_X_POS[toEdge]) / 2) - 20;
+			} else {
+				xPos= ((VERTICES_FIXID_X_POS[fromEdge] + VERTICES_FIXID_X_POS[toEdge]) / 2) + 20;
+			}
+			this.cmd("CreateLabel", this.edgeWeight[index], $("#edgeWeight").val(), xPos, yPos);
+			if (index == 0) {
+				this.cmd("CreateRectangle", this.nextIndex++, "Edge", 25, 25, 105, 105);
 			} else {
 				
-				this.cmd("Connect", this.vertices[fromEdge], this.vertices[toEdge]);
-				
-				var xPos = Math.abs(VERTICES_FIXID_X_POS[toEdge]);
-				var yPos = Math.abs((VERTICES_FIXID_Y_POS[fromEdge] - VERTICES_FIXID_Y_POS[toEdge])) + 5;
-				this.cmd("CreateLabel", this.edgeWeight[index], $("#edgeWeight").val(), xPos, yPos);
-				
-				/*this.cmd("DrawLine", this.ADJACENT_TABLE_VERTICAL_LINE, LINE_X_AXIS[fromEdge], LINE_Y_AXIS[fromEdge], 
-						LINE_X1_AXIS[toEdge], LINE_Y1_AXIS[toEdge], "", 0.3);*/
-				index++;
-		}
-			
-			
+			}
+			index++;
 			
 			
 			
 		}
-			/*if ((key == "0-3" || key == "3-0") || (key == "0-4" || key == "4-0")
-				|| (key == "3-7" || key == "7-3")  || (key == "4-7" || key == "7-4") ) {
-				console.log("Hello HI!!!! else if");
-				this.cmd("Connect", this.vertices[fromEdge], this.vertices[toEdge], "", 0.3);
-			} else {
-				console.log("Hello HI!!!! else if else ");
-				
-				//this.cmd("Connect", this.vertices[fromEdge], this.vertices[toEdge]);
-			}*/
-		//}
 		edgesMap[fromEdge + "-" + toEdge] = true;
 		edgesMap[toEdge + "-" + fromEdge] = true;
 		var connections = [];
