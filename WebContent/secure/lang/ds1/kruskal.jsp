@@ -13,6 +13,9 @@
 <link rel="stylesheet" href="/css/introjs.css">
 <link rel="stylesheet" href="/css/introjs-ct.css">
 <link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/alertify/alertify.bootstrap.css">
+<link rel="stylesheet" href="/css/alertify/alertify.core.css">
+<link rel="stylesheet" href="/css/alertify/alertify.default.css">
 
 <script type="text/javascript" src="/js/jquery-latest.js"></script>
 <script type="text/javascript" src="/js/bootstrap.js"></script>
@@ -21,6 +24,8 @@
 <script type="text/javascript" src="/js/gs/TweenMax.min.js"></script>
 <script type="text/javascript" src="/js/intro.js"></script>
 <script type="text/javascript" src="/js/jquery.scrollTo.js"></script>
+<script type="text/javascript" src="/js/alertify.js"></script>
+
 
 <script type="text/javascript" src="js/an-li/custom-events.js"></script>
 <script type="text/javascript" src="js/an-li/undo-functions.js"></script>
@@ -44,6 +49,14 @@
 
 
 <style type="text/css">
+.alertify-buttons {
+	background: white;
+}
+
+.alertify {
+	top: 200px;	
+}
+
 .ct-demo-heading {
 	background: highlight none repeat scroll 0 0;
 	border-radius: 10px;
@@ -274,8 +287,7 @@ td:first-child {
 				</div>
 			</div>
 			<div class='col-xs-9'>
-				<div class='col-xs-12 padding0 box-border'
-					id='animationDiv'>
+				<div class='col-xs-12 padding0 box-border' id='animationDiv'>
 					<div class='col-xs-12 padding0 margin-top-20 text-center'>
 						<div class='col-xs-offset-0 col-xs-12 padding0' id='btnsDiv'>
 							<div class="btn-css col-xs-2">
@@ -340,6 +352,15 @@ td:first-child {
 												</span>
 											</div>
 										</div>
+									</div>
+								</div>
+							</div>
+							<div class="btn-css col-xs-1">
+								<div class='col-sm-12'>
+									<div class="input-group" id='startBtnDiv'>
+										<span class="input-group-addon input-group-addon-border">
+											<span id="staerBtn" class="btn btn-sm btn-success"><b>Start</b></span>
+										</span>
 									</div>
 								</div>
 							</div>

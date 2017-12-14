@@ -3,8 +3,7 @@ var VERTICES_SIZE = index = 0;
 
 var kruskalArr= {};
 var edgesMap = {};
-var visited = {};
-var adjMap = {};
+//var adjMap = {};
 var edgeWeight = {};
 
 var VERTICES_FIXID_X_POS = [ 220, 145, 295, 70, 370, 145, 295, 220 ];
@@ -20,6 +19,7 @@ var LINK_COLOR = "#f962f3";
 var HIGHLIGHT_CIRCLE_COLOR = "#f962f3";
 var visitedEdgeColor = "#6e00ff";
 var colorsArr = ["#4cef83", "#3acde0", "#e039dd", "#8d96ba", "#e8b068", "#e8d668", "#ed368d"];
+var addVertext = false;
 
 
 
@@ -64,6 +64,10 @@ Kruskal.prototype.addControls = function() {
 	this.edgeButton.onclick = this.edgeCallback.bind(this);
 	this.controls.push(this.edgeTextField);
 	this.controls.push(this.edgeButton);
+	
+	this.startButton = document.getElementById("staerBtn");
+	this.startButton.onclick = this.startCallback.bind(this);
+	this.controls.push(this.startButton);
 }
 
 Kruskal.prototype.setup = function() {
@@ -106,7 +110,29 @@ Kruskal.prototype.edgeCallback = function(event) {
 	if (!isNaN($("#fromID .active").text()) && !isNaN($("#toID .active").text()) && $("#edgeWeight").val() != "") {
 		this.implementAction(this.edge.bind(this), "");
 	} else {
-		alert("your entered wrong");
+		$(".alertify").css({"left": "50%", "top": "200px"});
+		if (!addVertext) {
+			alertify.alert('<b>First you have to <r>add</r> the <r>vertex</r> then create an <r>edge</r> between <r>two Vertices</r></b>');
+		} else {
+			if($("#fromID .active").text() == "" || $("#toID .active").text() == "") {
+				alertify.alert("Please select the <r>vertex</r>.");
+			} else if ($("#edgeWeight").val() == "") {
+				alertify.alert("Please enter the <r>edge weight</r>.");
+			} else {
+				alertify.alert('<b>Please select <r>from Vertex</r>, <r>to Vertex</r> and enter the <r>weight</r> of the <r>two vertex</r></b>');
+			}
+		}
+	}
+}
+
+Kruskal.prototype.startCallback = function(event) {
+	if($(".btn").is(":disabled")) {
+		return;
+	}
+	
+	console.log("Hello Start Btn");
+	if (VERTICES_SIZE < MAX_VERTICES_SIZE) {
+		this.implementAction(this.start.bind(this), "");
 	}
 }
 
@@ -128,24 +154,32 @@ Kruskal.prototype.vertex = function() {
 	this.cmd("CreateCircle", this.vertices[VERTICES_SIZE], VERTICES_SIZE, VERTICES_FIXID_X_POS[VERTICES_SIZE], VERTICES_FIXID_Y_POS[VERTICES_SIZE]);
 	$("#fromID ul").append("<li><a href='#'>" + VERTICES_SIZE + "</a></li>");
 	$("#toID ul").append("<li><a href='#'>" + VERTICES_SIZE + "</a></li>");
+	addVertext = true;
 	VERTICES_SIZE++;
 	return this.commands;
 }
  
 Kruskal.prototype.edge = function() {
 	this.commands = new Array();
-	this.weightRect = this.nextIndex++;
-	this.edgeRect = this.nextIndex++;
+	this.weightRect = new Array();
+	this.edgeRect = new Array();
 	
+	for (var i = 0; i < MAX_VERTICES_SIZE * 5; i++) {
+		this.weightRect[i] = this.nextIndex++;
+		this.edgeRect[i] = this.nextIndex++;
+	}
 	
 	var fromEdge = parseInt($("#fromID .active").text());
 	var toEdge = parseInt($("#toID .active").text());
-	
 	if (edgesMap[fromEdge + "-" + toEdge] == undefined) {
 		var key = fromEdge + "-" + toEdge;
+		var key1 = toEdge + "-" + fromEdge;
+		
 		if (fromEdge == toEdge) {
 			alert("not possible to draw line");
 		} else {
+			//visited[index + index] = key;
+			//visited[index + 1] = key1;
 			if ((key == "0-3" || key == "3-0")) {
 				this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[0] - 20, VERTICES_FIXID_Y_POS[0], 
 						VERTICES_FIXID_X_POS[3], VERTICES_FIXID_Y_POS[3], "", 0.5);
@@ -162,8 +196,8 @@ Kruskal.prototype.edge = function() {
 				this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[0], VERTICES_FIXID_Y_POS[0] + 20, 
 						VERTICES_FIXID_X_POS[7], VERTICES_FIXID_Y_POS[7] + 20);
 			} else {
-					this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[fromEdge], VERTICES_FIXID_Y_POS[fromEdge], 
-							VERTICES_FIXID_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
+				this.cmd("DrawLine", this.edgeLine[index], VERTICES_FIXID_X_POS[fromEdge], VERTICES_FIXID_Y_POS[fromEdge], 
+						VERTICES_FIXID_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
 			}
 			var xPos;
 			var yPos = (VERTICES_FIXID_Y_POS[fromEdge] + VERTICES_FIXID_Y_POS[toEdge]) / 2;
@@ -183,14 +217,16 @@ Kruskal.prototype.edge = function() {
 				xPos= ((VERTICES_FIXID_X_POS[fromEdge] + VERTICES_FIXID_X_POS[toEdge]) / 2) + 20;
 			}
 			this.cmd("CreateLabel", this.edgeWeight[index], $("#edgeWeight").val(), xPos, yPos);
-			if (index == 0) {
-				this.cmd("CreateRectangle", this.nextIndex++, "Edge", 25, 25, 105, 105);
-			} else {
-				
-			}
+			
+			/*if (index == 0) {
+			this.cmd("CreateRectangle", this.nextIndex++, "Edge", 50, 25, 450, 50);
+			this.cmd("CreateRectangle", this.nextIndex++, "Weight", 50, 25, 500, 50);
+		} else {
+			
+		}*/
+			edgeWeight[fromEdge + "-" + toEdge] = $("#edgeWeight").val();
+			edgeWeight[toEdge + "-" + fromEdge] = $("#edgeWeight").val();
 			index++;
-			
-			
 			
 		}
 		edgesMap[fromEdge + "-" + toEdge] = true;
@@ -201,14 +237,52 @@ Kruskal.prototype.edge = function() {
 		}
 		connections.push(toEdge);
 		kruskalArr[fromEdge] = connections.sort();
-		adjMap[key] = 1;
-		
-		//this.cmd("SetText", adjacentTableMap[key], 1);
-		//this.cmd("SetForegroundColor", adjacentTableMap[key], "#cd3232");
+		//adjMap[key] = 1;
+	} else {
+		//console.log("Do u want to change weight of the edge");
+		alertify.prompt("The <r>edge</r> between <r>"+ $("#fromID .active").text() +"</r> and <r>"+ $("#toID .active").text() 
+				+ "</r> is already exists. <br/>Do u Want to <r>chage the weight of the Edge</r>.<br/>If yes then enter the <r>weight</r>"
+				+ " of the two <r>vertices</r>.");
+		$("#alertify-ok").text("Yes");
+		$("#alertify-text").attr("maxlength", "3");
+		$(".alertify").css({"left": "22%", "top": "50px"});
+		$("#alertify-ok").click(function() {
+			//alert($("#edgeWeight").val());
+			$("#edgeWeight").val($("#alertify-text").val());
+			
+			this.edgeWeight.splice(fromEdge, 1);
+			this.edgeWeight.splice(fromEdge, 0, $("#edgeWeight").val());
+			this.cmd("SetText", this.edgeWeight[0], $("#edgeWeight").val());
+			
+			edgeWeight.splice(fromEdge, 1);
+			edgeWeight.splice(fromEdge, 0, $("#edgeWeight").val())
+			console.log("Hello Poorna jiiii !!!!!!!!!!!!!!!!!!");
+			
+			/*this.cmd("SetEdgeHighlight", vertex, bfs[vertex][i], 1);
+			this.duplicateLine = this.nextIndex++;
+			this.cmd("DrawLine", this.duplicateLine, VERTICES_FIXID_X_POS[fromEdge], VERTICES_FIXID_Y_POS[fromEdge], 
+					VERTICES_FIXID_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
+			this.cmd("SetHighlight", this.duplicateLine, 1);*/
+			
+			
+			console.log("Hello poorna!!!!!");
+			console.log($("#edgeWeight").val());
+			
+			
+		})
 	}
+		
 	return this.commands;
 }
 
+
+Kruskal.prototype.start = function() {
+	this.commands = new Array();
+	console.log("Hello Start Btn")
+	
+	
+	return this.commands;
+}
 
 
 
