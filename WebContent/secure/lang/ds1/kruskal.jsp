@@ -53,8 +53,13 @@
 	background: white;
 }
 
+.alertify-dialog {
+	padding: 0;
+}
+
 .alertify {
 	top: 200px;	
+	width: 350px;
 }
 
 .ct-demo-heading {
@@ -360,6 +365,7 @@ td:first-child {
 									<div class="input-group" id='startBtnDiv'>
 										<span class="input-group-addon input-group-addon-border">
 											<span id="staerBtn" class="btn btn-sm btn-success"><b>Start</b></span>
+											<span id="testBtn" class="btn btn-sm btn-success hide"><b></b></span>
 										</span>
 									</div>
 								</div>

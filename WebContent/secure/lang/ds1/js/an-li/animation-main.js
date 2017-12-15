@@ -573,8 +573,7 @@ function AnimationManager(objectManager) {
 					this.animatedObjects.connectEdge(parseInt(nextCommand[1]),
 							parseInt(nextCommand[2]), this
 									.parseColor(nextCommand[3]),
-							parseFloat(nextCommand[4]), this
-									.parseBool(nextCommand[5]), nextCommand[6],
+							parseFloat(nextCommand[4]), (nextCommand[5] == "true") ? true: false, nextCommand[6],
 							parseInt(nextCommand[7]), nextCommand[8]);
 				} else if (nextCommand.length > 6) {
 					this.animatedObjects.connectEdge(parseInt(nextCommand[1]),
