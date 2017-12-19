@@ -60,6 +60,7 @@
 .alertify {
 	top: 200px;	
 	width: 350px;
+	z-index: 100000000 !important;
 }
 
 .ct-demo-heading {
@@ -98,6 +99,16 @@
 
 .introjs-tooltiptext {
 	min-width: 250px;
+}
+
+.popover {
+	min-width: 50px !important;
+	z-index: 1;
+	min-height: 20px !important;
+}
+
+.popover-content {
+	font-size: 12px;
 }
 
 /* .introjs-tooltip {
@@ -274,10 +285,11 @@ td:first-child {
 </head>
 <body onload="init()">
 	<div id="container">
-		<div class='col-xs-12 text-center' style="margin-top: 20px;">
-			<h1 class='label label-default ct-demo-heading'>Kruskal's Algorithm</h1>
+		<div class="col-xs-12">
+			<div class='col-xs-12 text-center' style="margin-top: 20px;">
+				<h1 class='label label-default ct-demo-heading' id="kruskalHeadding">Kruskal's Algorithm</h1>
+			</div>
 		</div>
-
 		<div id="mainContent" class='col-xs-12 margin-top-20 padding0'>
 			<div class='col-xs-3' style="padding-right: 0;">
 				<div class='col-xs-12 box-border' style="padding: 5px;">
@@ -392,6 +404,7 @@ td:first-child {
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+			
 			$("#Kruskal").on("click", function() {
 				$(this).find(".code").addClass("active");
 			});
@@ -407,7 +420,7 @@ td:first-child {
 				$(this).parent('li').addClass('active');
 				$(this).parents('.dropdown-select').find('.dropdown-toggle').html($(this).text() + ' &nbsp;<span class="caret"></span>');
 			});
-			//introGuide();
+			introGuide();
 		});
 	</script>
 </body>

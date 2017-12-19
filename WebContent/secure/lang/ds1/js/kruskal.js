@@ -86,11 +86,11 @@ Kruskal.prototype.setup = function() {
 	
 	for (var i = 0; i < MAX_VERTICES_SIZE * 5; i++) {
 		this.vertices[i] = this.nextIndex++;
-		this.spanningTreeVertices[i] = this.nextIndex++;
 		this.edgeLine[i] = this.nextIndex++;
 		this.edgeWeight[i] = this.nextIndex++;
 		this.edgeRect[i] = this.nextIndex++;
 		this.WeightRect[i] = this.nextIndex++;
+		this.spanningTreeVertices[i] = this.nextIndex++;
 	}
 	
 	this.ADJACENT_TABLE_HORIZONTAL_LINE = this.nextIndex++;
@@ -110,6 +110,8 @@ Kruskal.prototype.vertexCallback = function(event) {
 	
 	if (VERTICES_SIZE < MAX_VERTICES_SIZE) {
 		this.implementAction(this.vertex.bind(this), "");
+	} else {
+		alertify.alert("Here we are restricted to allow only <b>8</b> vertices.");
 	}
 }
 
@@ -186,7 +188,7 @@ Kruskal.prototype.edge = function() {
 	fromEdgeAndToEdgeValues();
 	if (edgesMap[fromEdge + " - " + toEdge] == undefined) {
 		if (fromEdge == toEdge) {
-			alertify.alert("Same vertices, please give different vertices!");
+			alertify.alert("You gave Same vertices, please give different vertices!");
 		} else {
 			this.setCirclehighlight();
 			this.connect_vertices();
@@ -285,9 +287,12 @@ Kruskal.prototype.start = function() {
 	
 	console.log(visit);
 	console.log(Object.keys(visit));
-	if (VERTICES_SIZE != Object.keys(visit).length) {
+	if (VERTICES_SIZE == 0) { 
+		alertify.alert("Graph is empty!!");
+	} else if (VERTICES_SIZE != Object.keys(visit).length) {
 		alertify.alert("Please Connect all vertices");
 	} else {
+		$(".btn, #edgeWeight").attr("disabled", "disabled");
 		this.cmd("Step");
 		this.sortTheEdges();
 		edgeWeight[Object.keys(edgeWeight)[0]];
@@ -302,6 +307,13 @@ Kruskal.prototype.sortTheEdges = function() {
 	this.cmd("CreateRectangle", this.nextIndex++, "Weight", 40, 25, 491, 60);
 	this.cmd("SetBackgroundColor", this.nextIndex - 2, colorsArr[usedColorsCount]);
 	this.cmd("SetBackgroundColor", this.nextIndex - 1, colorsArr[usedColorsCount]);
+	this.cmd("Step");
+	this.cmd("BFSTooltipPos", 520, 40);
+	$(".canvas-tooltip-text").append("<ul><li></li></ul>");
+	var text = "Order the <y>edge</y> weights by <y>ascending</y> order.";
+	this.cmd("BFSText", text);
+	
+	//this.cmd("BFSStep");
 	this.sortEdgeLogic();
 	this.cmd("Step");
 	return this.commands;
@@ -343,6 +355,7 @@ Kruskal.prototype.sortEdgeLogic = function() {
 Kruskal.prototype.drawMinSpanningTree = function() {
 	console.log("In min Spanning Tree");
 	
+	
 	if (kruskalArr.length != 0) {
 		for (var i = 0; i < kruskalArr.length; i++) {
 			this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
@@ -354,14 +367,20 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 			fromEdge = parseInt(val[0]);
 			toEdge = parseInt(val[1]);
 			var value = kruskalArr[i].val;
-			this.cmd("CreateCircle", this.spanningTreeVertices[i + (i * i)], fromEdge, SPANNING_TREE_X_POS[fromEdge], VERTICES_FIXID_Y_POS[fromEdge]);
-			this.cmd("CreateCircle", this.spanningTreeVertices[(i + 1) + (i * i)], toEdge, SPANNING_TREE_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
 			
-			this.cmd("SetBackgroundColor", this.spanningTreeVertices[i + (i * i)], colorsArr[usedColorsCount]);
-			this.cmd("SetBackgroundColor", this.spanningTreeVertices[(i + 1) + (i * i)], colorsArr[usedColorsCount]);
+			
+			if  (visitedVertices[fromEdge] == "-1") {
+				this.cmd("CreateCircle", this.spanningTreeVertices[fromEdge], fromEdge, SPANNING_TREE_X_POS[fromEdge], VERTICES_FIXID_Y_POS[fromEdge]);
+			}
+			if (visitedVertices[toEdge] == "-1") { 
+				this.cmd("CreateCircle", this.spanningTreeVertices[toEdge], toEdge, SPANNING_TREE_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
+			}
+			
+			this.cmd("SetBackgroundColor", this.spanningTreeVertices[fromEdge], colorsArr[usedColorsCount]);
+			this.cmd("SetBackgroundColor", this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount]);
 			this.cmd("Step");
-			this.cmd("Sethighlight", this.spanningTreeVertices[i + (i * i)], 1);
-			this.cmd("Sethighlight", this.spanningTreeVertices[(i + 1) + (i * i)], 1);
+			this.cmd("Sethighlight", this.spanningTreeVertices[fromEdge], 1);
+			this.cmd("Sethighlight", this.spanningTreeVertices[toEdge], 1);
 			this.cmd("Step");
 			this.cmd("Step");
 			
@@ -369,34 +388,41 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 				visitedVertices[fromEdge] = "1";
 				visitedVertices[toEdge] = "1";
 				if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
-					this.cmd("connect", this.spanningTreeVertices[i + (i * i)], this.spanningTreeVertices[(i + 1) + (i * i)], "#000000", 0.4, false, value, 0, true);
+					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0.4, false, value, 0, true);
 				} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
-					this.cmd("connect", this.spanningTreeVertices[i + (i * i)], this.spanningTreeVertices[(i + 1) + (i * i)], "#000000", -0.4, false, value, 0, true);
+					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", -0.4, false, value, 0, true);
 				} else {
-					this.cmd("connect", this.spanningTreeVertices[i + (i * i)], this.spanningTreeVertices[(i + 1) + (i * i)], "#000000", 0, false, value, 0, true);
+					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0, false, value, 0, true);
 				}
 				
+				this.cmd("SetEdgeColor", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
+				this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 2]);
+				this.cmd("Step");
+				this.cmd("Step");
+				this.cmd("SetEdgeColor", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
+				this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
 			} else {
+				var status;
+				console.log("All vertices are visited")
 				this.cmd("Step");
 				if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
-					this.cmd("connect", this.spanningTreeVertices[i + (i * i)], this.spanningTreeVertices[(i + 1) + (i * i)], "#e62e00", 0.4, false, value, 0, true);
+					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, value, 0, true);
 				} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
-					this.cmd("connect", this.spanningTreeVertices[i + (i * i)], this.spanningTreeVertices[(i + 1) + (i * i)], "#e62e00", -0.4, false, value, 0, true);
+					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", -0.4, false, value, 0, true);
 				} else {
-					this.cmd("connect", this.spanningTreeVertices[i + (i * i)], this.spanningTreeVertices[(i + 1) + (i * i)], "#e62e00", 0, false, value, 0, true);
+					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0, false, value, 0, true);
 				}
-				//this.cmd("connect", this.spanningTreeVertices[i + (i * i)], this.spanningTreeVertices[(i + 1) + (i * i)], "#000000", 0, false, value, 0, true);
 				this.cmd("Step");
 				this.cmd("Step");
-				this.cmd("DisConnect", this.spanningTreeVertices[i + (i * i)], this.spanningTreeVertices[(i + 1) + (i * i)], "#e62e00", 0.4, false, "", 0, true);
+				this.cmd("DisConnect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, "", 0, true);
 				
 			}
 			this.cmd("SetHighlight", this.edgeRect[i], "");
 			this.cmd("SetHighlight", this.WeightRect[i], "");
-			this.cmd("Sethighlight", this.spanningTreeVertices[i + (i * i)], "");
-			this.cmd("Sethighlight", this.spanningTreeVertices[(i + 1) + (i * i)], "");
-			this.cmd("SetBackgroundColor", this.spanningTreeVertices[i + (i * i)], "#fff");
-			this.cmd("SetBackgroundColor", this.spanningTreeVertices[(i + 1) + (i * i)], "#fff");
+			this.cmd("Sethighlight", this.spanningTreeVertices[fromEdge], "");
+			this.cmd("Sethighlight", this.spanningTreeVertices[toEdge], "");
+			this.cmd("SetBackgroundColor", this.spanningTreeVertices[fromEdge], "#fff");
+			this.cmd("SetBackgroundColor", this.spanningTreeVertices[toEdge], "#fff");
 			
 		}
 	} else {
