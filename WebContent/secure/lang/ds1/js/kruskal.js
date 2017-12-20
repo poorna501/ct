@@ -1,12 +1,12 @@
 var MAX_VERTICES_SIZE = 8;
-var VERTICES_SIZE = index = SPANNINGTREE_SIZE = usedColorsCount = 0; 
+var VERTICES_SIZE = index = SPANNINGTREE_SIZE = usedColorsCount = tooltipCount = 0; 
 
 var kruskalArr= [];
 var edgesMap = {};
 var edgeWeight = {};
 var adjMap = {};
 var visitedVertices = {};
-
+var flag = false;
 
 var poornaMap = {};
 
@@ -185,6 +185,7 @@ Kruskal.prototype.edge = function() {
 		this.weightRect[i] = this.nextIndex++;
 		this.edgeRect[i] = this.nextIndex++;
 	}
+	$("#addEdgeBtn").attr("disabled", "disabled");
 	fromEdgeAndToEdgeValues();
 	if (edgesMap[fromEdge + " - " + toEdge] == undefined) {
 		if (fromEdge == toEdge) {
@@ -200,7 +201,7 @@ Kruskal.prototype.edge = function() {
 			index++;
 		}
 	} else {
-		var flag = false; 
+		tooltipCount++; 
 		display_Prompt();
 	}
 	return this.commands;
@@ -262,6 +263,10 @@ Kruskal.prototype.connect_vertices = function() {
 	} else {
 		this.cmd("connect", this.vertices[fromEdge], this.vertices[toEdge], "#000000", 0, false, $("#edgeWeight").val(), 0, true);
 	}
+	this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
+	this.cmd("Step");
+	this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], "");
+	
 }
 
 Kruskal.prototype.removeCircleColor = function() {
@@ -302,18 +307,20 @@ Kruskal.prototype.start = function() {
 
 Kruskal.prototype.sortTheEdges = function() {
 	this.commands = new Array();
-	this.cmd("CreateLabel", this.nextIndex++, "Order the Edge", 475, 40);
+	this.cmd("CreateLabel", this.nextIndex++, "Order the Edge by ascending", 470, 40);
 	this.cmd("CreateRectangle", this.nextIndex++, "Edge", 40, 25, 450, 60);
 	this.cmd("CreateRectangle", this.nextIndex++, "Weight", 40, 25, 491, 60);
 	this.cmd("SetBackgroundColor", this.nextIndex - 2, colorsArr[usedColorsCount]);
 	this.cmd("SetBackgroundColor", this.nextIndex - 1, colorsArr[usedColorsCount]);
 	this.cmd("Step");
 	this.cmd("BFSTooltipPos", 520, 40);
-	$(".canvas-tooltip-text").append("<ul><li></li></ul>");
+	this.cmd("BFSStep");
 	var text = "Order the <y>edge</y> weights by <y>ascending</y> order.";
-	this.cmd("BFSText", text);
-	
-	//this.cmd("BFSStep");
+	this.cmd("BFSTEXT", text);
+	this.cmd("Step");
+	tooltipCount++;
+	this.cmd("BFSButton", "play");
+	this.cmd("Step");
 	this.sortEdgeLogic();
 	this.cmd("Step");
 	return this.commands;
@@ -327,8 +334,8 @@ Kruskal.prototype.sortEdgeLogic = function() {
 		toEdge = parseInt(val[1]);
 		this.setCirclehighlight();
 		
-		this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount]);
-		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
+		this.cmd("SETEDGECOLOR", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount]);
+		//this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
 		this.cmd("Step");
 		this.cmd("CreateRectangle", this.edgeRect[i], kruskalArr[i].key, 40, 25, 450, 85 + (i * 20));
 		this.cmd("CreateRectangle", this.WeightRect[i], kruskalArr[i].val, 40, 25, 491, 85 + (i * 20));
@@ -336,8 +343,8 @@ Kruskal.prototype.sortEdgeLogic = function() {
 		this.cmd("SetBackgroundColor",this.WeightRect[i], colorsArr[usedColorsCount + 1]);
 		this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
 		this.cmd("SetHighlight", this.WeightRect[i], colorsArr[usedColorsCount + 1]);
-		this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], "");
-		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
+		this.cmd("SETEDGECOLOR", this.vertices[fromEdge], this.vertices[toEdge], "");
+		//this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
 		this.cmd("Step");
 		this.cmd("SetHighlight", this.edgeRect[i], "");
 		this.cmd("SetHighlight", this.WeightRect[i], "");
@@ -347,6 +354,10 @@ Kruskal.prototype.sortEdgeLogic = function() {
 		this.cmd("SetHighlight", this.vertices[toEdge], "");
 		this.cmd("Step");
 	}
+	$(".canvas-tooltip").show();
+	this.cmd("Step");
+	tooltipCount++;
+	this.cmd("BFSButton", "play");
 	this.cmd("Step");
 	this.drawMinSpanningTree();
 	this.cmd("Step");
@@ -354,9 +365,16 @@ Kruskal.prototype.sortEdgeLogic = function() {
 
 Kruskal.prototype.drawMinSpanningTree = function() {
 	console.log("In min Spanning Tree");
-	
-	
+	this.cmd("BFSStep");
+	var text = "Now draw a <y>minimum spanning tree</y> by using <y>order the edges by ascending</y> order.";
+	this.cmd("BFSTEXT", text);
+	this.cmd("Step");
+	tooltipCount++;
+	this.cmd("BFSButton", "play");
+	this.cmd("Step");
 	if (kruskalArr.length != 0) {
+		this.cmd("Step");
+		//$(".canvas-tooltip").remove();
 		for (var i = 0; i < kruskalArr.length; i++) {
 			this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
 			this.cmd("SetHighlight",this.WeightRect[i], colorsArr[usedColorsCount + 1]);
@@ -395,12 +413,12 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0, false, value, 0, true);
 				}
 				
-				this.cmd("SetEdgeColor", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
-				this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 2]);
+				this.cmd("SETEDGECOLOR", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
+				//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 2]);
 				this.cmd("Step");
 				this.cmd("Step");
-				this.cmd("SetEdgeColor", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
-				this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
+				this.cmd("SETEDGECOLOR", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
+				//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
 			} else {
 				var status;
 				console.log("All vertices are visited")
@@ -428,21 +446,16 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 	} else {
 		console.log("Hello Poorna!!!!!!");
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
 
+function play() {
+	$(".user-btn").remove();
+	if (tooltipCount == 4) {
+		console.log(flag);
+		$(".canvas-tooltip").remove()
+	}
+	doPlayPause();
+}
 
 
 

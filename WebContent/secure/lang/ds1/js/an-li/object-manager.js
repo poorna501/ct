@@ -511,6 +511,7 @@ function ObjectManager() {
 		var oldColor = "#000000";
 		if (this.Edges[fromID] != null && this.Edges[fromID] != undefined) {
 			var len = this.Edges[fromID].length;
+			console.log("setEdgeColor len : " + len);
 			for (var i = len - 1; i >= 0; i--) {
 				if (this.Edges[fromID][i] != null
 						&& this.Edges[fromID][i] != undefined

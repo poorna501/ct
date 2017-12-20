@@ -82,6 +82,8 @@ function introGuide() {
 						popover('#addEdgeDiv', "top", text, function() {
 							var text = "Click on <y>start</y> button. We will find a <y>shortest path</y>.";
 							popover('#startBtnDiv','top', text, function() {
+								$("#addEdgeBtn").attr("disabled", "disabled");
+								events("#edgeWeight");
 								
 							});
 						});
@@ -100,19 +102,63 @@ function introGuide() {
 	$('.introjs-bullets').hide();
 }
 
-function popover(selector, position, text, callBackFunction) {	//display popover
+function popover(selector, position, text, callBackFunction) {
+	//doPlayPause();
 	$(selector).popover({
-		placement: position,
 		viewport: selector,
+		placement: position,
 		html: true,
-		trigger: "focus",
-		content: '<div id="popover'+count+'">'+ text +'</div>',
-		container: '#animationDiv'
+		trigger: 'focus',
+		container : $("canvas").parent(),
+		content: '<div class="customPopover'+ count +'">' + text + '</div>'
+	}).popover('show').css("top", "0");
+	
+	typing($(".customPopover:last"), text, function() {
+		if (typeof callBackFunction === "function") {
+			count++;
+			callBackFunction();
+		}
 	});
-	typing('#popover' + count, text, function() {
-		count++;
-		$(selector).popover('show');
-		callBackFunction();
+}
+
+function events(selector) {
+	$(selector).on("keydown", function(e) {
+		$('.error-text').remove();
+		var max = $(this).attr("maxlength");
+		if ($.inArray(e.keyCode, [8, 46, 37, 39, 27]) !== -1) {
+			return;
+		}
+		if (e.keyCode == 109 || e.keyCode == 189 || e.keyCode == 173) {
+			if ($(this).val().length < 1) {	
+				return;
+			} else {
+				e.preventDefault();
+			}
+		}
+		if (((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) || (e.keyCode == 13 || e.keyCode ==9)){
+			e.preventDefault();
+		}
+		if ($(this).val().length > max - 1) {
+			$('.introjs-tooltiptext').append('<div class="error-text">Please restrict the maximum length to 3 digits only.</div>')
+			e.preventDefault();
+		}
+	});
+	$(selector).on("keyup", function(e) {
+		$('.error-text').remove();
+		/*
+		var firstCon = $(this).val().length > 0 && (!$(this).val().startsWith('-'));
+		var secondCon = $(this).val().length >= 2 && $(this).val().indexOf('-', $(this).val().indexOf('-') + 1) == -1*/ 
+		if ($(selector).val() != "") {
+			$("#addEdgeBtn").removeAttr("disabled");
+			//$('.introjs-nextbutton').show();
+			/*if ($('.introjs-nextbutton[style="display: inline-block;"]').length == 1 && e.keyCode == 13) {
+				introcode.nextStep();
+			}*/
+		} else {
+			$('.introjs-tooltiptext').append('<div class="error-text">Please enter any integer.</div>');
+			//$('.introjs-nextbutton').hide();
+			$("#addEdgeBtn").attr("disabled", "disabled");
+		}
 	});
 }
 
