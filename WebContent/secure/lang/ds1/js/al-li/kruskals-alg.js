@@ -74,13 +74,13 @@ function introGuide() {
 				$(".introjs-nextbutton").hide();
 				$(".btn, #edgeWeight").removeAttr("disabled");
 				$(".introjs-helperLayer").one("transitionend", function() {
-					var text = "The <y>add vertex</y> is used to add a <y>new vertex</y> into the <y>graph</y>.";
+					var text = "<b>First Step: </b><br/><br/> The <y>add vertex</y> is used to add a <y>new vertex</y> into the <y>graph</y>.";
 					popover('#addVertexBtnDiv','left', text, function() {
-						var text = "Create a <y>connection (egde)</y> between the any two " 
+						var text = "<b>Second Step: <br/><br/> Create a <y>connection (egde)</y> between the any two " 
 							+ "<y>vertices</y> (<y>From Vertex</y>, <y>To Vertex</y>) give the "
 							+ "<y>weight</y> of the <y>edge</y>.";
 						popover('#addEdgeDiv', "top", text, function() {
-							var text = "Click on <y>start</y> button. We will find a <y>shortest path</y>.";
+							var text = "<b>Third Step: </b><br/><br/> Click on <y>start</y> button. We will find a <y>shortest path</y>.";
 							popover('#startBtnDiv','top', text, function() {
 								$("#addEdgeBtn").attr("disabled", "disabled");
 								events("#edgeWeight");
