@@ -7,8 +7,7 @@ var edgeWeight = {};
 var adjMap = {};
 var visitedVertices = {};
 var flag = false;
-
-var poornaMap = {};
+var total_min_cost = 0;
 
 var VERTICES_FIXID_X_POS = [ 220, 145, 295, 70, 370, 145, 295, 220 ];
 var VERTICES_FIXID_Y_POS = [ 50, 150, 150, 250, 250, 350, 350, 450 ];
@@ -412,16 +411,15 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 				} else {
 					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0, false, value, 0, true);
 				}
-				
+				total_min_cost += parseInt(value);
 				this.cmd("SETEDGECOLOR", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
 				//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 2]);
 				this.cmd("Step");
-				this.cmd("Step");
 				this.cmd("SETEDGECOLOR", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
+				this.cmd("Step");
 				//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
 			} else {
 				var status;
-				this.cmd("Step");
 				if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
 					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, value, 0, true);
 				} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
@@ -431,7 +429,7 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 				}
 				this.cmd("Step");
 				this.cmd("show", ".canvas-tooltip");
-				this.cmd("BFSTooltipPos", 510, 85 + (i * 20));
+				this.cmd("BFSTooltipPos", SPANNING_TREE_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
 				this.cmd("BFSStep");
 				var text = "Here form a <y>circle</y>.";
 				this.cmd("BFSTEXT", text);
@@ -439,7 +437,6 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 				this.cmd("BFSButton", "play");
 				this.cmd("Step");
 				this.cmd("hide", ".canvas-tooltip");
-				this.cmd("Step");
 				this.cmd("Step");
 				this.cmd("DisConnect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, "", 0, true);
 				
@@ -456,10 +453,11 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 		this.cmd("show", ".canvas-tooltip");
 		this.cmd("BFSTooltipPos", SPANNING_TREE_X_POS[2], VERTICES_FIXID_Y_POS[2] - 50);
 		this.cmd("BFSStep");
-		var text = "All <y>vertices</y> are sorted successfully. The below diagram shows the <y>Minimum Spanning Tree</y>.";
+		var text = "All <y>vertices</y> are sorted successfully. The below diagram shows the <y>Minimum Spanning Tree</y>.<br/><br/>The "
+					+ " Minimum cost of the tree is : <y>"+ total_min_cost +"</y>.";
 		this.cmd("BFSTEXT", text);
 		this.cmd("Step");
-		this.cmd("BFSButton", "restat");
+		this.cmd("RESTARTBUTTON", "restat");
 		this.cmd("Step");
 		this.cmd("hide", ".canvas-tooltip");
 		this.cmd("Step");

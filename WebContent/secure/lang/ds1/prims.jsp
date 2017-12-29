@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Kruskal's algorithm</title>
+<title>Prim's algorithm</title>
 
 <link rel="stylesheet" href="/css/bootstrap.css">
 <link rel="stylesheet" href="/css/jquery-ui.css">
@@ -26,7 +26,6 @@
 <script type="text/javascript" src="/js/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="/js/alertify.js"></script>
 
-
 <script type="text/javascript" src="js/an-li/custom-events.js"></script>
 <script type="text/javascript" src="js/an-li/undo-functions.js"></script>
 <script type="text/javascript" src="js/an-li/animated-object.js"></script>
@@ -41,14 +40,11 @@
 <script type="text/javascript" src="js/an-li/animation-main.js"></script>
 <script type="text/javascript" src="js/al-li/algorithm.js"></script>
 
-<script type="text/javascript" src="js/al-li/kruskals-alg.js"></script>
-<script type="text/javascript" src="js/kruskal.js"></script>
-
-<!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
-
+<!-- <script type="text/javascript" src="js/al-li/kruskals-alg.js"></script> -->
+<script type="text/javascript" src="js/prims.js"></script>
 
 <style type="text/css">
+
 .alertify-buttons {
 	background: white;
 }
@@ -110,10 +106,6 @@
 .popover-content {
 	font-size: 12px;
 }
-
-/* .introjs-tooltip {
-	max-height: 400px;
-} */
 
 .introjs-tooltiptext li span {
 	display: inline-block;
@@ -259,6 +251,7 @@ r {
 	left: -10px;
 	top: 10px;
 }
+
 .canvas-tooltip-arrow {
 	border: 5px solid black;
 	content: "";
@@ -275,15 +268,10 @@ canvas {
 	z-index: 1;
 }
 
-td:first-child {
-	width : 100px;
-}
-
 .input-edge {
 	margin-left: 6px;
 	margin-right: 6px;
 }
-
 </style>
 
 </head>
@@ -291,17 +279,17 @@ td:first-child {
 	<div id="container">
 		<div class="col-xs-12">
 			<div class='col-xs-12 text-center' style="margin-top: 20px;">
-				<h1 class='label label-default ct-demo-heading' id="kruskalHeadding">Kruskal's Algorithm</h1>
+				<h1 class='label label-default ct-demo-heading' id="primsHeadding">Prim's Algorithm</h1>
 			</div>
 		</div>
 		<div id="mainContent" class='col-xs-12 margin-top-20 padding0'>
 			<div class='col-xs-3' style="padding-right: 0;">
 				<div class='col-xs-12 box-border' style="padding: 5px;">
 
-					<div id='kruskalDiv'>
-						<span class='btn btn-primary' data-toggle='collapse' data-target='#codeDiv' style="margin-bottom: 5px;">Kruskal's</span>
+					<div id='primsDiv'>
+						<span class='btn btn-primary' data-toggle='collapse' data-target='#codeDiv' style="margin-bottom: 5px;">Prim's</span>
 						<div id='codeDiv' class='collapse'>
-							<pre class='creampretab4'>void KruskalsAlgorithm() {
+							<pre class='creampretab4'>void PrimsAlgorithm() {
 }</pre>
 						</div>
 					</div>
@@ -338,7 +326,6 @@ td:first-child {
 													</div>
 												</td>
 											</tr>
-
 											<tr>
 												<td><b style="font-family: monospace;">To Vertex
 														&emsp;&emsp;: </b></td>
@@ -363,7 +350,6 @@ td:first-child {
 											</tr>
 										</table>
 									</div>
-
 									<div style="display: table;">
 										<div class='col-sm-12'>
 											<div class="input-group">
@@ -376,14 +362,29 @@ td:first-child {
 									</div>
 								</div>
 							</div>
-							<div class="btn-css col-xs-1">
-								<div class='col-sm-12'>
-									<div class="input-group" id='startBtnDiv'>
-										<span class="input-group-addon input-group-addon-border">
-											<span id="staerBtn" class="btn btn-sm btn-success"><b>Start</b></span>
-											<span id="testBtn" class="btn btn-sm btn-success hide"><b></b></span>
-										</span>
-									</div>
+							<div class='col-xs-4'>
+								<div id='bfsBtnDiv' class='vertical-center box-border padding10'>
+									<table>
+										<tr>
+											<td><b style="font-family: monospace;">Starting Vertex : </b></td>
+											<td>
+												<div class="dropdown dropdown-select" id='primsVal'>
+													<button class="btn dropdown-toggle btn-info btn-xs"
+														type="button" data-toggle="dropdown">
+														vertex &nbsp;<span class="caret"></span>
+													</button>
+													<ul class="dropdown-menu"></ul>
+												</div>
+											</td>
+											<td>
+												<div class="input-group">
+													<span class="input-group-addon input-group-addon-border">
+														<span id="startBtn" class="btn btn-sm btn-success">Start</span>
+													</span>
+												</div>
+											</td>
+										</tr>
+									</table>
 								</div>
 							</div>
 						</div>
@@ -409,7 +410,7 @@ td:first-child {
 	<script type="text/javascript">
 		$(document).ready(function() {
 			
-			$("#Kruskal").on("click", function() {
+			$("#Prims").on("click", function() {
 				$(this).find(".code").addClass("active");
 			});
 
@@ -424,7 +425,7 @@ td:first-child {
 				$(this).parent('li').addClass('active');
 				$(this).parents('.dropdown-select').find('.dropdown-toggle').html($(this).text() + ' &nbsp;<span class="caret"></span>');
 			});
-			introGuide();
+			//introGuide();
 		});
 	</script>
 </body>

@@ -530,6 +530,9 @@ function AnimationManager(objectManager) {
 			} else if (nextCommand[0].toUpperCase() == "BFSBUTTON" || nextCommand[0].toUpperCase() == "DFSBUTTON") {
 				doPlayPause();
 				$(".canvas-tooltip-buttons").append("<a class='introjs-button user-btn' onclick='" + nextCommand[1] + "()'>Next &#8594;</a>");
+			} else if (nextCommand[0].toUpperCase() == "RESTARTBUTTON") {
+				doPlayPause();
+				$(".canvas-tooltip-buttons").append("<a class='introjs-button restart-btn' onclick='" + nextCommand[1] + "()'>restart &#8594;</a>");
 			} else if (nextCommand[0].toUpperCase() == "PAUSE") {
 				doPlayPause();
 			} else if(nextCommand[0].toUpperCase() == "SETNEXTINTROSTEP") {
