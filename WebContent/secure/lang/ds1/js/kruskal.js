@@ -13,26 +13,8 @@ var VERTICES_FIXID_X_POS = [ 220, 145, 295, 70, 370, 145, 295, 220 ];
 var VERTICES_FIXID_Y_POS = [ 50, 150, 150, 250, 250, 350, 350, 450 ];
 var SPANNING_TREE_X_POS = [ 750, 675, 825, 600, 900, 675, 825, 750 ];
 
-var HIGHLIGHT_LABEL_COLOR = "#FF0000"
-var HIGHLIGHT_LINK_COLOR = "#FF0000"
-
-var HIGHLIGHT_COLOR = "#f962f3"
-var HEIGHT_LABEL_COLOR = "#007700"
-
-var LINK_COLOR = "#f962f3";
-var HIGHLIGHT_CIRCLE_COLOR = "#f962f3";
-var visitedEdgeColor = "#6e00ff";
 var colorsArr = ["#4cef83", "#3acde0", "#e039dd", "#8d96ba", "#e8b068", "#e8d668", "#ed368d"];
 var addVertext = false;
-
-var ADJACENT_TABLE_HORIZONTAL_X_POS = 725;
-var ADJACENT_TABLE_HORIZONTAL_Y_POS = 100;
-var ADJACENT_TABLE_VERTICAL_X_POS = 700;
-var ADJACENT_TABLE_VERTICAL_Y_POS = 125;
-var ADJACENT_TABLE_LINE_FLAG = false;
-
-var VISITED_VERTEX_X_POS = 150;
-var adjacentTableMap = {};
 
 function Kruskal(am, w, h) {
 	this.init(am, w, h);
@@ -219,10 +201,11 @@ function display_Prompt() {
 
 Kruskal.prototype.testing = function() {
 	this.commands = new Array();
+	console.log("testing");
 	fromEdgeAndToEdgeValues();
 	this.cmd("Step");
 	this.setCirclehighlight()
-	this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], "#e62e00");
+	this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "#e62e00");
 	this.cmd("DisConnect", this.vertices[fromEdge], this.vertices[toEdge], "#000000", 0.4, false, "", 0, true);
 	this.connect_vertices();
 	edgeWeight[fromEdge + " - " + toEdge] = $("#edgeWeight").val();
@@ -262,9 +245,9 @@ Kruskal.prototype.connect_vertices = function() {
 	} else {
 		this.cmd("connect", this.vertices[fromEdge], this.vertices[toEdge], "#000000", 0, false, $("#edgeWeight").val(), 0, true);
 	}
-	this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
+	this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
 	this.cmd("Step");
-	this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], "");
+	this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
 	
 }
 
@@ -334,7 +317,7 @@ Kruskal.prototype.sortEdgeLogic = function() {
 		toEdge = parseInt(val[1]);
 		this.setCirclehighlight();
 		
-		this.cmd("SETEDGECOLOR", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount]);
+		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount]);
 		//this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
 		this.cmd("Step");
 		this.cmd("CreateRectangle", this.edgeRect[i], kruskalArr[i].key, 40, 25, 450, 85 + (i * 20));
@@ -343,7 +326,7 @@ Kruskal.prototype.sortEdgeLogic = function() {
 		this.cmd("SetBackgroundColor",this.WeightRect[i], colorsArr[usedColorsCount + 1]);
 		this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
 		this.cmd("SetHighlight", this.WeightRect[i], colorsArr[usedColorsCount + 1]);
-		this.cmd("SETEDGECOLOR", this.vertices[fromEdge], this.vertices[toEdge], "");
+		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
 		//this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
 		this.cmd("Step");
 		this.cmd("SetHighlight", this.edgeRect[i], "");
@@ -369,7 +352,7 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 	this.cmd("show", ".canvas-tooltip");
 	this.cmd("BFSTooltipPos", 521, 40);
 	this.cmd("BFSStep");
-	var text = "After sort the <y>edge</y> weight</y>, draw a <y>minimum spanning tree</y> by using <y>order the edges</y>.";
+	var text = "After sort the <y>edge</y> weight</y>, draw a <y>minimum spanning tree</y> using <y>order the edges</y>.";
 	this.cmd("BFSTEXT", text);
 	this.cmd("Step");
 	this.cmd("BFSButton", "play");
@@ -412,10 +395,10 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0, false, value, 0, true);
 				}
 				total_min_cost += parseInt(value);
-				this.cmd("SETEDGECOLOR", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
+				this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
 				//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 2]);
 				this.cmd("Step");
-				this.cmd("SETEDGECOLOR", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
+				this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
 				this.cmd("Step");
 				//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
 			} else {

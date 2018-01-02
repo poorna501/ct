@@ -54,7 +54,7 @@ function introGuide() {
 				$(".btn, #edgeWeight").attr("disabled", "disabled");
 				$(".introjs-helperLayer").one("transitionend", function() {
 					var text = "Here, we will create a <y>connection (egde)</y> between the any two " 
-						+ "<y>vertices</y>, by using <y>From Vertex</y> point and <y>To Vertex</y> point and also give the "
+						+ "<y>vertices</y>, using <y>From Vertex</y> point and <y>To Vertex</y> point and also give the "
 						+ "<y>weight</y> of the <y>edge</y>.";
 					typing(".introjs-tooltiptext", text, function() {
 						$(".introjs-nextbutton").show();

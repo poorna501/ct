@@ -1,14 +1,19 @@
 var MAX_VERTICES_SIZE = 8;
 var VERTICES_SIZE = index = SPANNINGTREE_SIZE = usedColorsCount = tooltipCount = 0; 
 
-var primsArr= [];
-var G = [];
+
+var vis = {};
+var testingArr = [];
+var testingMap = {};
+
+var primsArr = [];
+var checking = [];
 var edgesMap = {};
 var edgeWeight = {};
-var adjMap = {};
 var visitedVertices = {};
 var flag = false;
 var total_min_cost = 0;
+
 
 var VERTICES_FIXID_X_POS = [ 220, 145, 295, 70, 370, 145, 295, 220 ];
 var VERTICES_FIXID_Y_POS = [ 50, 150, 150, 250, 250, 350, 350, 450 ];
@@ -69,9 +74,9 @@ Prims.prototype.addControls = function() {
 	this.startButton.onclick = this.startCallback.bind(this);
 	this.controls.push(this.startButton);
 	
-	/*this.testButton = document.getElementById("testBtn");
+	this.testButton = document.getElementById("testBtn");
 	this.testButton.onclick = this.testCallback.bind(this);
-	this.controls.push(this.testButton);*/
+	this.controls.push(this.testButton);
 }
 
 Prims.prototype.setup = function() {
@@ -83,6 +88,8 @@ Prims.prototype.setup = function() {
 	this.edgeLine = new Array(MAX_VERTICES_SIZE * 5);
 	this.edgeRect = new Array(MAX_VERTICES_SIZE * 5);
 	this.WeightRect = new Array(MAX_VERTICES_SIZE * 5);
+	this.visitedVertices = new Array(MAX_VERTICES_SIZE);
+	this.vertexVisited = new Array(MAX_VERTICES_SIZE);
 	
 	for (var i = 0; i < MAX_VERTICES_SIZE * 5; i++) {
 		this.vertices[i] = this.nextIndex++;
@@ -91,6 +98,8 @@ Prims.prototype.setup = function() {
 		this.edgeRect[i] = this.nextIndex++;
 		this.WeightRect[i] = this.nextIndex++;
 		this.spanningTreeVertices[i] = this.nextIndex++;
+		this.visitedVertices[i] = this.nextIndex++;
+		this.vertexVisited[i] = this.nextIndex++;
 	}
 	
 	this.ADJACENT_TABLE_HORIZONTAL_LINE = this.nextIndex++;
@@ -107,7 +116,6 @@ Prims.prototype.vertexCallback = function(event) {
 	if($(".btn").is(":disabled")) {
 		return;
 	}
-	
 	if (VERTICES_SIZE < MAX_VERTICES_SIZE) {
 		this.implementAction(this.vertex.bind(this), "");
 	} else {
@@ -186,8 +194,9 @@ Prims.prototype.edge = function() {
 		this.weightRect[i] = this.nextIndex++;
 		this.edgeRect[i] = this.nextIndex++;
 	}
-	$("#addEdgeBtn").attr("disabled", "disabled");
+	//$("#addEdgeBtn").attr("disabled", "disabled");
 	fromEdgeAndToEdgeValues();
+	
 	if (edgesMap[fromEdge + " - " + toEdge] == undefined) {
 		if (fromEdge == toEdge) {
 			alertify.alert("You gave Same vertices, please give different vertices!");
@@ -197,12 +206,9 @@ Prims.prototype.edge = function() {
 			this.cmd("Step");
 			this.removeCircleColor();
 			edgeWeight[fromEdge + " - " + toEdge] = $("#edgeWeight").val();
-			/*G.push([fromEdge, toEdge] = $("#edgeWeight").val());*/
-			G.push([toEdge, fromEdge]);
-			
-			//G.push: fromEdge + " - " + toEdge, val: $("#edgeWeight").val()});
 			primsArr.push({key: fromEdge + " - " + toEdge, val: $("#edgeWeight").val()});
 			edgesMap[fromEdge + " - " + toEdge] = true;
+			edgeAndWeightTable();
 			index++;
 		}
 	} else {
@@ -211,15 +217,32 @@ Prims.prototype.edge = function() {
 	return this.commands;
 }
 
+function edgeAndWeightTable() {
+	console.log("Edge Table.....!");
+	var dummyArr = []
+	if(testingMap[fromEdge] != undefined) {
+		dummyArr = testingMap[fromEdge];
+	}
+	dummyArr.push({key: fromEdge + " - " + toEdge, val: $("#edgeWeight").val()});	
+	testingMap[fromEdge] = dummyArr;
+	
+	var dummyArr = []
+	if(testingMap[toEdge] != undefined) {
+		dummyArr = testingMap[toEdge];
+	}
+	dummyArr.push({key: toEdge + " - " + fromEdge, val: $("#edgeWeight").val()});
+	testingMap[toEdge] = dummyArr;
+}
+
 function display_Prompt() {
 	alertify.confirm("The <r>edge</r> between <r>"+ $("#fromID .active").text() +"</r> and <r>"+ $("#toID .active").text() 
 			+ "</r> is already exists. <br/>Do u Want to <r>chage the weight of the Edge</r>.");
-		$("#alertify-ok").text("Yes");
-		$("#alertify-text").attr("maxlength", "3");
-		$(".alertify").css({"left": "45%", "top": "50px"});
-		$("#alertify-ok").click(function() {
-			$("#testBtn").click();
-		});
+	$("#alertify-ok").text("Yes");
+	$("#alertify-text").attr("maxlength", "3");
+	$(".alertify").css({"left": "45%", "top": "50px"});
+	$("#alertify-ok").click(function() {
+		$("#testBtn").click();
+	});
 }
 
 Prims.prototype.testing = function() {
@@ -227,13 +250,20 @@ Prims.prototype.testing = function() {
 	fromEdgeAndToEdgeValues();
 	this.cmd("Step");
 	this.setCirclehighlight()
-	this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], "#e62e00");
+	this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "#e62e00");
 	this.cmd("DisConnect", this.vertices[fromEdge], this.vertices[toEdge], "#000000", 0.4, false, "", 0, true);
 	this.connect_vertices();
 	edgeWeight[fromEdge + " - " + toEdge] = $("#edgeWeight").val();
 	for (let i = 0; i < Object.keys(edgeWeight).length; i++) {
-		if (primsArr[i].key == fromEdge + " - " + toEdge) {
+		if (primsArr[i].key == fromEdge + " - " + toEdge ) {
 			primsArr[i].val = $("#edgeWeight").val();
+		}
+	}
+	for (let i = 0; i < Object.keys(testingMap).length; i++) {
+		for (let j = 0; j < testingMap[i].length; j++) {
+			if (testingMap[i][j].key == fromEdge + " - " + toEdge || testingMap[i][j].key == toEdge + " - " + fromEdge) {
+				testingMap[i][j].val = $("#edgeWeight").val();
+			}
 		}
 	}
 	this.removeCircleColor();
@@ -267,10 +297,9 @@ Prims.prototype.connect_vertices = function() {
 	} else {
 		this.cmd("connect", this.vertices[fromEdge], this.vertices[toEdge], "#000000", 0, false, $("#edgeWeight").val(), 0, true);
 	}
-	this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
+	this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
 	this.cmd("Step");
-	this.cmd("SetEdgeColor", this.vertices[fromEdge], this.vertices[toEdge], "");
-	
+	this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
 }
 
 Prims.prototype.removeCircleColor = function() {
@@ -282,7 +311,6 @@ Prims.prototype.removeCircleColor = function() {
 
 Prims.prototype.start = function() {
 	this.commands = new Array();
-	
 	var visit = {};
 	if (primsArr.length != 0) {
 		for (var i = 0; i < primsArr.length; i++) {
@@ -293,25 +321,132 @@ Prims.prototype.start = function() {
 			visit[toEdge] = "1";
 		}
 	}
-	
-	console.log(visit);
-	console.log(Object.keys(visit));
 	if (VERTICES_SIZE == 0) { 
 		alertify.alert("Graph is empty!!");
 	} else if (VERTICES_SIZE != Object.keys(visit).length) {
 		alertify.alert("Please Connect all vertices");
 	} else {
-		var source = parseInt($("#primsVal .btn").text().trim());
-		this.cmd("CreateLabel", this.nextIndex++, "Source Vertex", VERTICES_FIXID_X_POS[source], VERTICES_FIXID_Y_POS[source] + 25);
-		this.cmd("SETTEXTCOLOR", this.nextIndex - 1, colorsArr[1]);
-		
-		prims(G, VERTICES_SIZE);
-		//$(".btn, #edgeWeight").attr("disabled", "disabled");
-		this.cmd("Step");
-		//this.sortTheEdges();
-		//edgeWeight[Object.keys(edgeWeight)[0]];
+		if ($("#primsVal .btn").text().trim() == "vertex") {
+			alertify.alert("Please select the <r>Source Vertex</r>.");
+		} else {
+			var source = parseInt($("#primsVal .btn").text().trim());
+			this.cmd("CreateLabel", this.nextIndex++, "Source Vertex", VERTICES_FIXID_X_POS[source], VERTICES_FIXID_Y_POS[source] + 28);
+			this.cmd("SETTEXTCOLOR", this.nextIndex - 1, "#660000");
+			this.cmd("SetBackgroundColor", this.vertices[source], colorsArr[1]);
+			this.cmd("Step");
+			this.cmd("Sethighlight", this.vertices[source], 1);
+			this.cmd("Step");
+			//this.cmd("SetHighlight", this.vertices[source], "");
+			this.primsTableCreation();
+			this.cmd("Step");
+			primsLogic();
+			//this.setAllVerticesToZero();
+			this.cmd("Step");
+		}
 	}
 	return this.commands;
+}
+/*
+Prims.prototype.setAllVerticesToZero = function() {
+	var source = parseInt($("#primsVal .btn").text().trim());
+	this.cmd("CreateRectangle", this.nextIndex++, "Vertex", 40, 25, 350, 40);
+	this.cmd("CreateRectangle", this.nextIndex++, "Visited", 40, 25, 350, 65);
+	this.cmd("SetBackgroundColor", this.nextIndex - 2, colorsArr[usedColorsCount]);
+	this.cmd("SetBackgroundColor", this.nextIndex - 1, colorsArr[usedColorsCount]);
+	this.cmd("CreateLabel", this.nextIndex++, "Note:   -1 --> Not Visited", 410, 95);
+	this.cmd("CreateLabel", this.nextIndex++, "1 --> Visited", 419, 110);
+	this.cmd("SetTextColor", this.nextIndex - 1, "#660000");
+	this.cmd("SetTextColor", this.nextIndex - 2, "#660000");
+	for (let i = 0; i < VERTICES_SIZE; i++) {
+		this.cmd("CreateRectangle", this.visitedVertices[i], i, 40, 25, (350 + (i + 1) * 40), 40);
+		this.cmd("CreateRectangle", this.vertexVisited[i], "-1", 40, 25, (350 + (i + 1) * 40), 65);
+	}
+	this.cmd("SetText", this.vertexVisited[source], 1);
+	this.cmd("Step");
+	this.cmd("SetBackgroundColor", this.visitedVertices[source], colorsArr[1]);
+	this.cmd("SetBackgroundColor", this.vertexVisited[source], colorsArr[1]);
+	this.cmd("Sethighlight", this.visitedVertices[source], 1);
+	this.cmd("Sethighlight", this.vertexVisited[source], 1);
+	this.cmd("Step");
+	this.cmd("Step");
+	this.cmd("Sethighlight", this.visitedVertices[source], "");
+	this.cmd("Sethighlight", this.vertexVisited[source], "");
+	this.cmd("SetTextColor", this.visitedVertices[source], "#fff");
+	this.cmd("SetTextColor", this.vertexVisited[source], "#660000");
+	//this.cmd("SetBackgroundColor", this.visitedVertices[source], "#fff");
+	this.cmd("SetBackgroundColor", this.vertexVisited[source], "#fff");
+	this.cmd("Step");
+}*/
+
+Prims.prototype.primsTableCreation = function() {
+	this.cmd("CreateLabel", this.nextIndex++, "Edge and it's corresponding Edge weight", 470, 40);
+	this.cmd("CreateRectangle", this.nextIndex++, "Edge", 40, 25, 450, 60);
+	this.cmd("CreateRectangle", this.nextIndex++, "Weight", 40, 25, 491, 60);
+	this.cmd("SetBackgroundColor", this.nextIndex - 2, colorsArr[usedColorsCount]);
+	this.cmd("SetBackgroundColor", this.nextIndex - 1, colorsArr[usedColorsCount]);
+	this.cmd("Step");
+	var source = parseInt($("#primsVal .btn").text().trim());
+	
+	testingMap[source].sort(function(a, b) { return a.val - b.val});
+	for (var i = 0; i < testingMap[source].length; i++) {
+		var val = testingMap[source][i].key.split(" - ");
+		fromEdge = parseInt(val[0]);
+		toEdge = parseInt(val[1]);
+		
+		//this.setCirclehighlight();
+		
+		console.log("In Table creation...");
+		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], 1);
+		
+		
+		this.cmd("CreateRectangle", this.edgeRect[i], testingMap[source][i].key, 40, 25, 450, 85 + (i * 20));
+		this.cmd("CreateRectangle", this.WeightRect[i], testingMap[source][i].val, 40, 25, 491, 85 + (i * 20));
+		this.cmd("SetBackgroundColor", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
+		this.cmd("SetBackgroundColor",this.WeightRect[i], colorsArr[usedColorsCount + 1]);
+		this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
+		this.cmd("SetHighlight", this.WeightRect[i], colorsArr[usedColorsCount + 1]);
+		//this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
+		this.cmd("Step");
+		this.cmd("SetHighlight", this.edgeRect[i], "");
+		this.cmd("SetHighlight", this.WeightRect[i], "");
+		this.cmd("Step");
+		//this.removeCircleColor();
+		this.cmd("SetHighlight", this.vertices[fromEdge], "");
+		this.cmd("SetHighlight", this.vertices[toEdge], "");
+		
+		this.cmd("Step");
+		//this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
+		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
+	}
+	this.cmd("Step");
+	
+	
+	
+	
+	
+	this.cmd("Step");
+	
+	
+	
+	
+	
+	
+	
+	console.log(testingArr);
+	
+	
+	/*this.cmd("Step");
+	this.cmd("BFSTooltipPos", 520, 40);
+	this.cmd("BFSStep");
+	var text = "Order the <y>edge</y> weights by <y>ascending</y> order.";
+	this.cmd("BFSTEXT", text);
+	this.cmd("Step");
+	//tooltipCount++;
+	this.cmd("BFSButton", "play");
+	this.cmd("Step");
+	this.cmd("hide", ".canvas-tooltip");
+	this.sortEdgeLogic();*/
+	this.cmd("Step");
 }
 
 function play() {
@@ -324,16 +459,15 @@ function restat() {
 	location.reload();
 }
 
-
-function prims(G, nodes) {
+function primsLogic() {
+	var nodes = VERTICES_SIZE;
 	var infinity = 32767;
 	var selected = {};
 	var i, j, k, min, total = 0, v1, v2, start;
-	for (i = 0; i < nodes; i++) 
+	for (i = 0; i < nodes; i++) {
 		selected[i] = 0;
+	} 
 	console.log("Minimum Spanning Tree : \n"); 
-	/*printf("Enter starting Vertix : ");
-	scanf("%d", &start);*/
 	var source = parseInt($("#primsVal .btn").text().trim());
 	selected[source] = 1;
 
@@ -341,20 +475,24 @@ function prims(G, nodes) {
 		min = infinity;
 		for (i = 0; i < nodes; i++) {
 			for (j = 0; j < nodes; j++) {
-				if (G[i][j] && ((selected[i] && !selected[j]) || (selected[j] && !selected[i]))) {
-					if (min > parseInt(edgeWeight[""+ i + " - " +  j +""])) {
-						min = parseInt(edgeWeight[""+ i + " - " +  j +""]);
+				if (edgeWeight[""+ i + " - " + j+""] != "undefined" && ((selected[i] && !selected[j]) || (selected[j] && !selected[i]))) {
+					//checking.push({key: v1 + " - " + v2, val: parseInt(edgeWeight[""+ v1 + " - " + v2 +""])});
+					if (min > parseInt(edgeWeight[""+ i + " - " + j+""])) {
+						min = parseInt(edgeWeight[""+ i + " - " + j+""]);
 						v1 = i;
 						v2 = j;
+						/*if (edgeWeight[""+ v1 + " - " + v2 +""] != undefined) {
+						}*/
 					}
 				}
 			}
 		}
+		
 		console.log("Edge (%d %d) weight %d\n", +  v1, v2, min);
 		selected[v1] = selected[v2] = 1;
 		total = total + min;
 	}
-	console.log("Total weight of Minimum Spanning Tree %d\n" + total);
+	console.log("Total weight of Minimum Spanning Tree \n" + total);
 }
 
 

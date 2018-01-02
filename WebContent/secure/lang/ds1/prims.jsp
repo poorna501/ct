@@ -366,7 +366,7 @@ canvas {
 								<div id='bfsBtnDiv' class='vertical-center box-border padding10'>
 									<table>
 										<tr>
-											<td><b style="font-family: monospace;">Starting Vertex : </b></td>
+											<td><b style="font-family: monospace;">Source Vertex : </b></td>
 											<td>
 												<div class="dropdown dropdown-select" id='primsVal'>
 													<button class="btn dropdown-toggle btn-info btn-xs"
@@ -380,6 +380,7 @@ canvas {
 												<div class="input-group">
 													<span class="input-group-addon input-group-addon-border">
 														<span id="startBtn" class="btn btn-sm btn-success">Start</span>
+														<span id="testBtn" class="btn btn-sm btn-success hide"><b></b></span>
 													</span>
 												</div>
 											</td>
@@ -409,7 +410,6 @@ canvas {
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
 			$("#Prims").on("click", function() {
 				$(this).find(".code").addClass("active");
 			});
