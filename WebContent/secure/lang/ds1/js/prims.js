@@ -14,6 +14,14 @@ var flag = false;
 var total_min_cost = 0;
 var source;
 var count = 0;
+var visitEdgeCount = 0;
+var visitedVerTexCount = 0;
+
+
+var edgeVal = "";
+var edgeValue = "";
+
+
 
 var VERTICES_FIXID_X_POS = [ 220, 145, 295, 70, 370, 145, 295, 220 ];
 var VERTICES_FIXID_Y_POS = [ 50, 150, 150, 250, 250, 350, 350, 450 ];
@@ -149,7 +157,7 @@ Prims.prototype.startCallback = function(event) {
 	if($(".btn").is(":disabled")) {
 		return;
 	}
-	console.log("Hello Start Btn");
+	console.log("Click Start Btn");
 	this.implementAction(this.start.bind(this), "");
 }
 
@@ -157,7 +165,7 @@ Prims.prototype.testCallback = function(event) {
 	if ($(".btn").is(":disabled")) {
 		return;
 	}
-	console.log("Hello test Btn");
+	console.log("Click test Btn");
 	this.implementAction(this.testing.bind(this), "");
 } 
 
@@ -222,14 +230,14 @@ function edgeAndWeightTable() {
 	if(testingMap[fromEdge] != undefined) {
 		dummyArr = testingMap[fromEdge];
 	}
-	dummyArr.push({key: fromEdge + " - " + toEdge, val: $("#edgeWeight").val()});	
+	dummyArr.push({key: fromEdge + " - " + toEdge, val: $("#edgeWeight").val(), visit: -1});	
 	testingMap[fromEdge] = dummyArr;
 	
 	var dummyArr = []
 	if(testingMap[toEdge] != undefined) {
 		dummyArr = testingMap[toEdge];
 	}
-	dummyArr.push({key: toEdge + " - " + fromEdge, val: $("#edgeWeight").val()});
+	dummyArr.push({key: toEdge + " - " + fromEdge, val: $("#edgeWeight").val(), visit: -1});
 	testingMap[toEdge] = dummyArr;
 }
 
@@ -406,8 +414,20 @@ Prims.prototype.primsTableCreation = function() {
 	var text = "This table is used to store the <y>edge</y> and it's corresponding <y>edge weight</y>.";
 	this.tooltipShow(510, 155, text);
 	this.cmd("Step");
-	var edgeVal = "";
-	var edgeValue = "";
+	
+	findEdges();	
+	var text = "Store the <y> source</y> vertex edges (<span id='edges'><y>"+ edgeVal +"</y></span>) and it's corresponding edge weights "
+				+ "(<span class='edgeWeights'><y>"+ edgeValue +"</y></span>) into the <y>edge</y> table.<br/>"
+	this.tooltipShow(VERTICES_FIXID_X_POS[source] + 25, VERTICES_FIXID_Y_POS[source] - 10, text);
+	this.cmd("Step");
+	this.edgeAndWeightTableCreation();
+	this.edgeSelection(0);
+	this.cmd("Step");
+}
+
+function findEdges() {
+	edgeVal = "";
+	edgeValue = "";
 	for (var i = 0; i < testingMap[source].length; i++) {
 		if (i < testingMap[source].length - 1) {
 			edgeVal  += testingMap[source][i].key + "," ;
@@ -417,13 +437,36 @@ Prims.prototype.primsTableCreation = function() {
 			edgeValue += testingMap[source][i].val;
 		}
 	}
-	var text = "Store the <y> source</y> vertex edges (<span id='edges'><y>"+ edgeVal +"</y></span>) and it's corresponding edge weights "
-				+ "(<span class='edgeWeights'><y>"+ edgeValue +"</y></span>) into the <y>edge</y> table.<br/>"
-	this.tooltipShow(VERTICES_FIXID_X_POS[source] + 25, VERTICES_FIXID_Y_POS[source] - 10, text);
-	this.cmd("Step");
-	this.edgeAndWeightTableCreation();
-	this.edgeSelection();
-	this.cmd("Step");
+}
+
+function visiteVertexList() {
+	let visitCount = 0;
+	visitEdge = "";
+	nonVisitEdge = "";
+	
+	for (let i = 0; i < testingMap[source].length; i++) {
+		if (i < testingMap[source].length - 1) {
+			if (testingMap[source][i].visit == "1") {
+				visitCount++;
+			} else {
+				nonVisitEdge += testingMap[source][i].key + ",";
+			}
+		} else {
+			nonVisitEdge += testingMap[source][i].key;
+		}
+	}
+	
+	for (let i = visitCount - 1; i >= 0 ; i--) {
+		if (i == -1) {
+			break;
+		} else {
+			if (i == 0) {
+				visitEdge += testingMap[source][i].key; 
+			} else {
+				visitEdge += testingMap[source][i].key + ",";
+			}
+		}
+	}
 }
 
 Prims.prototype.edgeAndWeightTableCreation = function() {
@@ -434,8 +477,9 @@ Prims.prototype.edgeAndWeightTableCreation = function() {
 		var fromEdge = testingMap[source][i].key.split(" - ")[0];
 		var toEdge = testingMap[source][i].key.split(" - ")[1];
 		
+		
 		if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
-			testingArr.push({key: fromEdge + " - " + toEdge, val: $("#edgeWeight").val(), idx: count});
+			testingArr.push({key: fromEdge + " - " + toEdge, key1 :toEdge + " - " + fromEdge,  val: testingMap[source][i].val, idx: count, visit: -1});
 			this.cmd("CreateRectangle", this.edgeRect[count], testingMap[source][i].key, 40, 25, 450, 185 + (count * 20));
 			this.cmd("CreateRectangle", this.WeightRect[count], testingMap[source][i].val, 40, 25, 491, 185 + (count * 20));
 			this.cmd("SetBackgroundColor", this.edgeRect[count], colorsArr[usedColorsCount + 1]);
@@ -461,24 +505,105 @@ Prims.prototype.edgeHighlightFun = function(color) {
 		var val = testingMap[source][i].key.split(" - ");
 		fromEdge = parseInt(val[0]);
 		toEdge = parseInt(val[1]);
-		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], color);
-		this.cmd("SETEDGEHIGHLIGHT", this.vertices[toEdge], this.vertices[fromEdge], color);
+		if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
+			this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], color);
+			this.cmd("SETEDGEHIGHLIGHT", this.vertices[toEdge], this.vertices[fromEdge], color);
+		}
 	}
 }
 
-Prims.prototype.edgeSelection = function() {
+
+
+Prims.prototype.edgeSelection = function(idxVal) {
 	
 	
-	for (let i = 0; i < testingArr.length - 1; i++) {
-		if (testingArr[i].val == testingArr[i + 1].val) {
+	
+	this.cmd("SetHighlight", this.edgeRect[idxVal], colorsArr[usedColorsCount + 1]);
+	this.cmd("SetHighlight", this.WeightRect[idxVal], colorsArr[usedColorsCount + 1]);
+	testingArr.sort(function(a, b) { return a.val - b.val});
+	var text = "Find the <y>mininum</y> weight of the <y>edge</y>.<br/><br/> Here the edge <y>"+ testingArr[0].key +"</y> have min weight "
+				+ " <y>"+ testingArr[0].val +"</y> .";
+	
+	this.tooltipShow(520, 185 + (idxVal) - 20, text);
+	this.cmd("SetHighlight", this.edgeRect[idxVal], "");
+	this.cmd("SetHighlight", this.WeightRect[idxVal], "");
+	
+	this.cmd("SetHighlight", this.edgeRect[idxVal], colorsArr[usedColorsCount + 1]);
+	this.cmd("SetHighlight", this.WeightRect[idxVal], colorsArr[usedColorsCount + 1]);
+	
+	fromEdge = testingArr[0].key.split(" - ")[0];
+	toEdge = testingArr[0].key.split(" - ")[1];
+	
+	if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
+		var text = "Set the two vertices i.e <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> from <y>-1</y> to <y>1</y>.<br/><br/>After that "
+					+ " draw a line between <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> vertices.";
+	} else if ((visitedVertices[fromEdge] != "-1" && visitedVertices[toEdge] == "-1")) {
+		var text = "Here the vertex <y>"+ fromEdge +"</y> is already visited, So now set the "+ toEdge +" to <y>1</y>. <br/><br/>After that"
+					+ " draw a line between <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> vertices.";
+	} else if ((visitedVertices[fromEdge] != "-1" && visitedVertices[toEdge]== "-1")) {
+		var text = "Here the vertex <y>"+ toEdge +"</y> is already visited, So now set the "+ fromEdge +" to <y>1</y> <br/></br/>After that "
+				+" draw a line between <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> verices.";
+	} else {
+		var text = "The given vertivces <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> are already visited";
+	}
+	this.tooltipShow((350 + (VERTICES_SIZE) * 40) + 25, 40, text);
+	this.vertexVisitHighlite(fromEdge);
+	this.vertexVisitHighlite(toEdge);
+	this.cmd("Step");
+	this.drawSpanningTree();
+	
+	this.cmd("SetBackgroundColor", this.edgeRect[idxVal], colorsArr[3]);
+	this.cmd("SetBackgroundColor", this.WeightRect[idxVal], colorsArr[3]);
+	
+	this.cmd("SetHighlight", this.edgeRect[idxVal], "");
+	this.cmd("SetHighlight", this.WeightRect[idxVal], "");
+	this.cmd("Step");
+	
+	source = toEdge;
+	this.cmd("SetBackgroundColor", this.vertices[source], colorsArr[2]);
+	
+	findEdges(source);
+	visiteVertexList();
+	var text = "The vertex <y>"+ toEdge +"</y> have <y>"+ testingMap[toEdge].length +"</y> edges i.e (<y>"+ edgeVal +"</y>).<br/><br/>"
+				+ " Here the Edges (<y>"+ visitEdge +"</y>) already visited so omit the edge.<br/><br/>"
+				+ " Now store the edges (<y>"+ nonVisitEdge +"</y>) in the edge table.";
+	this.tooltipShow(VERTICES_FIXID_X_POS[toEdge] + 25, VERTICES_FIXID_Y_POS[toEdge] - 10, text);
+	
+	this.cmd("Step");
+	
+	for (let i = 0; i < visitedVertices.length; i++) {
+		if (visitedVertices[i] == "1") {
+			visitedVerTexCount++;
+		}
+	}
+	
+	if (visitedVerTexCount == VERTICES_SIZE) {
+		console.log("Stop working");
+	} else {
+		this.edgeAndWeightTableCreation();
+		this.cmd("Step");
+		testingArr.shift();
+		testingArr.sort(function(a, b) { return a.val - b.val});
+		this.edgeSelection(testingArr[0].idx);
+	}
+	
+	
+	/*this.cmd("SetBackgroundColor", this.vertices[source], "#fff");
+	this.cmd("Step");
+	this.cmd("Sethighlight", this.vertices[source], "");
+	*/
+	
+	
+	/*for (let i = 0; i < testingMap[source].length - 1; i++) {
+		if (testingMap[source][i].val == testingMap[source][i + 1].val) {
 			console.log("Both values are same");
 			this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
 			this.cmd("SetHighlight", this.edgeRect[i + 1], colorsArr[usedColorsCount + 1]);
 			this.cmd("SetHighlight", this.WeightRect[i], colorsArr[usedColorsCount + 1]);
 			this.cmd("SetHighlight", this.WeightRect[i + 1], colorsArr[usedColorsCount + 1]);
-			var text = "Find the <y>mininum</y> weight of the <y>edge</y>.<br/>Here the <y>edge</y> (<y>"+ testingArr[i].key 
-						+ "</y>) and (<y>"+ testingArr[i + 1].key +"</y>) edge having <y>equal</y> edge weights (i.e <y>"+ testingArr[i].val 
-						+ "</y>) <br><br/>Here i take <y>"+ testingArr[i].key +"</y> edge we can also take <y>"+ testingArr[i + 1].key 
+			var text = "Find the <y>mininum</y> weight of the <y>edge</y>.<br/>Here the <y>edge</y> (<y>"+ testingMap[source][i].key 
+						+ "</y>) and (<y>"+ testingMap[source][i + 1].key +"</y>) edge having <y>equal</y> edge weights (i.e <y>"+ testingMap[source][i].val 
+						+ "</y>) <br><br/>Here i take <y>"+ testingMap[source][i].key +"</y> edge we can also take <y>"+ testingMap[source][i + 1].key 
 						+ "</y> edge.";
 			this.tooltipShow(520, 185 + (testingArr[i].idx * 20) - 20, text);
 			this.cmd("SetHighlight", this.edgeRect[i], "");
@@ -486,17 +611,13 @@ Prims.prototype.edgeSelection = function() {
 			this.cmd("SetHighlight", this.WeightRect[i], "");
 			this.cmd("SetHighlight", this.WeightRect[i + 1], "");
 			
-			
-			/*this.cmd("BFSTooltipPos", 500, 185 + (i * 20));
-			this.cmd("BFSStep");
-			var text = "Here, the weigth (<y>"+ testingMap[source][i].val +"</y>) of the <y>"+ testingMap[source][i].key 
-						+"</y> and <y>"+ testingMap[source][i + 1].key +"</y> are same. <br/>So choose with path you want to continue.";
-			this.cmd("BFSTEXT", text);
-			this.cmd("Step");
-			this.cmd("BFSButton", "play");
-			this.cmd("Step");*/
 		} else if (testingMap[source][i].val > testingMap[source][i + 1].val) {
 			console.log("Greater");
+			this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
+			this.cmd("SetHighlight", this.WeightRect[i], colorsArr[usedColorsCount + 1]);
+			
+			this.cmd("Step");
+			
 		} else if (testingMap[source][i].val < testingMap[source][i + 1].val) {
 			console.log("lesser");
 		} else {
@@ -505,20 +626,22 @@ Prims.prototype.edgeSelection = function() {
 		
 		this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
 		this.cmd("SetHighlight", this.WeightRect[i], colorsArr[usedColorsCount + 1]);
+		
 		fromEdge = testingMap[source][i].key.split(" - ")[0];
 		toEdge = testingMap[source][i].key.split(" - ")[1];
 		
 		if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
-			var text = "Set the two vertices i.e <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> from <y>-1</y> to <y>1</y>.<br/><br/>Now draw "
-						+ " line between <y>"+ fromEdge +"</y> to <y>"+ toEdge +"</y>";
+			var text = "Set the two vertices i.e <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> from <y>-1</y> to <y>1</y>.<br/><br/>After that "
+						+ " draw a line between <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> vertices.";
 		} else if ((visitedVertices[fromEdge] != "-1" && visitedVertices[toEdge] == "-1")) {
-			var text = "Here the vertex <y>"+ fromEdge +"</y> is already visited, So now set the "+ toEdge +" to <y>1</y>.";
+			var text = "Here the vertex <y>"+ fromEdge +"</y> is already visited, So now set the "+ toEdge +" to <y>1</y>. <br/><br/>After that"
+						+ " draw a line between <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> vertices.";
 		} else if ((visitedVertices[fromEdge] != "-1" && visitedVertices[toEdge]== "-1")) {
-			var text = "Here the vertex <y>"+ toEdge +"</y> is already visited, So now set the "+ fromEdge +" to <y>1</y>.";
+			var text = "Here the vertex <y>"+ toEdge +"</y> is already visited, So now set the "+ fromEdge +" to <y>1</y> <br/></br/>After that "
+					+" draw a line between <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> verices.";
 		} else {
 			var text = "The given vertivces <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> are already visited";
 		}
-		
 		this.tooltipShow((350 + (VERTICES_SIZE) * 40) + 25, 40, text);
 		
 		this.vertexVisitHighlite(fromEdge);
@@ -526,25 +649,38 @@ Prims.prototype.edgeSelection = function() {
 		this.vertexVisitHighlite(toEdge);
 		this.cmd("Step");
 		this.drawSpanningTree();
-		this.cmd("Step");
+		
+		this.cmd("SetBackgroundColor", this.edgeRect[i], colorsArr[3]);
+		this.cmd("SetBackgroundColor", this.WeightRect[i], colorsArr[3]);
+		
 		this.cmd("SetHighlight", this.edgeRect[i], "");
 		this.cmd("SetHighlight", this.WeightRect[i], "");
 		this.cmd("Step");
+		
 		source = testingMap[source][i].key.split(" - ")[1];
 		this.cmd("SetBackgroundColor", this.vertices[source], colorsArr[2]);
+		
+		findEdges(source);
+		visiteVertexList();
+		var text = "The vertex <y>"+ toEdge +"</y> have <y>"+ testingMap[toEdge].length +"</y> edges i.e (<y>"+ edgeVal +"</y>).<br/><br/>"
+					+ " Here the Edges (<y>"+ visitEdge +"</y>) already visited so omit the edge.<br/><br/>"
+					+ "Now store the edges (<y>"+ nonVisitEdge +"</y>) in the edge table.";
+		this.tooltipShow(VERTICES_FIXID_X_POS[toEdge] + 25, VERTICES_FIXID_Y_POS[toEdge] - 10, text);
+		
 		this.cmd("Step");
-		//this.edgeAndWeightTableCreation();
+		this.edgeAndWeightTableCreation();
 		this.cmd("Step");
-		/*this.cmd("SetBackgroundColor", this.vertices[source], "#fff");
+		
+		
+		
+		this.cmd("SetBackgroundColor", this.vertices[source], "#fff");
 		this.cmd("Step");
-		this.cmd("Sethighlight", this.vertices[source], "");*/
+		this.cmd("Sethighlight", this.vertices[source], "");
 	}
-	this.cmd("Step");
-	
+	this.cmd("Step");*/
 }
 
 Prims.prototype.drawSpanningTree = function() {
-	this.cmd("Step");
 	
 	if (primsArr.length != 0) {
 		var val = testingMap[source][0].key.split(" - ");
@@ -562,9 +698,13 @@ Prims.prototype.drawSpanningTree = function() {
 		this.cmd("CreateLabel", this.nextIndex++, "Source Vertex", SPANNING_TREE_X_POS[source], VERTICES_FIXID_Y_POS[source] + 28);
 		this.cmd("SETTEXTCOLOR", this.nextIndex - 1, "#660000");
 		this.cmd("Step");
+		
 		if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
 			visitedVertices[fromEdge] = "1";
 			visitedVertices[toEdge] = "1";
+			
+			this.cmd("SETEDGECOLOR", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[4]);
+			this.cmd("SETEDGECOLOR", this.vertices[toEdge], this.vertices[fromEdge], colorsArr[4]);
 			if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0.4, false, value, 0, true);
 			} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
@@ -574,11 +714,37 @@ Prims.prototype.drawSpanningTree = function() {
 			}
 			total_min_cost += parseInt(value);
 			this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
-			//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 2]);
 			this.cmd("Step");
 			this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
 			this.cmd("Step");
-			//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
+			
+			for (let i = 0; i < testingArr.length; i++) {
+				if (testingArr[i].key == fromEdge + " - " + toEdge || testingArr[i].key1 == toEdge + " - " + fromEdge) {
+					testingArr[i].visit = "1";
+				}
+			}
+			
+			
+			for (let i = 0; i < testingMap[fromEdge].length; i++) {
+				if (testingMap[fromEdge][i].key == fromEdge + " - " + toEdge || testingMap[fromEdge][i].key == toEdge + " - " + fromEdge) {
+					testingMap[fromEdge][i].visit = "1";
+				} 
+			}
+			
+			for (let i = 0; i < testingMap[toEdge].length; i++) {
+				if (testingMap[toEdge][i].key == fromEdge + " - " + toEdge || testingMap[toEdge][i].key == toEdge + " - " + fromEdge) {
+					testingMap[toEdge][i].visit = "1";
+				} 
+			}
+			
+			
+			this.cmd("SetBackgroundColor", this.spanningTreeVertices[toEdge], colorsArr[2]);
+			this.cmd("Sethighlight", this.spanningTreeVertices[toEdge], 1);
+			var text = "Newly visited vertex is <y>"+ toEdge +"</y>.";
+			this.tooltipShow(SPANNING_TREE_X_POS[toEdge] + 25, VERTICES_FIXID_Y_POS[toEdge], text);
+			this.cmd("Step");
+			this.cmd("SetBackgroundColor", this.spanningTreeVertices[toEdge], "#fff");
+			this.cmd("Sethighlight", this.spanningTreeVertices[toEdge], "");
 		} else {
 			var status;
 			if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
