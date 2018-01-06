@@ -420,6 +420,7 @@ canvas {
 			});
 
 			$('.dropdown').on('click','.dropdown-menu li a', function() {
+				$("#edgeWeight").val("");
 				$('.dropdown-menu').css('min-width', $(".dropdown").width());
 				$(this).parents('.dropdown-menu').find('li').removeClass('active');
 				$(this).parent('li').addClass('active');

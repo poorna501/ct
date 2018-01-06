@@ -73,7 +73,7 @@ function setCookie(cookieName, value, expireDays) {
 	document.cookie = cookieName + "=" + value;
 }
 
-var ANIMATION_SPEED_DEFAULT = 40;
+var ANIMATION_SPEED_DEFAULT = 80;
 
 // TODO: Move these out of global space into animation manager?
 var objectManager;
