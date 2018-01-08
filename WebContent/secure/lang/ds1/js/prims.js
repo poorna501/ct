@@ -6,7 +6,7 @@ var circleCount = 0;
 var vis = {};
 var testingArr = [];
 var testingMap = {};
-
+var finalTree = [];
 var primsArr = [];
 var checking = [];
 var edgesMap = {};
@@ -19,11 +19,8 @@ var count = 0;
 var visitEdgeCount = 0;
 var visitedVerTexCount = 0;
 
-
 var edgeVal = "";
 var edgeValue = "";
-
-
 
 var VERTICES_FIXID_X_POS = [ 220, 145, 295, 70, 370, 145, 295, 220 ];
 var VERTICES_FIXID_Y_POS = [ 50, 150, 150, 250, 250, 350, 350, 450 ];
@@ -31,7 +28,6 @@ var SPANNING_TREE_X_POS = [ 750, 675, 825, 600, 900, 675, 825, 750 ];
 
 var HIGHLIGHT_LABEL_COLOR = "#FF0000"
 var HIGHLIGHT_LINK_COLOR = "#FF0000"
-
 var HIGHLIGHT_COLOR = "#f962f3"
 var HEIGHT_LABEL_COLOR = "#007700"
 
@@ -98,6 +94,7 @@ Prims.prototype.setup = function() {
 	this.edgeLine = new Array(MAX_VERTICES_SIZE * 5);
 	this.edgeRect = new Array(MAX_VERTICES_SIZE * 5);
 	this.WeightRect = new Array(MAX_VERTICES_SIZE * 5);
+	this.edgeStatus = new Array(MAX_VERTICES_SIZE * 5);
 	this.visitedVertices = new Array(MAX_VERTICES_SIZE);
 	this.vertexVisited = new Array(MAX_VERTICES_SIZE);
 	
@@ -107,6 +104,7 @@ Prims.prototype.setup = function() {
 		this.edgeWeight[i] = this.nextIndex++;
 		this.edgeRect[i] = this.nextIndex++;
 		this.WeightRect[i] = this.nextIndex++;
+		this.edgeStatus[i] = this.nextIndex++;
 		this.spanningTreeVertices[i] = this.nextIndex++;
 		this.visitedVertices[i] = this.nextIndex++;
 		this.vertexVisited[i] = this.nextIndex++;
@@ -355,11 +353,8 @@ Prims.prototype.start = function() {
 			this.cmd("Step");
 			this.cmd("Sethighlight", this.vertices[source], 1);
 			this.cmd("Step");
-			
 			var text = "This is the <y>source</y> vertex of the <y>Graph</y>.";
 			this.tooltipShow(VERTICES_FIXID_X_POS[source] + 25, VERTICES_FIXID_Y_POS[source] - 10, text);
-			
-			// primsLogic();
 			this.setAllVerticesToZero();
 			this.cmd("Step");
 			this.primsTableCreation();
@@ -374,7 +369,6 @@ Prims.prototype.tooltipShow = function(xPos, yPos, text) {
 	this.cmd("BFSTooltipPos", xPos, yPos);
 	this.cmd("BFSStep");
 	this.cmd("Step");
-	console.log("Text = " , text);
 	this.cmd("BFSTEXT", text);
 	this.cmd("Step");
 	this.cmd("BFSButton", "play");
@@ -413,17 +407,19 @@ Prims.prototype.setAllVerticesToZero = function() {
 
 Prims.prototype.primsTableCreation = function() {
 	this.cmd("CreateLabel", this.nextIndex++, "Edge and it's corresponding Edge weight", 470, 140);
-	this.cmd("CreateRectangle", this.nextIndex++, "Edge", 40, 25, 450, 160);
-	this.cmd("CreateRectangle", this.nextIndex++, "Weight", 40, 25, 491, 160);
-	this.cmd("SetBackgroundColor", this.nextIndex - 2, colorsArr[usedColorsCount]);
+	this.cmd("CreateRectangle", this.nextIndex++, "Edge", 40, 25, 430, 160);
+	this.cmd("SetBackgroundColor", this.nextIndex - 1, colorsArr[usedColorsCount]);
+	this.cmd("CreateRectangle", this.nextIndex++, "Weight", 40, 25, 471, 160);
+	this.cmd("SetBackgroundColor", this.nextIndex - 1, colorsArr[usedColorsCount]);
+	this.cmd("CreateRectangle", this.nextIndex++, "Status", 60, 25, 522, 160);
 	this.cmd("SetBackgroundColor", this.nextIndex - 1, colorsArr[usedColorsCount]);
 	this.cmd("Step");
-	var text = "This table is used to store the <y>edge</y> and it's corresponding <y>edge weight</y>.";
-	this.tooltipShow(510, 155, text);
+	var text = "This table is used to store the <y>edge</y> and it's corresponding <y>edge weight</y> and <y>status</y> of the edge.";
+	this.tooltipShow(545, 155, text);
 	this.cmd("Step");
-	
 	var text = "The adjacent vertices of the vertex <y>"+ source +"</y> and it's corresponding <y>edge weight(s)</y> "
 				+ "<y><div id='edgeNdEdgeWeight'>";
+	testingMap[source].sort(function(a, b) { return a.val - b.val});
 	for (var i = 0; i < testingMap[source].length; i++) {
 		text = text + "<div>"+ testingMap[source][i].key +" -->  "+  testingMap[source][i].val + "</div>";
 	}
@@ -432,44 +428,6 @@ Prims.prototype.primsTableCreation = function() {
 	this.cmd("Step");
 	this.edgeAndWeightTableCreation();
 	this.edgeSelection(0);
-}
-
-function findEdges() {
-	/*edgeVal = "";
-	edgeValue = "";*/
-	for (var i = 0; i < testingMap[source].length; i++) {
-		
-		$("#edgeNdEdgeWeight").append("<div>"+ testingMap[source][i].key +" -->  "+  testingMap[source][i].val + "</div>");
-		/*if (i < testingMap[source].length - 1) {
-			edgeVal  += testingMap[source][i].key + "," ;
-			edgeValue += testingMap[source][i].val + ","; 
-		} else {
-			edgeVal  += testingMap[source][i].key;
-			edgeValue += testingMap[source][i].val;
-		}*/
-	}
-}
-
-function visiteVertexList() {
-	let visitCount = 0;
-	visitEdge = "";
-	nonVisitEdge = "";
-	
-	for (let i = 0; i < testingMap[source].length; i++) {
-		if (testingMap[source][i].visit == "1") {
-			if (i < testingMap[source].length - 1) {
-				visitEdge += testingMap[source][i].key + ",";
-			} else {
-				visitEdge += testingMap[source][i].key;
-			}
-		} else {
-			if (i < testingMap[source].length - 1) {
-				nonVisitEdge += testingMap[source][i].key + ",";
-			} else {
-				nonVisitEdge += testingMap[source][i].key;
-			}
-		}
-	}
 }
 
 Prims.prototype.edgeAndWeightTableCreation = function() {
@@ -481,15 +439,19 @@ Prims.prototype.edgeAndWeightTableCreation = function() {
 		toEdge = testingMap[source][i].key.split("-")[1];
 		if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
 			testingArr.push({key: testingMap[source][i].key, key1 :toEdge + "-" + fromEdge,  val: testingMap[source][i].val, idx: count, visit: -1});
-			this.cmd("CreateRectangle", this.edgeRect[count], testingMap[source][i].key, 40, 25, 450, 185 + (count * 20));
-			this.cmd("CreateRectangle", this.WeightRect[count], testingMap[source][i].val, 40, 25, 491, 185 + (count * 20));
+			this.cmd("CreateRectangle", this.edgeRect[count], testingMap[source][i].key, 40, 25, 430, 185 + (count * 20));
+			this.cmd("CreateRectangle", this.WeightRect[count], testingMap[source][i].val, 40, 25, 471, 185 + (count * 20));
+			this.cmd("CreateRectangle", this.edgeStatus[count], "Not Visited", 60, 25, 522, 185 + (count * 20));
 			this.cmd("SetBackgroundColor", this.edgeRect[count], colorsArr[usedColorsCount + 1]);
 			this.cmd("SetBackgroundColor",this.WeightRect[count], colorsArr[usedColorsCount + 1]);
+			this.cmd("SetBackgroundColor", this.edgeStatus[count], colorsArr[usedColorsCount + 1]);
 			this.cmd("SetHighlight", this.edgeRect[count], colorsArr[usedColorsCount + 1]);
 			this.cmd("SetHighlight", this.WeightRect[count], colorsArr[usedColorsCount + 1]);
+			this.cmd("SetHighlight", this.edgeStatus[count], colorsArr[usedColorsCount + 1]);
 			this.cmd("Step");
 			this.cmd("SetHighlight", this.edgeRect[count], "");
 			this.cmd("SetHighlight", this.WeightRect[count], "");
+			this.cmd("SetHighlight", this.edgeStatus[count], "");
 			this.cmd("Step");
 			count++;
 		} else {
@@ -512,22 +474,18 @@ Prims.prototype.edgeHighlightFun = function(color) {
 }
 
 Prims.prototype.edgeSelection = function(idxVal) {
-	
 	this.cmd("SetHighlight", this.edgeRect[idxVal], colorsArr[usedColorsCount + 1]);
 	this.cmd("SetHighlight", this.WeightRect[idxVal], colorsArr[usedColorsCount + 1]);
 	testingArr.sort(function(a, b) { return a.val - b.val});
 	var text = "Here, we consider the <y>mininum</y> weigth of the edge (<y>"+ testingArr[0].key +"</y>) having the weight <y>"+ 
 				testingArr[0].val +"</y>."; 
-	this.tooltipShow(520, 185 + (idxVal) - 20, text);
+	this.tooltipShow(545, 185 + (idxVal) - 20, text);
 	this.cmd("SetHighlight", this.edgeRect[idxVal], "");
 	this.cmd("SetHighlight", this.WeightRect[idxVal], "");
-	
 	this.cmd("SetHighlight", this.edgeRect[idxVal], colorsArr[usedColorsCount + 1]);
 	this.cmd("SetHighlight", this.WeightRect[idxVal], colorsArr[usedColorsCount + 1]);
-	
 	fromEdge = testingArr[0].key.split("-")[0];
 	toEdge = testingArr[0].key.split("-")[1];
-	
 	if (visitedVertices[fromEdge] == "-1" && visitedVertices[toEdge] == "-1") {
 		var text = "Set the two vertices i.e <y>"+ fromEdge +"</y> and <y>"+ toEdge +"</y> from <y>-1</y> to <y>1</y>.";
 		this.tooltipShow((350 + (VERTICES_SIZE) * 40) + 25, 40, text);
@@ -556,14 +514,12 @@ Prims.prototype.drawSpanningTree = function(idxVal) {
 		fromEdge = parseInt(val[0]);
 		toEdge = parseInt(val[1]);
 		var value = testingArr[0].val;
-		
 		if  (visitedVertices[fromEdge] == "-1") {
 			this.cmd("CreateCircle", this.spanningTreeVertices[fromEdge], fromEdge, SPANNING_TREE_X_POS[fromEdge], VERTICES_FIXID_Y_POS[fromEdge]);
 		}
 		if (visitedVertices[toEdge] == "-1") { 
 			this.cmd("CreateCircle", this.spanningTreeVertices[toEdge], toEdge, SPANNING_TREE_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
 		}
-		
 		if (circleCount == 0) {
 			this.cmd("CreateLabel", this.nextIndex++, "Source", SPANNING_TREE_X_POS[source], VERTICES_FIXID_Y_POS[source] - 40);
 			this.cmd("CreateLabel", this.nextIndex++, "Vertex", SPANNING_TREE_X_POS[source], VERTICES_FIXID_Y_POS[source] - 28);
@@ -572,16 +528,14 @@ Prims.prototype.drawSpanningTree = function(idxVal) {
 			this.cmd("Step");
 			circleCount++;
 		} 
-		
 		if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
 			visitedVertices[fromEdge] = "1";
 			visitedVertices[toEdge] = "1";
-			
 			this.cmd("SETEDGECOLOR", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[4]);
 			this.cmd("SETEDGECOLOR", this.vertices[toEdge], this.vertices[fromEdge], colorsArr[4]);
-			if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
+			if ((key == "0-3" || key == "3-0") || (key == "3-7" || key == "7-3")) {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", -0.4, false, value, 0, true);
-			} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
+			} else if ((key == "0-4" || key == "4-0") || (key == "4-7" || key == "7-4")) {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0.4, false, value, 0, true);
 			} else {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0, false, value, 0, true);
@@ -591,7 +545,6 @@ Prims.prototype.drawSpanningTree = function(idxVal) {
 			this.cmd("Step");
 			this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
 			this.cmd("Step");
-			
 			for (let i = 0; i < testingArr.length; i++) {
 				if (testingArr[i].key == fromEdge + "-" + toEdge || testingArr[i].key1 == toEdge + "-" + fromEdge) {
 					testingArr[i].visit = "1";
@@ -607,7 +560,6 @@ Prims.prototype.drawSpanningTree = function(idxVal) {
 					testingMap[toEdge][i].visit = "1";
 				} 
 			}
-			
 			this.cmd("SetBackgroundColor", this.spanningTreeVertices[toEdge], colorsArr[2]);
 			this.cmd("Sethighlight", this.spanningTreeVertices[toEdge], 1);
 			if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
@@ -618,13 +570,11 @@ Prims.prototype.drawSpanningTree = function(idxVal) {
 				source = fromEdge;
 			}
 			visitedVerTexCount = 0;
-			
 			for (let i = 0; i < VERTICES_SIZE; i++) {
 				if (visitedVertices[i] == "1") {
 					visitedVerTexCount++;
 				}
 			}
-			
 			if (visitedVerTexCount < VERTICES_SIZE) {
 				var text = "Newly visited vertex is <y>"+ source+"</y>.<li>The adjacent vertex of the vertex <y>"+ source +"</y> is.</li>";
 				this.tooltipShow(SPANNING_TREE_X_POS[toEdge] + 25, VERTICES_FIXID_Y_POS[toEdge], text);
@@ -632,95 +582,111 @@ Prims.prototype.drawSpanningTree = function(idxVal) {
 				this.cmd("SetBackgroundColor", this.spanningTreeVertices[toEdge], "#fff");
 				this.cmd("Sethighlight", this.spanningTreeVertices[toEdge], "");
 				this.cmd("Step");
+				this.cmd("SetText", this.edgeStatus[idxVal], "Visited");
 				this.cmd("SetBackgroundColor", this.edgeRect[idxVal], colorsArr[3]);
 				this.cmd("SetBackgroundColor", this.WeightRect[idxVal], colorsArr[3]);
-				
+				this.cmd("SetBackgroundColor", this.edgeStatus[idxVal], colorsArr[3]);
 				this.cmd("SetHighlight", this.edgeRect[idxVal], "");
 				this.cmd("SetHighlight", this.WeightRect[idxVal], "");
 				this.cmd("Step");
 				this.cmd("SetBackgroundColor", this.vertices[source], colorsArr[2]);
-				
 				var text = "Here the vertex <y>"+ source +"</y> have <y>"+ testingMap[toEdge].length +"</y> edge(s) "
 							+" and it's corresponding edge weight(s) <y><div id='edgeNdEdgeWeight'>";
+				testingMap[source].sort(function(a, b) { return a.val - b.val});
 				for (var i = 0; i < testingMap[source].length; i++) {
 					text = text + "<div>"+ testingMap[source][i].key +" -->  "+  testingMap[source][i].val + "</div>";
 				}
 				text = text + "</div></y><li>Here the Edge(s) <y>"; 
+				testingMap[source].sort(function(a, b) { return a.val - b.val});
 				for (let i = 0; i < testingMap[source].length; i++) {
 					if (testingMap[source][i].visit == "1") {
 							text = text + "<div>"+ testingMap[source][i].key +" -->  "+  testingMap[source][i].val + "</div>";
 					} 
 				}
 				text = text + "</y> already visited so omit the edge.</li>";
-				
-				/*findEdges(source);
-				visiteVertexList();
-				
-				var text = "The vertex <y>"+ toEdge +"</y> have <y>"+ testingMap[toEdge].length +"</y> edges i.e (<y>"+ edgeVal +"</y>).<br/><br/>"
-							+ " Here the Edges (<y>"+ visitEdge +"</y>) already visited so omit the edge.<br/><br/>"
-							+ " Now store the edges (<y>"+ nonVisitEdge +"</y>) in the edge table.";*/
 				this.tooltipShow(VERTICES_FIXID_X_POS[toEdge] + 25, VERTICES_FIXID_Y_POS[toEdge] - 10, text);
-				
-				console.log(visitedVerTexCount);
-				console.log(testingArr);
 				this.edgeAndWeightTableCreation();
 				this.cmd("Step");
+				finalTree.push(testingArr[0]);
 				testingArr.shift();
 				testingArr.sort(function(a, b) { return a.val - b.val});
 				this.edgeSelection(testingArr[0].idx);
-				
 			} else {
+				finalTree.push(testingArr[0]);
 				testingArr.shift();
 				var text = "Newly visited vertex is <y>"+ source+"</y>.<li>The adjacent vertex of the vertex <y>"+ source +"</y> is.</li>";
 				this.tooltipShow(SPANNING_TREE_X_POS[toEdge] + 25, VERTICES_FIXID_Y_POS[toEdge], text);
-				
 				this.cmd("SetBackgroundColor", this.spanningTreeVertices[toEdge], "#fff");
 				this.cmd("Sethighlight", this.spanningTreeVertices[toEdge], "");
 				this.cmd("Step");
 				this.cmd("SetBackgroundColor", this.edgeRect[idxVal], colorsArr[3]);
 				this.cmd("SetBackgroundColor", this.WeightRect[idxVal], colorsArr[3]);
+				this.cmd("SetText", this.edgeStatus[idxVal], "Visited");
+				this.cmd("SetHighlight", this.edgeStatus[idxVal], 1);
+				this.cmd("Step");
+				this.cmd("SetBackgroundColor", this.edgeStatus[idxVal], colorsArr[3]);
 				this.cmd("SetHighlight", this.edgeRect[idxVal], "");
 				this.cmd("SetHighlight", this.WeightRect[idxVal], "");
-				
+				this.cmd("SetHighlight", this.edgeStatus[idxVal], "");
 				this.cmd("SetBackgroundColor", this.vertices[source], colorsArr[2]);
 				this.cmd("Sethighlight", this.vertices[source], 1);
-				
 				this.cmd("show", ".canvas-tooltip");
 				var text = "All <y>vertices</y> are <y>visited</y> there is no more nodes to <y>visit</y>.";
 				this.tooltipShow(VERTICES_FIXID_X_POS[source] + 25, VERTICES_FIXID_Y_POS[source] - 10, text);
 				this.cmd("Sethighlight", this.vertices[source], "");
 				this.cmd("Step");
-				
 				this.cmd("show", ".canvas-tooltip");
 				this.cmd("BFSTooltipPos", SPANNING_TREE_X_POS[0] + 25, VERTICES_FIXID_Y_POS[0] - 15);
 				this.cmd("BFSStep");
-				var text = "The Minimum cost of the tree is : <y>"+ total_min_cost +"</y>.";
+				var text = "The final <y>Minimum</y> Spanning Tree is :"
+					+ "<y><div id='edgeNdEdgeWeight'>";
+				for (var i = 0; i < finalTree.length; i++) {
+					text = text + "<div><span id='treeEdges"+ i +"'>"+ finalTree[i].key +"</span> -->  <span id='value"+ i +"'>"
+							+ finalTree[i].val + "</span></div>";
+				}
+				text = text + "</div></y>";
 				this.cmd("BFSTEXT", text);
 				this.cmd("Step");
-				this.cmd("RESTARTBUTTON", "restat");
+				this.cmd("BFSButton", "play");
+				this.cmd("Step");
+				var text = "The Minimum cost of the tree is : <div><y><div class='position' id='minCosrt'>";
+					for (var i = 0; i < finalTree.length; i++) {
+						if (i < (finalTree.length - 1)) {
+							text = text + "<span id='costVal"+ i +"'></span> <span class='opacity00' id='plus"+ i +"'> + </span>";
+						} else {
+							text = text + "<span id='costVal"+ i +"'></span>";
+						}
+					}
+					text = text + "</div></y></div>";
+				this.cmd("BFSTEXT", text);
+				this.cmd("Step");
+				this.cmd("BFSButton", "calMinCost");
+				this.cmd("Step");
+				this.cmd("RESTARTBUTTON", "restart");
 				this.cmd("Step");
 				this.cmd("hide", ".canvas-tooltip");
 				this.cmd("Step");
-				console.log("Stop working");
 			}
 		} else {
 			var status;
-			if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
-				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, value, 0, true);
-			} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
+			if ((key == "0-3" || key == "3-0") || (key == "3-7" || key == "7-3")) {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", -0.4, false, value, 0, true);
+			} else if ((key == "0-4" || key == "4-0") || (key == "4-7" || key == "7-4")) {
+				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, value, 0, true);
 			} else {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0, false, value, 0, true);
 			}
 			var text = "Here form a <y>circle</y>.";
 			this.tooltipShow(SPANNING_TREE_X_POS[toEdge] + 25, VERTICES_FIXID_Y_POS[toEdge], text);
-			this.cmd("DisConnect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, "", 0, true);
-			
+			this.cmd("DisConnect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge]);
 			this.cmd("SetBackgroundColor", this.edgeRect[idxVal], "#ff0000");
 			this.cmd("SetBackgroundColor", this.WeightRect[idxVal], "#ff0000");
+			this.cmd("SetBackgroundColor", this.edgeStatus[idxVal], "#ff0000");
+			this.cmd("SetHighlight", this.edgeStatus[idxVal], 1);
+			this.cmd("setText", this.edgeStatus[idxVal], "Circle");
 			this.cmd("SetHighlight", this.edgeRect[idxVal], "");
 			this.cmd("SetHighlight", this.WeightRect[idxVal], "");
-			
+			this.cmd("SetHighlight", this.edgeStatus[idxVal], "");
 			testingArr.shift();
 			testingArr.sort(function(a, b) { return a.val - b.val});
 			this.edgeSelection(testingArr[0].idx);
@@ -744,10 +710,45 @@ function play() {
 	doPlayPause();
 }
 
-function restat() {
+function restart() {
 	$(".user-btn").remove();
 	location.reload();
 }
+
+function calMinCost() {
+	$(".user-btn").remove();
+	console.log("In Calculate Min Cost");
+	if (finalTree.length == 1) {
+		$("#costVal0").text(finalTree[0].val);
+		travel("#value0", "#costVal0", function() {
+			doPlayPause();
+		});
+	} else {
+		minCostAnimation(0);
+		
+	}
+}
+
+function minCostAnimation(costIdx) {
+	if (costIdx == finalTree.length - 1) {
+		$("#costVal" + costIdx).text(finalTree[costIdx].val);
+		travel("#value" + costIdx, "#costVal" + costIdx, function() {
+			setTimeout(function() {
+				flip("#minCosrt", total_min_cost, function() {
+					doPlayPause();
+				});
+			}, 800);
+		});
+	} else if (costIdx < finalTree.length - 1) {
+		$("#costVal" + costIdx).text(finalTree[costIdx].val);
+		travel("#value" + costIdx, "#costVal" + costIdx, function() {
+			$("#plus" + costIdx).removeClass("opacity00");
+			costIdx++;
+			minCostAnimation(costIdx);
+		});
+	} 
+}
+
 
 function primsLogic() {
 	var nodes = VERTICES_SIZE;
@@ -758,28 +759,20 @@ function primsLogic() {
 		selected[i] = 0;
 	} 
 	console.log("Minimum Spanning Tree : \n"); 
-	// source = parseInt($("#primsVal .btn").text().trim());
 	selected[source] = 1;
-
 	for (k = 1; k < nodes; k++) {
 		min = infinity;
 		for (i = 0; i < nodes; i++) {
 			for (j = 0; j < nodes; j++) {
 				if (edgeWeight[""+ i + "-" + j+""] != "undefined" && ((selected[i] && !selected[j]) || (selected[j] && !selected[i]))) {
-					// checking.push({key: v1 + "-" + v2, val:
-					// parseInt(edgeWeight[""+ v1 + "-" + v2 +""])});
 					if (min > parseInt(edgeWeight[""+ i + "-" + j+""])) {
 						min = parseInt(edgeWeight[""+ i + "-" + j+""]);
 						v1 = i;
 						v2 = j;
-						/*
-						 * if (edgeWeight[""+ v1 + "-" + v2 +""] != undefined) { }
-						 */
 					}
 				}
 			}
 		}
-		
 		console.log("Edge (%d %d) weight %d\n", +  v1, v2, min);
 		selected[v1] = selected[v2] = 1;
 		total = total + min;
@@ -787,36 +780,38 @@ function primsLogic() {
 	console.log("Total weight of Minimum Spanning Tree \n" + total);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 var currentAlg;
 function init() {
 	var animManag = initCanvas();
 	currentAlg = new Prims(animManag, canvas.width, canvas.height);
 }
+
+function flip(selector, val, callBackFunction) {
+	TweenMax.to($(selector), 0.5, {rotationX : -90, onComplete:function() {
+		$(selector).text(val);
+		TweenMax.to($(selector), 0.5, {rotationX : 0, onComplete:function() {
+			if (typeof callBackFunction === "function") {
+				callBackFunction();
+			}
+		}});
+	}});
+}
+
+function travel(fromSelector, toSelector, callBackFunction) {
+	$(fromSelector).effect("highlight", {color: 'yellow'}, 500);
+	//$(fromSelector).css("background-color", "yellow");
+	var l = $(fromSelector).offset();
+	$(toSelector).offset({
+		top : l.top,
+		left : l.left
+	});
+	TweenMax.to(toSelector, 1, { top : 0, left : 0, onComplete:function() {
+		if (typeof callBackFunction === "function") {
+			callBackFunction();
+		}
+	}});
+}
+
+
+
+

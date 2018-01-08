@@ -440,7 +440,7 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 					+ " Minimum cost of the tree is : <y>"+ total_min_cost +"</y>.";
 		this.cmd("BFSTEXT", text);
 		this.cmd("Step");
-		this.cmd("RESTARTBUTTON", "restat");
+		this.cmd("RESTARTBUTTON", "restart");
 		this.cmd("Step");
 		this.cmd("hide", ".canvas-tooltip");
 		this.cmd("Step");

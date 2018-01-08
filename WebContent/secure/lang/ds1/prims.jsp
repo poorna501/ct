@@ -40,7 +40,7 @@
 <script type="text/javascript" src="js/an-li/animation-main.js"></script>
 <script type="text/javascript" src="js/al-li/algorithm.js"></script>
 
-<!-- <script type="text/javascript" src="js/al-li/kruskals-alg.js"></script> -->
+<script type="text/javascript" src="js/al-li/prims-alg.js"></script>
 <script type="text/javascript" src="js/prims.js"></script>
 
 <style type="text/css">
@@ -272,6 +272,12 @@ canvas {
 	margin-left: 6px;
 	margin-right: 6px;
 }
+
+.position {
+	position: relative;
+	display: inline-block;
+}
+
 </style>
 
 </head>
@@ -413,12 +419,10 @@ canvas {
 			$("#Prims").on("click", function() {
 				$(this).find(".code").addClass("active");
 			});
-
-			$("canvas").on("mousedown", function(evt) {
+			/* $("canvas").on("mousedown", function(evt) {
 				console.log(evt.clientX - $("canvas").offset().left);
 				console.log(evt.clientY - $("canvas").offset().top);
-			});
-
+			}); */
 			$('.dropdown').on('click','.dropdown-menu li a', function() {
 				$("#edgeWeight").val("");
 				$('.dropdown-menu').css('min-width', $(".dropdown").width());
