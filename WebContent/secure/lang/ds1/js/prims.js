@@ -479,7 +479,7 @@ Prims.prototype.edgeSelection = function(idxVal) {
 	testingArr.sort(function(a, b) { return a.val - b.val});
 	var text = "Here, we consider the <y>mininum</y> weigth of the edge (<y>"+ testingArr[0].key +"</y>) having the weight <y>"+ 
 				testingArr[0].val +"</y>."; 
-	this.tooltipShow(545, 185 + (idxVal) - 20, text);
+	this.tooltipShow(545, 185 + (idxVal * 40) - 20, text);
 	this.cmd("SetHighlight", this.edgeRect[idxVal], "");
 	this.cmd("SetHighlight", this.WeightRect[idxVal], "");
 	this.cmd("SetHighlight", this.edgeRect[idxVal], colorsArr[usedColorsCount + 1]);
@@ -534,9 +534,9 @@ Prims.prototype.drawSpanningTree = function(idxVal) {
 			this.cmd("SETEDGECOLOR", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[4]);
 			this.cmd("SETEDGECOLOR", this.vertices[toEdge], this.vertices[fromEdge], colorsArr[4]);
 			if ((key == "0-3" || key == "3-0") || (key == "3-7" || key == "7-3")) {
-				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", -0.4, false, value, 0, true);
-			} else if ((key == "0-4" || key == "4-0") || (key == "4-7" || key == "7-4")) {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0.4, false, value, 0, true);
+			} else if ((key == "0-4" || key == "4-0") || (key == "4-7" || key == "7-4")) {
+				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", -0.4, false, value, 0, true);
 			} else {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0, false, value, 0, true);
 			}
@@ -670,9 +670,9 @@ Prims.prototype.drawSpanningTree = function(idxVal) {
 		} else {
 			var status;
 			if ((key == "0-3" || key == "3-0") || (key == "3-7" || key == "7-3")) {
-				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", -0.4, false, value, 0, true);
-			} else if ((key == "0-4" || key == "4-0") || (key == "4-7" || key == "7-4")) {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, value, 0, true);
+			} else if ((key == "0-4" || key == "4-0") || (key == "4-7" || key == "7-4")) {
+				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", -0.4, false, value, 0, true);
 			} else {
 				this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0, false, value, 0, true);
 			}
