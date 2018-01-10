@@ -54,9 +54,9 @@ function svgAppend(parentId, svgId, markerId, markerColor) {
 		}
 		var code = '<svg class="svg-css" id=' + svgId +'></svg>';
 		
-		var testingArr = []
-		testingArr.push({"parentId" : parentId, "svgId" : "#" + svgId});
-		testingMap[parentId] = testingArr; 
+		//var testingArr = []
+		//testingArr.push({"parentId" : parentId, "svgId" : "#" + svgId});
+		testingMap[parentId] = {"parentId" : parentId, "svgId" : "#" + svgId}; 
 		$(parentId).append(code);
 		svgMarkerAppend(svgId, markerId, markerColor);
 	}		
