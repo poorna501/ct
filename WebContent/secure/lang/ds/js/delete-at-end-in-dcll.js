@@ -12,7 +12,6 @@ function deleteAtEndNodeAnimation() { //call the method to start the intro and c
 	tooltipDisplay("#prev", "bottom", toolTopText);
 }
 
-
 function introFunction() {	
 	intro = introJs();
 	intro.setOptions({
@@ -97,7 +96,7 @@ function introFunction() {
 						appendSteps(2);
 						var text = "<ul><li>If it is <g>Not Empty</g> then, define one tempary node <g>last</g>"
 									+ " and initialize with <bwbg>first</bwbg> value.</li>"
-									+ "<ul><li>Check whether the <g>next</g> field of <g>last</g> node is <g>NULL</g>.</li>"
+									+ "<ul><li>Check whether the <g>next</g> field of <g>last</g> node is <bwbg>first</bwbg>.</li>"
 									+ "<li> If it is <brown>TRUE</brown>. Then, assign <g>NULL</g> to the <bwbg>first</bwbg> then print "
 									+ "<g>data</g> field of <g>last</g> node and delete <g>last</g> and terminate the function."
 									+ "<span id='btn'></span></li></ul></ul>";
@@ -114,10 +113,10 @@ function introFunction() {
 						$('#s3').addClass('opacity00');
 						appendSteps(3);
 						var text = '<ul><ul><li>If it is <brown>FALSE</brown>, then define another tempary node <g>prev</g>.</li>'
-									+ '<li>Repeat the loop until the <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>NULL</g>.</li> '
-									+ '<li>if the <g>next</g> field of <g>last</g> is <brown>not equal</brown> to <g>NULL</g> assign a <g>last</g> to'
+									+ '<li>Repeat the loop until the <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>first</g>.</li> '
+									+ '<li>if the <g>next</g> field of <g>last</g> is <brown>not equal</brown> to <g>first</g> assign a <g>last</g> to'
 									+ ' <g>prev</g> and also travel the <g>next</g> field of <g>last</g> to <g>last</g></li>'
-									+ '<li>if <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>NULL</g> assign <g>NULL</g> to'
+									+ '<li>if <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>first</g> assign <g>first</g> to'
 									+ ' the  <g>next</g> field of <g>prev</g>'
 									+ ' then print the <g>data</g> field of <g>last</g> and '
 									+ 'delete the <g>last</g> node and terminate the function.<span id="btn"></span></li></ul></ul>';
@@ -242,7 +241,9 @@ function firstNotEqNullAnimation() {
 		$('#next1, #prev1').text('NULL');
 		$('#data1, #next1, #prev1').removeClass('opacity00');
 		zoomInEffect('#node1', function() {
-			$('#firstVal').text($('.data-address:first').text());
+			svgCurveUpper('#nextDiv1',  '#prevDiv1', "pUpLine1");
+			svgCurveDown('#prevDiv1', '#nextDiv1', "pDownLine1");
+			$('#firstVal, #next1, #prev1').text($('.data-address:first').text().trim());
 			$('#line1').css('opacity', '1');
 			text = '<li>Here, the <y>first</y> node contain the value (i.e <y>'
 					+ $('#firstVal').text() +'</y>) is not equal to <y>NULL</y> means '
@@ -289,8 +290,7 @@ function createlastAnimation() {
 function lastNextNullText() {
 	$('.user-btn').remove();
 	$('.introjs-tooltip').css('height','250');
-	text = '<li>Check if <y>last -> next</y> is equal to <y>NULL</y>. it returns <y>true</y>'
-			+' so the list contain only <y>one node</y>.</li>'
+	text = '<li>Check if <y>last -> next</y> is equal to <y>first</y> or not. Here, it returns <y>true</y>.</li>'
 	typing('#appendDiv22', text, function() {
 		$('#appendDiv22').after('<div id="appendDiv2"></div>')
 		appendNextBtn('.introjs-tooltipbuttons', 'firstNextToFirstText');
@@ -302,7 +302,7 @@ function lastNextNotNullText() {
 	$('.user-btn').remove();
 	$('#Step21').addClass('blinkingRed');
 	$('.introjs-tooltip').css('height','250');
-	var text = '<li>Here, the <y>last -> next</y> is <y>not equal</y> to <y>NULL</y> '
+	var text = '<li>Here, the <y>last -> next</y> is <y>not equal</y> to <y>first</y> '
 				+ 'so, list contains more than one node.</li>'
 	typing('#appendDiv22', text, function() {
 		$('#nextDiv1').removeClass('blinkingGreen');
@@ -343,8 +343,8 @@ function createprevTextAnimation() {
 
 function repeatLoopStep() {
 	$('.user-btn').remove();
-	text = '<li>Repeat the <y>loop</y> until the <y>last -> next</y> is <y>equal</y> to <y>NULL</y>.</li> <li>if <y>last -> next</y>'
-			+ ' is <y>not equal</y> to <y>NULL</y> assign <y>last</y> value to <y>prev</y> and <y>last -> next</y>'
+	text = '<li>Repeat the <y>loop</y> until the <y>last -> next</y> is <y>equal</y> to <y>first</y>.</li> <li>if <y>last -> next</y>'
+			+ ' is not equal to <y>first</y> assign <y>last</y> value to <y>prev</y> and travel the <y>last -> next</y>'
 			+ ' to <y>last</y>. </li>'
 	typing('#appendDiv3', text, function() {
 		$('#appendDiv3').after('<div id="appendDiv4"></div>');
@@ -355,7 +355,7 @@ function repeatLoopStep() {
 
 function repeatLoopStepAnimation() {
 	$('.user-btn').remove();
-	if ($('#next' + nodeCount).text().trim() != "NULL") {
+	if ($('#next' + nodeCount).text().trim() != $("#firstVal").text().trim()) {
 		$('#lastVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
 			fadeInBounceEffectWithTimelineMax("#lastVal", "#prevVal", "right", function() {
 				$('#line111').remove();
@@ -381,8 +381,9 @@ function repeatLoopStepAnimation() {
 			});
 		});
 	} else {
-		text = '<li>Here the <y>last -> next</y> (<y>'+ $('#next' + nodeCount).text() +'</y>) is equal to <y>NULL</y>'
-		+' so assign <y>NULL</y> to <y>prev -> next</y>.</li>'
+		text = '<li>Here the <y>last -> next</y> (<y>'+ $('#next' + nodeCount).text() +'</y>) is equal to <y>first</y>'
+				+ ' so assign the <y>next</y> field of <y>prev</y> to <y>first</y> and also assign the <y>prev</y> field of <y>first</y>'
+				+ ' to <y>prev</y></li>'	
 		typing('#appendDiv4', text, function() {
 			$('.next-div:last').addClass('blinkingRed');
 			$('#appendDiv4').after('<div id="appendDiv31"></div>');
@@ -400,8 +401,10 @@ function assignNullToPrev() {
 			 "#svgId", "line22", "arrow", false, function() {
 			$('#line22').remove();
 			$('#next' + (nodeCount - 1)).parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-				$('#next' + (nodeCount - 1)).addClass('opacity00').text("NULL");
+				$('#next' + (nodeCount - 1)).addClass('opacity00').text($("#firstVal").text().trim().trim());
 				zoomInEffect('#next' + (nodeCount - 1), function() {
+					svgCurveUpper('#nextDiv1', '#prevDiv1', "pUpLine2");
+					svgCurveDown('#prevDiv1', '#nextDiv1', "pDownLine2");
 					$('#line' + nodeCount + ', #line1' + nodeCount).remove();
 					appendNextBtn('.introjs-tooltipbuttons', 'printAndDeleteNodeText');
 					$('.introjs-tooltip').scrollTo('.user-btn', 500);
@@ -413,7 +416,7 @@ function assignNullToPrev() {
 
 function firstNextToFirstText() {
 	$('.user-btn').remove();
-	var text = '<li>Now assign <y>NULL</y> to the <y>first</y> node.</li>'
+	var text = '<li>Assign <y>NULL</y> to the <y>first</y> node.</li>'
 	typing('#appendDiv2', text, function() {
 		$('#appendDiv2').after('<div id="appendDiv31"></div>')
 		appendNextBtn('.introjs-tooltipbuttons', 'firstNextToFirstAnimation');
@@ -447,10 +450,10 @@ function firstNextToFirstAnimation() {
 function printAndDeleteNodeText() {
 	$('.user-btn').remove();
 	if (lang != 'cpp') {
-		var text = '<li>Now print the <y>last -> data</y> (i.e <y>'+ $('#data' + nodeCount).text() +'</y>) and '
+		var text = '<li>Print the <y>last -> data</y> (i.e <y>'+ $('#data' + nodeCount).text() +'</y>) and '
 		+ ' <y>delete</y> the <y>last</y> node i.e (<y>'+ $('#lastVal').text() +'</y>).</li>'	
 	} else {
-		var text = '<li>Now print the <y>last -> data</y> (i.e <y>'+ $('#data' + nodeCount).text() +'</y>) and '
+		var text = '<li>Print the <y>last -> data</y> (i.e <y>'+ $('#data' + nodeCount).text() +'</y>) and '
 		+ ' <y>delete</y> the <y>last</y> node i.e (<y>'+ $('#lastVal').text() +'</y>) and also return the <y>last</y> node.</li>'
 	}
 	typing('#appendDiv31', text, function() {
@@ -464,8 +467,8 @@ function printAndDeleteNodeText() {
 function printAndDeleteNodeAnimation() {
 	$('.user-btn, #btn').remove();
 	TweenMax.to("#node" + nodeCount, 0.5, { top : -80, onComplete: function() {
+		$("#node"+ nodeCount +", #line11, #pUpLine1, #pDownLine1").remove();
 		$('#dataDiv'+nodeCount +', #nextDiv'+ nodeCount + ', #prevDiv' + nodeCount).removeClass('blinkingRed');
-		$("#node"+ nodeCount +", #line11").remove();
 		$('#last').addClass('opacity00');
 		introNextSteps('#algorithmStepsDiv', 'Step' + stepCount);
 		$('.introjs-nextbutton').show();
@@ -491,9 +494,12 @@ function multipleNodes() {
 			$('#node'+ i).removeClass('opacity00');
 			$('#line' + i).css('opacity', '1');
 		}
-		$("#prev1, #next2").text("NULL").removeClass("opacity00");
+		$("#prev1, #next2").text($('.data-address:first').text()).removeClass("opacity00");
 		//$("#next2").text("NULL").removeClass("opacity00");
 		regenerateArrows(true);
+		
+		svgCurveUpper('#nextDiv' + ($('.nodes').length),  '#prevDiv1', "pUpLine1");
+		svgCurveDown('#prevDiv1', '#nextDiv' +  ($('.nodes').length), "pDownLine1");
 		appendNextBtn('.introjs-tooltipbuttons', 'applyBesideStep');
 	},500);
 }
@@ -513,7 +519,7 @@ function applyBesideStep() {
 function regenerateArrows(flag) {
 	for (var i = 1; i <= $('#dynamicNodes .nodes').length; i++) {
 		if (i == 1) {
-			svgAnimatingLineBottomToTop("#animationDiv", "#firstDiv", "#prevDiv1",
+			svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1",
 					"#svgId", "line"+ i +"", "arrow", flag);
 		} else {
 			svgAnimatingLineRightToLeft("#animationDiv", "#nextDiv"+ (i - 1) +"", "#prevDiv"+ (i) +"",
@@ -626,23 +632,6 @@ function createDynamicNodes(val) {
 	var toolTopText = "it indicates the address of the node";
 	tooltipDisplay(".data-address", "bottom", toolTopText);
 }
-
-/*
-function createDynamicNodes(nodeCount) { //Create data & next field div.
-	var randomAddress = getRandomInt(1000, 5000);
-	var x = '<div class="opacity00 col-xs-2 nodes" id="node' + nodeCount + '" style="top: 0px; width: auto;">'
-						+ ' <div class="col-xs-12 padding00"><div class="col-xs-6 ct-blue-color ct-fonts padding00 text-center">'
-						+ ' data</div><div class="ct-green-color ct-fonts text-center">next</div></div>'
-						+ ' <div id="nodedata' + nodeCount + '" class="data-nodes"><div id="dataDiv' + nodeCount + '"'
-						+ ' class="div-border left-radius col-xs-6 data-div zindex"><span id="data' + nodeCount +'"'
-						+ ' class="data-span position opacity00 ct-blue-color ct-fonts" style="top: 0px; left: 0px;"></span></div>'
-						+ ' <div id="nextDiv' + nodeCount +'" class="position div-border zindex right-radius col-xs-6 next-div">'
-						+ ' <span id="next' + nodeCount +'" class="position next-span ct-green-color ct-fonts position"></span></div></div>'
-						+ ' <div class="col-xs-12 padding00"><div class="col-xs-6 padding00 text-center">'
-						+ ' <span id="dataAddress' + nodeCount + '" class="position data-address zindex padding00 ct-brown-color ct-fonts">'+ randomAddress 
-						+ '</span></div></div></div>';
-	$('#dynamicNodes').append(x);
-}*/
 
 function declareNodesWhenFunctionCall(id1, id2, nodeName, nodeNameText, callBackFunction) {	//Temp node div declaration 
 	$('#declareNodes').append('<div class="col-xs-2 col-xs-offset-1 extraNode opacity00 padding00 tooltopClass zindex" id=' + id1 + '>'
@@ -832,13 +821,8 @@ function svgAnimatingLineBottomToTop(parentSelector, selector1, selector2, svgId
 	var parentOffset = $(parentSelector).offset();
 	var y1 = $(selector1).offset().top - parentOffset.top + $(selector1).outerHeight();
 	var y2 = $(selector2).offset().top - parentOffset.top;
-		/*if (lineFlag) {
-			var x1 = $(selector1).offset().left - parentOffset.left + $(selector1).outerWidth() / 5;
-			var x2 = $(selector2).offset().left - parentOffset.left + $(selector2).outerWidth() / 5;
-		} else {*/
-			var x1 = $(selector1).offset().left - parentOffset.left + $(selector1).outerWidth() / 2;
-			var x2 = $(selector2).offset().left - parentOffset.left + $(selector2).outerWidth() / 2;
-		//}
+	var x1 = $(selector1).offset().left - parentOffset.left + $(selector1).outerWidth() / 2;
+	var x2 = $(selector2).offset().left - parentOffset.left + $(selector2).outerWidth() / 2;
 	svgLineAppend(svgId, svgLineId, markerId, x1, y1, x1, y1);
 	TweenMax.to($('#' + svgLineId).show(), 1, {attr: {x2: x2, y2: y2}, onComplete: function() {
 		if (typeof callBackFunction === "function") {

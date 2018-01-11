@@ -249,6 +249,13 @@ bwBg {
 	padding: 5px;
 }
 
+polyline {
+	fill: transparent;
+	stroke: red;
+	stroke-width: 4;
+}
+
+
 
 </style>
 
