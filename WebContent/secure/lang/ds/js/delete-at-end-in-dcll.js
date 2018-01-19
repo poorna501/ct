@@ -6,7 +6,7 @@ function deleteAtEndNodeAnimation() { //call the method to start the intro and c
 	declareNodesWhenFunctionCall("prev", "prevVal", "prevInDelMtd", "prev");
 	svgAppend("#animationDiv", "svgId");
 	svgMarkerAppend("#svgId", "arrow");
-	introFunction();
+	introFunction(); //intro Function
 	var toolTopText = "This is a tempary node to store the address of node.";
 	tooltipDisplay("#last", "bottom", toolTopText);
 	tooltipDisplay("#prev", "bottom", toolTopText);
@@ -116,9 +116,9 @@ function introFunction() {
 									+ '<li>Repeat the loop until the <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>first</g>.</li> '
 									+ '<li>if the <g>next</g> field of <g>last</g> is <brown>not equal</brown> to <g>first</g> assign a <g>last</g> to'
 									+ ' <g>prev</g> and also travel the <g>next</g> field of <g>last</g> to <g>last</g></li>'
-									+ '<li>if <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>first</g> assign <g>first</g> to'
-									+ ' the  <g>next</g> field of <g>prev</g>'
-									+ ' then print the <g>data</g> field of <g>last</g> and '
+									+ '<li>if <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>first</g>, assign <g>first</g> value to'
+									+ ' the  <g>next</g> field of <g>prev</g> and also assign the <g>last</g> value to the <g>prev</g> field of '
+									+ '<g>first</g> node, then print the <g>data</g> field of <g>last</g> and '
 									+ 'delete the <g>last</g> node and terminate the function.<span id="btn"></span></li></ul></ul>';
 						intro.refresh();
 						$('#stepDes3').html(text).addClass('opacity00');
@@ -177,7 +177,9 @@ function introFunction() {
 									+ '\t\t\t\t\tprev = last;\n'
 									+ '\t\t\t\t\tlast = last -> next;\n'
 									+ '\t\t\t\t}\n'
-									+ '\t\t\t\tprev -> next = NULL;\n\t\t\t}</span>');
+									+ '\t\t\t\tprev -> next = first;\n'
+									+ '\t\t\t\tfirst -> prev = prev;\n'
+									+ '\t\t\t}</span>');
 							transferEffect('#algorithmStepsDiv ul:last','#elseBlock1', function() {
 								$('#parentPre').scrollTo('#print', 500);
 								$('#elseBlock1').effect( "highlight",{color: 'yellow'}, 600);
@@ -403,11 +405,25 @@ function assignNullToPrev() {
 			$('#next' + (nodeCount - 1)).parent().effect( "highlight",{color: 'yellow'}, 600, function() {
 				$('#next' + (nodeCount - 1)).addClass('opacity00').text($("#firstVal").text().trim().trim());
 				zoomInEffect('#next' + (nodeCount - 1), function() {
-					svgCurveUpper('#nextDiv1', '#prevDiv1', "pUpLine2");
-					svgCurveDown('#prevDiv1', '#nextDiv1', "pDownLine2");
 					$('#line' + nodeCount + ', #line1' + nodeCount).remove();
-					appendNextBtn('.introjs-tooltipbuttons', 'printAndDeleteNodeText');
-					$('.introjs-tooltip').scrollTo('.user-btn', 500);
+					setTimeout(function() {
+						$('#firstVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+							svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1",
+									 "#svgId", "line22", "arrow", true, function() {
+								$('#line22').remove();
+								$('#prev1').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+									$('#prev1').addClass('opacity00').text($("#prevVal").text().trim().trim());
+									zoomInEffect('#prev1', function() {
+										svgCurveUpper('#nextDiv1', '#prevDiv1', "pUpLine2");
+										svgCurveDown('#prevDiv1', '#nextDiv1', "pDownLine2");
+										appendNextBtn('.introjs-tooltipbuttons', 'printAndDeleteNodeText');
+										$('.introjs-tooltip').scrollTo('.user-btn', 500);
+									});
+								});
+							});
+						});
+						
+					},1000);
 				});
 			});
 		});

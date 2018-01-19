@@ -255,11 +255,7 @@ polyline {
 	stroke-width: 4;
 }
 
-
-
 </style>
-
-
 
 </head>
 <body>

@@ -145,18 +145,10 @@ function events(selector) {
 	});
 	$(selector).on("keyup", function(e) {
 		$('.error-text').remove();
-		/*
-		var firstCon = $(this).val().length > 0 && (!$(this).val().startsWith('-'));
-		var secondCon = $(this).val().length >= 2 && $(this).val().indexOf('-', $(this).val().indexOf('-') + 1) == -1*/ 
 		if ($(selector).val() != "") {
 			$("#addEdgeBtn").removeAttr("disabled");
-			//$('.introjs-nextbutton').show();
-			/*if ($('.introjs-nextbutton[style="display: inline-block;"]').length == 1 && e.keyCode == 13) {
-				introcode.nextStep();
-			}*/
 		} else {
 			$('.introjs-tooltiptext').append('<div class="error-text">Please enter any integer.</div>');
-			//$('.introjs-nextbutton').hide();
 			$("#addEdgeBtn").attr("disabled", "disabled");
 		}
 	});

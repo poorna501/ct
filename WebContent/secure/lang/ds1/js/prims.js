@@ -138,7 +138,7 @@ Prims.prototype.edgeCallback = function(event) {
 	if ($("#fromID .active").text() != "" && $("#toID .active").text() != "" && $("#edgeWeight").val() != "") {
 		if (Number.isInteger(parseInt($("#edgeWeight").val()))) {
 			if (parseInt($("#edgeWeight").val()) < 0) {
-				alertify.alert('<b>Please enter <r>positive</r> values only.</b>');
+				alertify.alert('<b>Please enter <r>positive</r> values only (greater than <b>0</b>).</b>');
 			} else {
 				this.implementAction(this.edge.bind(this), "");
 			}

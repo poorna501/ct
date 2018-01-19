@@ -1,3 +1,9 @@
+var cost = [], parent = [];
+var ne, mincost,fnMap;
+ne = mincost = fnMap = 0;
+
+
+
 var MAX_VERTICES_SIZE = 8;
 var VERTICES_SIZE = index = SPANNINGTREE_SIZE = usedColorsCount = tooltipCount = 0; 
 
@@ -6,6 +12,7 @@ var edgesMap = {};
 var edgeWeight = {};
 var adjMap = {};
 var visitedVertices = {};
+var finalVertices = [];
 var flag = false;
 var total_min_cost = 0;
 
@@ -101,7 +108,15 @@ Kruskal.prototype.edgeCallback = function(event) {
 		return;
 	}
 	if ($("#fromID .active").text() != "" && $("#toID .active").text() != "" && $("#edgeWeight").val() != "") {
-		this.implementAction(this.edge.bind(this), "");
+		if (Number.isInteger(parseInt($("#edgeWeight").val()))) {
+			if (parseInt($("#edgeWeight").val()) <= 0) {
+				alertify.alert('<b>Please enter <r>positive</r> values only (greater than <b>0</b>).</b>');
+			} else {
+				this.implementAction(this.edge.bind(this), "");
+			}
+		} else {
+			alertify.alert('<b>Please enter <r>integers</r> values only.</b>');
+		}
 	} else {
 		$(".alertify").css({"left": "50%", "top": "200px"});
 		if (!addVertext) {
@@ -166,7 +181,7 @@ Kruskal.prototype.edge = function() {
 		this.weightRect[i] = this.nextIndex++;
 		this.edgeRect[i] = this.nextIndex++;
 	}
-	$("#addEdgeBtn").attr("disabled", "disabled");
+	//$("#addEdgeBtn").attr("disabled", "disabled");
 	fromEdgeAndToEdgeValues();
 	if (edgesMap[fromEdge + " - " + toEdge] == undefined) {
 		if (fromEdge == toEdge) {
@@ -202,6 +217,24 @@ function display_Prompt() {
 Kruskal.prototype.testing = function() {
 	this.commands = new Array();
 	console.log("testing");
+	
+	if ($("#fromID .active").text() != "" && $("#toID .active").text() != "" && $("#edgeWeight").val() != "") {
+		if (Number.isInteger(parseInt($("#edgeWeight").val()))) {
+			if (parseInt($("#edgeWeight").val()) <= 0) {
+				alertify.alert('<b>Please enter <r>positive</r> values only (greater than <b>0</b>).</b>');
+			} else {
+				this.testingFun();
+			}
+		} else {
+			alertify.alert('<b>Please enter <r>integers</r> values only.</b>');
+		}
+	} else {
+		alertify.alert('<b>Please enter <r>integers</r> values only.</b>');
+	}
+	return this.commands;
+}
+
+Kruskal.prototype.testingFun = function() {
 	fromEdgeAndToEdgeValues();
 	this.cmd("Step");
 	this.setCirclehighlight()
@@ -215,7 +248,6 @@ Kruskal.prototype.testing = function() {
 		}
 	}
 	this.removeCircleColor();
-	return this.commands;
 }
 
 function fromEdgeAndToEdgeValues() {
@@ -309,8 +341,46 @@ Kruskal.prototype.sortTheEdges = function() {
 	return this.commands;
 }
 
+function kruskalFun() {
+	while(ne < VERTICES_SIZE - 1) {
+		var val = kruskalArr[ne].key.split(" - ");
+		u = parseInt(val[0]);
+		v = parseInt(val[1]);
+		var min = kruskalArr[ne].val;
+		u=find(u);
+		v=find(v);
+		
+		
+		if(uni(u,v, min)) {
+			ne++;
+			parseInt(mincost += parseInt(min));
+			console.log("u and v values and min weight", u, v, min);
+		}
+	}
+	console.log("Minimum cost =" ,mincost);
+}
+
+function find(i) {
+	while(parent[i])
+		i = parent[i];
+	return i;
+}
+
+function uni(i, j, min) {
+	if(i != j) {
+		parent[j] = i;
+		finalVertices.push({key: i + " - " + j, val: min});
+		return 1;
+	}
+	return 0;
+}
+
 Kruskal.prototype.sortEdgeLogic = function() {
 	kruskalArr.sort(function(a, b) { return a.val - b.val});
+	
+	kruskalFun();
+	console.log("original function!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	this.cmd("Step");
 	for (var i = 0; i < kruskalArr.length; i++) {
 		var val = kruskalArr[i].key.split(" - ");
 		fromEdge = parseInt(val[0]);
@@ -370,6 +440,7 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 			fromEdge = parseInt(val[0]);
 			toEdge = parseInt(val[1]);
 			var value = kruskalArr[i].val;
+			
 			if  (visitedVertices[fromEdge] == "-1") {
 				this.cmd("CreateCircle", this.spanningTreeVertices[fromEdge], fromEdge, SPANNING_TREE_X_POS[fromEdge], VERTICES_FIXID_Y_POS[fromEdge]);
 			}
@@ -384,45 +455,32 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 			this.cmd("Step");
 			this.cmd("Step");
 			
-			if (visitedVertices[fromEdge] == "-1" || visitedVertices[toEdge] == "-1") {
-				visitedVertices[fromEdge] = "1";
-				visitedVertices[toEdge] = "1";
-				if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
-					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0.4, false, value, 0, true);
-				} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
-					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", -0.4, false, value, 0, true);
-				} else {
-					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0, false, value, 0, true);
-				}
-				total_min_cost += parseInt(value);
-				this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
-				//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 2]);
-				this.cmd("Step");
-				this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
-				this.cmd("Step");
-				//this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
-			} else {
-				var status;
-				if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
-					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, value, 0, true);
-				} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
-					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", -0.4, false, value, 0, true);
-				} else {
-					this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0, false, value, 0, true);
-				}
-				this.cmd("Step");
-				this.cmd("show", ".canvas-tooltip");
-				this.cmd("BFSTooltipPos", SPANNING_TREE_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
-				this.cmd("BFSStep");
-				var text = "Here form a <y>circle</y>.";
-				this.cmd("BFSTEXT", text);
-				this.cmd("Step");
-				this.cmd("BFSButton", "play");
-				this.cmd("Step");
-				this.cmd("hide", ".canvas-tooltip");
-				this.cmd("Step");
-				this.cmd("DisConnect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, "", 0, true);
+			if (fnMap < finalVertices.length) {
+				var splitVal = finalVertices[fnMap].key.split(" - ");
+				finalFromEdge = parseInt(splitVal[0]);
+				finalToEdge = parseInt(splitVal[1]);
 				
+				if ((fromEdge == finalFromEdge) && (toEdge == finalToEdge)) {
+					visitedVertices[fromEdge] = "1";
+					visitedVertices[toEdge] = "1";
+					if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
+						this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0.4, false, value, 0, true);
+					} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
+						this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", -0.4, false, value, 0, true);
+					} else {
+						this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#000000", 0, false, value, 0, true);
+					}
+					total_min_cost += parseInt(value);
+					this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], colorsArr[usedColorsCount + 1]);
+					this.cmd("Step");
+					this.cmd("SETEDGEHIGHLIGHT", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "");
+					this.cmd("Step");
+					fnMap++;
+				} else {
+					this.formCircle(value);
+				}
+			} else {
+				this.formCircle(value);
 			}
 			this.cmd("SetHighlight", this.edgeRect[i], "");
 			this.cmd("SetHighlight", this.WeightRect[i], "");
@@ -448,50 +506,64 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 	} else {
 		console.log("Hello Poorna!!!!!!");
 	}
-	
 }
+
+Kruskal.prototype.formCircle = function(value) {
+	var status;
+	if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
+		this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, value, 0, true);
+	} else if ((key == "0 - 4" || key == "4 - 0") || (key == "4 - 7" || key == "7 - 4")) {
+		this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", -0.4, false, value, 0, true);
+	} else {
+		this.cmd("connect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0, false, value, 0, true);
+	}
+	this.cmd("Step");
+	this.cmd("show", ".canvas-tooltip");
+	this.cmd("BFSTooltipPos", SPANNING_TREE_X_POS[toEdge], VERTICES_FIXID_Y_POS[toEdge]);
+	this.cmd("BFSStep");
+	var text = "Here form a <y>circle</y>.";
+	this.cmd("BFSTEXT", text);
+	this.cmd("Step");
+	this.cmd("BFSButton", "play");
+	this.cmd("Step");
+	this.cmd("hide", ".canvas-tooltip");
+	this.cmd("Step");
+	this.cmd("DisConnect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, "", 0, true);
+}
+
 
 function play() {
 	$(".user-btn").remove();
 	doPlayPause();
 }
 
-function restat() {
+function restart() {
 	$(".user-btn").remove();
 	location.reload();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 var currentAlg;
 function init() {
 	var animManag = initCanvas();
 	currentAlg = new Kruskal(animManag, canvas.width, canvas.height);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
