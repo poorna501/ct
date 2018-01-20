@@ -304,8 +304,8 @@ Kruskal.prototype.start = function() {
 		}
 	}
 	
-	console.log(visit);
-	console.log(Object.keys(visit));
+	//console.log(visit);
+	//console.log(Object.keys(visit));
 	if (VERTICES_SIZE == 0) { 
 		alertify.alert("Graph is empty!!");
 	} else if (VERTICES_SIZE != Object.keys(visit).length) {
@@ -341,46 +341,79 @@ Kruskal.prototype.sortTheEdges = function() {
 	return this.commands;
 }
 
+
 function kruskalFun() {
-	while(ne < VERTICES_SIZE - 1) {
-		var val = kruskalArr[ne].key.split(" - ");
+	
+	for (i = 0; i < VERTICES_SIZE; i++) {
+		parent[i] = -1;
+	}
+	
+	var i = 0
+	while(ne < VERTICES_SIZE) {
+		var val = kruskalArr[i].key.split(" - ");
 		u = parseInt(val[0]);
 		v = parseInt(val[1]);
-		var min = kruskalArr[ne].val;
-		u=find(u);
-		v=find(v);
+		var min = kruskalArr[i].val;
 		
+		//u = find(u);
+		//v = find(v);
+		//console.log("NE value = ", ne);
+		//console.log("Before u and v values", u, v);
 		
-		if(uni(u,v, min)) {
+		if (checkCycle(u, v, min)) {
 			ne++;
+			i++;
+		//if(uni(u,v, min)) {
+			console.log("After u and v values and min weight", u, v, min);
 			parseInt(mincost += parseInt(min));
-			console.log("u and v values and min weight", u, v, min);
-		}
+		} 
 	}
 	console.log("Minimum cost =" ,mincost);
 }
 
-function find(i) {
-	while(parent[i])
+function checkCycle(i, j, min) {
+	var v1, v2;
+	v1 = i;
+	v2 = j;
+	
+	while(parent[i] > -1)
 		i = parent[i];
-	return i;
-}
-
-function uni(i, j, min) {
-	if(i != j) {
+	while(parent[j] > -1)
+		j = parent[i];
+	
+	console.log("i and j values : ", i. j);
+	
+	if (i != j) {
 		parent[j] = i;
-		finalVertices.push({key: i + " - " + j, val: min});
+		finalVertices.push({key: u + " - " + v, val: min});
+		//printf("%d %d\n", v1, v2);
 		return 1;
 	}
 	return 0;
 }
 
+/*function find(i) {
+	while(parent[i] > -1)	
+		i = parent[i];
+		return i;
+}
+
+function uni(i, j) {
+	if(i != j) {
+		parent[j] = i;
+		return 1;
+	}
+	return 0;
+}*/
+
 Kruskal.prototype.sortEdgeLogic = function() {
 	kruskalArr.sort(function(a, b) { return a.val - b.val});
 	
 	kruskalFun();
+	
 	console.log("original function!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	this.cmd("Step");
+	
 	for (var i = 0; i < kruskalArr.length; i++) {
 		var val = kruskalArr[i].key.split(" - ");
 		fromEdge = parseInt(val[0]);
@@ -388,7 +421,6 @@ Kruskal.prototype.sortEdgeLogic = function() {
 		this.setCirclehighlight();
 		
 		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount]);
-		//this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], colorsArr[usedColorsCount + 1]);
 		this.cmd("Step");
 		this.cmd("CreateRectangle", this.edgeRect[i], kruskalArr[i].key, 40, 25, 450, 85 + (i * 20));
 		this.cmd("CreateRectangle", this.WeightRect[i], kruskalArr[i].val, 40, 25, 491, 85 + (i * 20));
@@ -397,7 +429,6 @@ Kruskal.prototype.sortEdgeLogic = function() {
 		this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
 		this.cmd("SetHighlight", this.WeightRect[i], colorsArr[usedColorsCount + 1]);
 		this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
-		//this.cmd("SETEDGEHIGHLIGHT", this.vertices[fromEdge], this.vertices[toEdge], "");
 		this.cmd("Step");
 		this.cmd("SetHighlight", this.edgeRect[i], "");
 		this.cmd("SetHighlight", this.WeightRect[i], "");
@@ -408,8 +439,6 @@ Kruskal.prototype.sortEdgeLogic = function() {
 		this.cmd("Step");
 	}
 	this.cmd("Step");
-	//this.cmd("show", ".canvas-tooltip");
-	//$(".canvas-tooltip").show();
 	this.cmd("show", ".canvas-tooltip");
 	this.cmd("BFSButton", "play");
 	this.cmd("Step");
@@ -430,6 +459,7 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 	this.cmd("hide", ".canvas-tooltip");
 	if (kruskalArr.length != 0) {
 		this.cmd("Step");
+		
 		for (var i = 0; i < kruskalArr.length; i++) {
 			this.cmd("SetHighlight", this.edgeRect[i], colorsArr[usedColorsCount + 1]);
 			this.cmd("SetHighlight",this.WeightRect[i], colorsArr[usedColorsCount + 1]);
