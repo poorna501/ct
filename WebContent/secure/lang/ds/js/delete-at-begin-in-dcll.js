@@ -1,6 +1,6 @@
 var lang, intro, nodeCount = stepCount = 1;
 
-function deleteAtEndNodeAnimation() { //call the method to start the intro and create some nodes
+function deleteAtBeginNodeAnimation() { //call the method to start the intro and create some nodes
 	lang = getURLParameter("lang");
 	declareNodesWhenFunctionCall("last", "lastVal", "lastInDelMtd", "last");
 	declareNodesWhenFunctionCall("prev", "prevVal", "prevInDelMtd", "prev");
@@ -204,7 +204,7 @@ function introFunction() {
 	});
 	intro.start();
 	$('.introjs-skipbutton, .introjs-prevbutton, .introjs-nextbutton').hide();
-	text = " Here, we will learn <y>Delete At End Node in Doubly Circular Linked List</y>.";
+	text = " Here, we will learn <y>Delete At Begin Node in Doubly Circular Linked List</y>.";
 	typing(".introjs-tooltiptext", text, function() {
 		$('.introjs-nextbutton').show();
 	});
@@ -216,9 +216,6 @@ function deleteAtEnd() {
 				+'\n\t\tprintf("List is Empty,"\n\t\t\t" Deletion is not possible\\n");\n\t}</span>'
 				+'\n}</span>');
 }
-
-
-
 
 function firstEqNull() {
 	$('.user-btn, #btn').remove();;
@@ -346,7 +343,7 @@ function createprevTextAnimation() {
 function repeatLoopStep() {
 	$('.user-btn').remove();
 	text = '<li>Repeat the <y>loop</y> until the <y>last -> next</y> is <y>equal</y> to <y>first</y>.</li> <li>if <y>last -> next</y>'
-			+ ' is not equal to <y>first</y> assign <y>last</y> value to <y>prev</y> and travel the <y>last -> next</y>'
+			+ ' is not equal to <y>first</y>  then travel the <y>last -> next</y>'
 			+ ' to <y>last</y>. </li>'
 	typing('#appendDiv3', text, function() {
 		$('#appendDiv3').after('<div id="appendDiv4"></div>');
@@ -359,71 +356,111 @@ function repeatLoopStepAnimation() {
 	$('.user-btn').remove();
 	if ($('#next' + nodeCount).text().trim() != $("#firstVal").text().trim()) {
 		$('#lastVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-			fadeInBounceEffectWithTimelineMax("#lastVal", "#prevVal", "right", function() {
-				$('#line111').remove();
-				svgAnimatingLineTopToBottom("#animationDiv", "#prev", "#dataDiv" + nodeCount,
-						 "#svgId", "line111", "arrow", false, function() {
-					$('#lastVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-						svgAnimatingLineTopToBottom("#animationDiv", "#last", "#dataDiv" + nodeCount,
-								 "#svgId", "line22", "arrow", false, function() {
-							$('#line22').remove();
-							$('#lastVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-									fadeInBounceEffectWithTimelineMax("#next" + nodeCount, "#lastVal", "bottom", function() {
-											$('#line11').remove();
-											svgAnimatingLineTopToBottom("#animationDiv", "#last", "#dataDiv" + (nodeCount + 1),
-											"#svgId", "line11", "arrow", false, function() {
-												nodeCount++;
-												repeatLoopStepAnimation()
-											});
-									});
-							});
+			svgAnimatingLineTopToBottom("#animationDiv", "#last", "#dataDiv" + nodeCount,
+					 "#svgId", "line22", "arrow", false, function() {
+				$('#line22').remove();
+				$('#lastVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+					fadeInBounceEffectWithTimelineMax("#next" + nodeCount, "#lastVal", "bottom", function() {
+						$('#line11').remove();
+						svgAnimatingLineTopToBottom("#animationDiv", "#last", "#dataDiv" + (nodeCount + 1),
+							"#svgId", "line11", "arrow", false, function() {
+							nodeCount++;
+							repeatLoopStepAnimation()
 						});
 					});
 				});
 			});
 		});
 	} else {
-		text = '<li>Here the <y>last -> next</y> (<y>'+ $('#next' + nodeCount).text() +'</y>) is equal to <y>first</y>'
-				+ ' so assign the <y>next</y> field of <y>prev</y> to <y>first</y> and also assign the <y>prev -> first</y> '
-				+ ' to <y>prev</y></li>'	
+		text = '<li>Here the <y>last -> next</y> (<y>'+ $('#next' + nodeCount).text() +'</y>) is equal to <y>first</y> ' +
+				'so assign the <y>next</y> field of <y>first</y> value to the <y>next</y> field of <y>last</y>, '
 		typing('#appendDiv4', text, function() {
 			$('.next-div:last').addClass('blinkingRed');
 			$('#appendDiv4').after('<div id="appendDiv31"></div>');
-			appendNextBtn('.introjs-tooltipbuttons', 'assignNullToPrev');
+			appendNextBtn('.introjs-tooltipbuttons', 'firstNxtToPrevNext')
 			$('.introjs-tooltip').scrollTo('.user-btn', 500);
 		});
 	}
 }
 
-function assignNullToPrev() {
+function firstNxtToPrevNext() {
 	$('.user-btn').remove();
 	$('.next-div:last').removeClass('blinkingRed');
-	$('#prevVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-		svgAnimatingLineTopToBottom("#animationDiv", "#prev", "#dataDiv" + (nodeCount - 1),
-			 "#svgId", "line22", "arrow", false, function() {
-			$('#line22').remove();
-			$('#next' + (nodeCount - 1)).parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-				$('#next' + (nodeCount - 1)).addClass('opacity00').text($("#firstVal").text().trim().trim());
-				zoomInEffect('#next' + (nodeCount - 1), function() {
-					$('#line' + nodeCount + ', #line1' + nodeCount).remove();
-					setTimeout(function() {
-						$('#firstVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-							svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1",
-									 "#svgId", "line22", "arrow", true, function() {
-								$('#line22').remove();
-								$('#prev1').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-									$('#prev1').addClass('opacity00').text($("#prevVal").text().trim().trim());
-									zoomInEffect('#prev1', function() {
-										svgCurveUpper('#nextDiv1', '#prevDiv1', "pUpLine2");
-										svgCurveDown('#prevDiv1', '#nextDiv1', "pDownLine2");
-										appendNextBtn('.introjs-tooltipbuttons', 'printAndDeleteNodeText');
+	$('#firstVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+		svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1","#svgId", "dummyLine", "arrow", true, function() {
+			$("#dummyLine").remove();
+			$('#nextDiv1').effect( "highlight",{color: 'yellow'}, 600, function() {
+				$('#nextDiv1').addClass("black");
+				$('#lastVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+					svgAnimatingLineTopToBottom("#animationDiv", "#last", "#dataDiv2","#svgId", "dummyLine", "arrow", true, function() {
+						$("#dummyLine").remove();
+						$('#nextDiv2').effect( "highlight",{color: 'yellow'}, 600, function() {
+							$('#nextDiv2').addClass("black");
+							fadeInBounceEffectWithTimelineMax("#next1", "#next2", "left", function() {
+								$("#pUpLine1").remove();
+								svgCurveUpper('#nextDiv2', '#prevDiv2', "pUpLine3");
+								$('#nextDiv1, #nextDiv2').removeClass("black");
+								appendNextBtn('.introjs-tooltipbuttons', 'lastTofirstNxtPrev')
+								$('.introjs-tooltip').scrollTo('.user-btn', 500);
+							});
+						});
+					});
+				});
+			});
+		});
+	});
+}
+
+function lastTofirstNxtPrev() {
+	$(".user-btn").remove();
+	text = 'Assign the <y>last</y> (<y>'+ $("#lastVal").text() +'</y>) value to <y>first -> next -> prev</y>.';
+	typing('#appendDiv31', text, function() {
+		$('#appendDiv31').after('<div id="appendDiv32"></div>');
+		$('.introjs-tooltipbuttons').append('<a class="introjs-button user-btn">Next &#8594;</a>');
+		$(".user-btn").click(function() {
+			$(".user-btn").remove();	
+			$('#lastVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+				$('#lastVal').parent().addClass("black");
+				$('#firstVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+					svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1","#svgId", "dummyLine", "arrow", true, function() {
+						$("#dummyLine").remove();
+						$('#nextDiv1').effect( "highlight",{color: 'yellow'}, 600, function() {
+							$('#nextDiv1').addClass("black");
+							svgAnimatingLineRightToLeft("#animationDiv", "#nextDiv1", "#prevDiv2","#svgId", "dummyLine", "arrow", false, function() {
+								$('#nextDiv1').removeClass("black");
+								$("#dummyLine").remove();
+								$('#prevDiv2').effect( "highlight",{color: 'yellow'}, 600, function() {
+									$('#prevDiv2').addClass("black");
+									fadeInBounceEffectWithTimelineMax("#lastVal", "#prev2", "left", function() {
+										$("#line12").remove();
+										svgCurveDown('#nextDiv2', '#prevDiv2', "pDownLine3");
+										$('#firstDiv, #prevDiv2').removeClass("black");
+										$('#lastVal').parent().removeClass("black");
+										appendNextBtn('.introjs-tooltipbuttons', 'firstNextToFirst')
 										$('.introjs-tooltip').scrollTo('.user-btn', 500);
 									});
 								});
 							});
 						});
-						
-					},1000);
+					});
+				});
+			});
+		});
+	});
+}
+
+function firstNextToFirst() {
+	$(".user-btn").remove();
+	var text = 'Assign the <y>next</y> field of <y>first</y> value (<y>'+ $('#next1').text() +'</y>) to <y>first</y>.';
+	typing('#appendDiv32', text, function() {
+		$('#appendDiv31').after('<div id="appendDiv33"></div>');
+		$('.introjs-tooltipbuttons').append('<a class="introjs-button user-btn">Next &#8594;</a>');
+		$(".user-btn").click(function() {
+			$(".user-btn").remove();
+			$('#firstVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+				$('#firstVal').addClass("black");
+				svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1","#svgId", "dummyLine", "arrow", true, function() {
+					$("#dummyLine").remove();
 				});
 			});
 		});
@@ -449,17 +486,6 @@ function firstNextToFirstAnimation() {
 			appendNextBtn('.introjs-tooltipbuttons', 'printAndDeleteNodeText');
 			$('.introjs-tooltip').scrollTo('.user-btn', 500);
 		});
-		/*svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#dataDiv1",
-				 "#svgId", "line21", "arrow", false, function() {
-			$('#line21').remove();
-			$('#next1').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-				fadeInBounceEffectWithTimelineMax("#next1", "#firstVal", "left", function() {
-					$('#line1').remove();
-					appendNextBtn('.introjs-tooltipbuttons', 'printAndDeleteNodeText');
-					$('.introjs-tooltip').scrollTo('.user-btn', 500);
-				});
-			});
-		});*/
 	});
 }
 
@@ -513,6 +539,7 @@ function multipleNodes() {
 		$("#prev1, #next2").text($('.data-address:first').text()).removeClass("opacity00");
 		//$("#next2").text("NULL").removeClass("opacity00");
 		regenerateArrows(true);
+		$("#prev2").text($("#dataAddress1").text());
 		
 		svgCurveUpper('#nextDiv' + ($('.nodes').length),  '#prevDiv1', "pUpLine1");
 		svgCurveDown('#prevDiv1', '#nextDiv' +  ($('.nodes').length), "pDownLine1");
