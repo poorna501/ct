@@ -114,12 +114,14 @@ function introFunction() {
 						appendSteps(3);
 						var text = '<ul><ul><li>If it is <brown>FALSE</brown>, then define another tempary node <g>prev</g>.</li>'
 									+ '<li>Repeat the loop until the <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>first</g>.</li> '
-									+ '<li>if the <g>next</g> field of <g>last</g> is <brown>not equal</brown> to <g>first</g> assign a <g>last</g> to'
-									+ ' <g>prev</g> and also travel the <g>next</g> field of <g>last</g> to <g>last</g></li>'
-									+ '<li>if <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>first</g>, assign <g>first</g> value to'
-									+ ' the  <g>next</g> field of <g>prev</g> and also assign the <g>last</g> value to the <g>prev</g> field of '
-									+ '<g>first</g> node, then print the <g>data</g> field of <g>last</g> and '
-									+ 'delete the <g>last</g> node and terminate the function.<span id="btn"></span></li></ul></ul>';
+									+ '<li>if the <g>next</g> field of <g>last</g> is <brown>not equal</brown> to <g>first</g> then '
+									+ ' travel the <g>next</g> field of <g>last</g> to <g>last</g></li>'
+									+ '<li>if <g>next</g> field of <g>last</g> is <brown>equal</brown> to <g>first</g>.</li>'
+									+ ' <li>Assign the <g>next</g> field of <g>first</g> value to'
+									+ ' the  <g>next</g> field of <g>last</g>.</li> <li>Assign the <g>last</g> value to the <g>prev</g> of <g>next</g>'
+									+ ' field of <g>first</g> node.</li> <li>Also assign the <g>next</g> field of <g>first</g> to <g>first</g>.</li> '
+									+ '<li>Then print the <g>data</g> field of <g>last</g> and '
+									+ 'delete the <g>last</g> node and terminate the function.<span id="btn"></span></li></li></ul></ul>';
 						intro.refresh();
 						$('#stepDes3').html(text).addClass('opacity00');
 						$('#algorithmStepsDiv').scrollTo('ul li:last', 500);
@@ -139,7 +141,7 @@ function introFunction() {
 				var animateStep = intro._introItems[intro._currentStep].animateStep;
 				switch(animateStep) {
 					case "firstCon" :
-						deleteAtEnd();
+						deleteAtBegin();
 						$('#parentPre').removeClass('opacity00');
 						$('#algorithmStepsDiv ul:first').effect( "highlight",{color: 'yellow'}, 600, function() {
 							transferEffect('#algorithmStepsDiv ul:first','#ifFirstEqNull', function() {
@@ -173,12 +175,12 @@ function introFunction() {
 					case "threeCon" :
 						$('#algorithmStepsDiv ul:last').effect( "highlight",{color: 'yellow'}, 600, function() {
 							$('#secondElseCon').append('<span id="elseBlock1" class="opacity00"> else {\n'
-									+ '\t\t\t\twhile (<brown>last -> next != NULL</brown>) {\n'
-									+ '\t\t\t\t\tprev = last;\n'
+									+ '\t\t\t\twhile (<brown>last -> next != first</brown>) {\n'
 									+ '\t\t\t\t\tlast = last -> next;\n'
 									+ '\t\t\t\t}\n'
-									+ '\t\t\t\tprev -> next = first;\n'
-									+ '\t\t\t\tfirst -> prev = prev;\n'
+									+ '\t\t\t\tlast -> next = first -> next;\n'
+									+ '\t\t\t\tfirst -> next -> prev = last;\n'
+									+ '\t\t\t\tfirst = first -> next;\n'
 									+ '\t\t\t}</span>');
 							transferEffect('#algorithmStepsDiv ul:last','#elseBlock1', function() {
 								$('#parentPre').scrollTo('#print', 500);
@@ -210,8 +212,8 @@ function introFunction() {
 	});
 } 
 
-function deleteAtEnd() {
-	$('#parentPre').append('<span id="funName">node <g>deleteAtEnd()</g> { '
+function deleteAtBegin() {
+	$('#parentPre').append('<span id="funName">node <g>deleteAtBegin()</g> { '
 				+ '\n\t<span id="ifFirstEqNull" class="opacity00"> if (<brown>first == NULL</brown>) {'
 				+'\n\t\tprintf("List is Empty,"\n\t\t\t" Deletion is not possible\\n");\n\t}</span>'
 				+'\n}</span>');
@@ -320,7 +322,6 @@ function createprevText() {
 		$('#appendDiv2').after('<div id="appendDiv3"></div>')
 		appendNextBtn('.introjs-tooltipbuttons', 'createprevTextAnimation');
 		$('.introjs-tooltip').scrollTo('.user-btn', 500);
-
 	});
 }
 
@@ -376,7 +377,7 @@ function repeatLoopStepAnimation() {
 				'so assign the <y>next</y> field of <y>first</y> value to the <y>next</y> field of <y>last</y>, '
 		typing('#appendDiv4', text, function() {
 			$('.next-div:last').addClass('blinkingRed');
-			$('#appendDiv4').after('<div id="appendDiv31"></div>');
+			$('#appendDiv4').after('<div id="appendDiv41"></div>');
 			appendNextBtn('.introjs-tooltipbuttons', 'firstNxtToPrevNext')
 			$('.introjs-tooltip').scrollTo('.user-btn', 500);
 		});
@@ -413,9 +414,9 @@ function firstNxtToPrevNext() {
 
 function lastTofirstNxtPrev() {
 	$(".user-btn").remove();
-	text = 'Assign the <y>last</y> (<y>'+ $("#lastVal").text() +'</y>) value to <y>first -> next -> prev</y>.';
-	typing('#appendDiv31', text, function() {
-		$('#appendDiv31').after('<div id="appendDiv32"></div>');
+	text = '<li>Assign the <y>last</y> (<y>'+ $("#lastVal").text() +'</y>) value to <y>first -> next -> prev</y>.</li>';
+	typing('#appendDiv41', text, function() {
+		$('#appendDiv41').after('<div id="appendDiv32"></div>');
 		$('.introjs-tooltipbuttons').append('<a class="introjs-button user-btn">Next &#8594;</a>');
 		$(".user-btn").click(function() {
 			$(".user-btn").remove();	
@@ -433,7 +434,8 @@ function lastTofirstNxtPrev() {
 									$('#prevDiv2').addClass("black");
 									fadeInBounceEffectWithTimelineMax("#lastVal", "#prev2", "left", function() {
 										$("#line12").remove();
-										svgCurveDown('#nextDiv2', '#prevDiv2', "pDownLine3");
+										$("#pDownLine1").remove();
+										svgCurveDown('#prevDiv2', '#nextDiv2', "pDownLine3");
 										$('#firstDiv, #prevDiv2').removeClass("black");
 										$('#lastVal').parent().removeClass("black");
 										appendNextBtn('.introjs-tooltipbuttons', 'firstNextToFirst')
@@ -451,16 +453,22 @@ function lastTofirstNxtPrev() {
 
 function firstNextToFirst() {
 	$(".user-btn").remove();
-	var text = 'Assign the <y>next</y> field of <y>first</y> value (<y>'+ $('#next1').text() +'</y>) to <y>first</y>.';
+	var text = '<li>Assign the <y>next</y> field of <y>first</y> value (<y>'+ $('#next1').text() +'</y>) to <y>first</y>.</li>';
 	typing('#appendDiv32', text, function() {
-		$('#appendDiv31').after('<div id="appendDiv33"></div>');
+		$('#appendDiv32').after('<div id="appendDiv31"></div>');
 		$('.introjs-tooltipbuttons').append('<a class="introjs-button user-btn">Next &#8594;</a>');
 		$(".user-btn").click(function() {
 			$(".user-btn").remove();
 			$('#firstVal').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
-				$('#firstVal').addClass("black");
 				svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#prevDiv1","#svgId", "dummyLine", "arrow", true, function() {
 					$("#dummyLine").remove();
+					$('#next1').parent().effect( "highlight",{color: 'yellow'}, 600, function() {
+						$('#next1').parent().addClass("black");
+						fadeInBounceEffectWithTimelineMax("#firstVal", "#next1", "left", function() {
+							$('#next1').parent().removeClass("black");
+							appendNextBtn('.introjs-tooltipbuttons', 'printAndDeleteNodeText');
+						});
+					});
 				});
 			});
 		});
@@ -492,15 +500,15 @@ function firstNextToFirstAnimation() {
 function printAndDeleteNodeText() {
 	$('.user-btn').remove();
 	if (lang != 'cpp') {
-		var text = '<li>Print the <y>last -> data</y> (i.e <y>'+ $('#data' + nodeCount).text() +'</y>) and '
+		var text = '<li>Print the <y>last -> data</y> (i.e <y>'+ $('#data1').text() +'</y>) and '
 		+ ' <y>delete</y> the <y>last</y> node i.e (<y>'+ $('#lastVal').text() +'</y>).</li>'	
 	} else {
-		var text = '<li>Print the <y>last -> data</y> (i.e <y>'+ $('#data' + nodeCount).text() +'</y>) and '
+		var text = '<li>Print the <y>last -> data</y> (i.e <y>'+ $('#data1').text() +'</y>) and '
 		+ ' <y>delete</y> the <y>last</y> node i.e (<y>'+ $('#lastVal').text() +'</y>) and also return the <y>last</y> node.</li>'
 	}
 	typing('#appendDiv31', text, function() {
 		$('#appendDiv31').after('<div id="appendDiv4"></div>')
-		$('#dataDiv'+nodeCount +', #nextDiv'+ nodeCount + ', #prevDiv' + nodeCount).addClass('blinkingRed');
+		$('#dataDiv1, #nextDiv1, #prevDiv1').addClass('blinkingRed');
 		appendNextBtn('.introjs-tooltipbuttons', 'printAndDeleteNodeAnimation');
 		$('.introjs-tooltip').scrollTo('.user-btn', 500);
 	});
@@ -508,9 +516,14 @@ function printAndDeleteNodeText() {
 
 function printAndDeleteNodeAnimation() {
 	$('.user-btn, #btn').remove();
-	TweenMax.to("#node" + nodeCount, 0.5, { top : -80, onComplete: function() {
-		$("#node"+ nodeCount +", #line11, #pUpLine1, #pDownLine1").remove();
-		$('#dataDiv'+nodeCount +', #nextDiv'+ nodeCount + ', #prevDiv' + nodeCount).removeClass('blinkingRed');
+	TweenMax.to("#node1", 0.5, { top : -80, onComplete: function() {
+		$("#node1, #line11, #pUpLine1, #pDownLine1").remove();
+		changeIdsAtBegin();
+		if (nodeCount > 1) {
+			$("line, polyline").remove();
+			regenerateArrows(true);
+		}
+		$('#dataDiv1, #nextDiv1, #prevDiv1').removeClass('blinkingRed');
 		$('#last').addClass('opacity00');
 		introNextSteps('#algorithmStepsDiv', 'Step' + stepCount);
 		$('.introjs-nextbutton').show();
@@ -537,12 +550,8 @@ function multipleNodes() {
 			$('#line' + i).css('opacity', '1');
 		}
 		$("#prev1, #next2").text($('.data-address:first').text()).removeClass("opacity00");
-		//$("#next2").text("NULL").removeClass("opacity00");
 		regenerateArrows(true);
 		$("#prev2").text($("#dataAddress1").text());
-		
-		svgCurveUpper('#nextDiv' + ($('.nodes').length),  '#prevDiv1', "pUpLine1");
-		svgCurveDown('#prevDiv1', '#nextDiv' +  ($('.nodes').length), "pDownLine1");
 		appendNextBtn('.introjs-tooltipbuttons', 'applyBesideStep');
 	},500);
 }
@@ -572,6 +581,8 @@ function regenerateArrows(flag) {
 					"#svgId", "line1"+ i +"", "arrow", false);
 		}
 	}
+	svgCurveUpper('#nextDiv' + ($('.nodes').length),  '#prevDiv1', "pUpLine1");
+	svgCurveDown('#prevDiv1', '#nextDiv' +  ($('.nodes').length), "pDownLine1");
 }
 
 function changeIds1(elementParent, idAttr) {
@@ -586,9 +597,11 @@ function changeIdsAtBegin(callBackFunction) {
 	      $(this).attr("id", "node"+ (index + 1));
 	}); 
 	changeIds1($("#dynamicNodes .data-nodes"), "nodeData");
+	changeIds1($("#dynamicNodes .prev-div"), "prevDiv");
 	changeIds1($("#dynamicNodes .data-div"), "dataDiv");
 	changeIds1($("#dynamicNodes .next-div"), "nextDiv");
 	changeIds1($("#dynamicNodes .data-address"), "dataAddress");
+	changeIds1($("#dynamicNodes .prev-span"), "prev");
 	changeIds1($("#dynamicNodes .data-span"), "data");
 	changeIds1($("#dynamicNodes .next-span"), "next");
 	if (typeof callBackFunction === "function") {
