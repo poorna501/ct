@@ -278,6 +278,16 @@ bwBg {
 	width: 21px;
 	padding: 5px 4px;
 }
+
+polyline {
+	fill: transparent;
+	stroke: red;
+	stroke-width: 4;
+}
+
+.black {
+	background-color: black;
+}
 	
 </style>
 </head>
