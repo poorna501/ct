@@ -84,7 +84,6 @@ function introGuide() {
 							popover('#startBtnDiv','top', text, function() {
 								$("#addEdgeBtn").attr("disabled", "disabled");
 								events("#edgeWeight");
-								
 							});
 						});
 					});
@@ -161,27 +160,3 @@ function events(selector) {
 		}
 	});
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
