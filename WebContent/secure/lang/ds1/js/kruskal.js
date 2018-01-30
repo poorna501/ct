@@ -1,18 +1,22 @@
 var cost = [], parent = [];
-var ne, mincost,fnMap;
-ne = mincost = fnMap = 0;
+var ne, mincost,fnMap, count;
+ne = mincost = fnMap = count = 0;
 
 
 
 var MAX_VERTICES_SIZE = 8;
 var VERTICES_SIZE = index = SPANNINGTREE_SIZE = usedColorsCount = tooltipCount = 0; 
 
+var elist = {};
+var spanlist = {};
+var tempArr = [];
+
 var kruskalArr= [];
 var edgesMap = {};
 var edgeWeight = {};
 var adjMap = {};
 var visitedVertices = {};
-var finalVertices = [];
+var spanTreelist = [];
 var flag = false;
 var total_min_cost = 0;
 
@@ -193,6 +197,10 @@ Kruskal.prototype.edge = function() {
 			this.removeCircleColor();
 			edgeWeight[fromEdge + " - " + toEdge] = $("#edgeWeight").val();
 			kruskalArr.push({key: fromEdge + " - " + toEdge, val: $("#edgeWeight").val()});
+			
+			tempArr.push({u: fromEdge, v: toEdge, w: $("#edgeWeight").val()});
+			elist["data"] = tempArr;
+			
 			edgesMap[fromEdge + " - " + toEdge] = true;
 			index++;
 		}
@@ -341,78 +349,69 @@ Kruskal.prototype.sortTheEdges = function() {
 	return this.commands;
 }
 
+function sort() {
+     var i, j;
+    var temp;
+    
+    for(i = 1; i < VERTICES_SIZE; i++)
+        for(j = 0; j < VERTICES_SIZE-1; j++)
+            if(parseInt(elist.data[j].w) > parseInt(elist.data[j + 1].w))
+            {
+                temp = elist.data[j];
+                elist.data[j] = elist.data[j + 1];
+                elist.data[j + 1] = temp;
+            }
+}
+
 
 function kruskalFun() {
-	
+	sort();
 	for (i = 0; i < VERTICES_SIZE; i++) {
-		parent[i] = -1;
+		parent[i] = i;
 	}
-	
-	var i = 0
-	while(ne < VERTICES_SIZE) {
-		var val = kruskalArr[i].key.split(" - ");
-		u = parseInt(val[0]);
-		v = parseInt(val[1]);
-		var min = kruskalArr[i].val;
-		
-		//u = find(u);
-		//v = find(v);
-		//console.log("NE value = ", ne);
-		//console.log("Before u and v values", u, v);
-		
-		if (checkCycle(u, v, min)) {
-			ne++;
-			i++;
-		//if(uni(u,v, min)) {
-			console.log("After u and v values and min weight", u, v, min);
-			parseInt(mincost += parseInt(min));
-		} 
-	}
-	console.log("Minimum cost =" ,mincost);
+    spanlist.n = 0;
+	tempArr = [];
+    for(i = 0; i < VERTICES_SIZE; i++) {
+            cno1 = find(parent,elist.data[i].u);
+            cno2 = find(parent,elist.data[i].v);
+            if(cno1 != cno2)
+            {
+            	tempArr.push(elist.data[i]);
+            	spanlist["data"] = tempArr;
+                spanlist.n = spanlist.n+1;
+                union1(parent,cno1,cno2);
+            }
+        }
+	//console.log("Minimum cost =" ,mincost);
 }
 
-function checkCycle(i, j, min) {
-	var v1, v2;
-	v1 = i;
-	v2 = j;
-	
-	while(parent[i] > -1)
-		i = parent[i];
-	while(parent[j] > -1)
-		j = parent[i];
-	
-	console.log("i and j values : ", i. j);
-	
-	if (i != j) {
-		parent[j] = i;
-		finalVertices.push({key: u + " - " + v, val: min});
-		//printf("%d %d\n", v1, v2);
-		return 1;
-	}
-	return 0;
+function print()
+{
+    let i,cost=0;
+    
+    for(i = 0; i < spanlist.n; i++)
+    {
+        console.log(spanlist.data[i].v,spanlist.data[i].u,spanlist.data[i].w);
+        cost=cost+spanlist.data[i].w;
+    }
+ 
+    console.log("\n\nCost of the spanning tree = ",cost);
 }
 
-/*function find(i) {
-	while(parent[i] > -1)	
-		i = parent[i];
-		return i;
+function find(parent, vertexno) {
+    return(parent[vertexno]);
 }
-
-function uni(i, j) {
-	if(i != j) {
-		parent[j] = i;
-		return 1;
-	}
-	return 0;
-}*/
+ 
+function union1(parent, c1, c2) {
+    var i;
+    for(i = 0; i <  VERTICES_SIZE; i++)
+        if(parent[i] == c2)
+        	parent[i] = c1;
+}
 
 Kruskal.prototype.sortEdgeLogic = function() {
 	kruskalArr.sort(function(a, b) { return a.val - b.val});
-	
 	kruskalFun();
-	
-	console.log("original function!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	this.cmd("Step");
 	
 	for (var i = 0; i < kruskalArr.length; i++) {
 		var val = kruskalArr[i].key.split(" - ");
@@ -465,6 +464,7 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 			this.cmd("SetHighlight",this.WeightRect[i], colorsArr[usedColorsCount + 1]);
 			this.cmd("Step");
 			this.cmd("Step");
+			
 			var val = kruskalArr[i].key.split(" - ");
 			var key = kruskalArr[i].key;
 			fromEdge = parseInt(val[0]);
@@ -485,12 +485,14 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 			this.cmd("Step");
 			this.cmd("Step");
 			
-			if (fnMap < finalVertices.length) {
-				var splitVal = finalVertices[fnMap].key.split(" - ");
+			if (fnMap < spanlist.n) {
+				/*var splitVal = spanTreelist[fnMap].key.split(" - ");
 				finalFromEdge = parseInt(splitVal[0]);
-				finalToEdge = parseInt(splitVal[1]);
+				finalToEdge = parseInt(splitVal[1]);*/
 				
-				if ((fromEdge == finalFromEdge) && (toEdge == finalToEdge)) {
+				console.log("Kruskals values fromE & toE", fromEdge, toEdge);
+				console.log("spanlist values v & u", spanlist.data[fnMap].v, spanlist.data[fnMap].u);
+				if ((fromEdge == spanlist.data[fnMap].u) && (toEdge == spanlist.data[fnMap].v)) {
 					visitedVertices[fromEdge] = "1";
 					visitedVertices[toEdge] = "1";
 					if ((key == "0 - 3" || key == "3 - 0") || (key == "3 - 7" || key == "7 - 3")) {
