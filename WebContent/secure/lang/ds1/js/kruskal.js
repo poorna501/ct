@@ -2,21 +2,18 @@ var cost = [], parent = [];
 var ne, mincost,fnMap, count;
 ne = mincost = fnMap = count = 0;
 
-
-
 var MAX_VERTICES_SIZE = 8;
 var VERTICES_SIZE = index = SPANNINGTREE_SIZE = usedColorsCount = tooltipCount = 0; 
 
 var elist = {};
 var spanlist = {};
 var tempArr = [];
-
+var spanListArr = [];
 var kruskalArr= [];
 var edgesMap = {};
 var edgeWeight = {};
 var adjMap = {};
 var visitedVertices = {};
-var spanTreelist = [];
 var flag = false;
 var total_min_cost = 0;
 
@@ -84,7 +81,6 @@ Kruskal.prototype.setup = function() {
 		this.WeightRect[i] = this.nextIndex++;
 		this.spanningTreeVertices[i] = this.nextIndex++;
 	}
-	
 	this.ADJACENT_TABLE_HORIZONTAL_LINE = this.nextIndex++;
 	this.ADJACENT_TABLE_VERTICAL_LINE = this.nextIndex++;
 	this.CURRENT_INDEX_LABEL = this.nextIndex++;
@@ -99,7 +95,6 @@ Kruskal.prototype.vertexCallback = function(event) {
 	if($(".btn").is(":disabled")) {
 		return;
 	}
-	
 	if (VERTICES_SIZE < MAX_VERTICES_SIZE) {
 		this.implementAction(this.vertex.bind(this), "");
 	} else {
@@ -141,7 +136,6 @@ Kruskal.prototype.startCallback = function(event) {
 	if($(".btn").is(":disabled")) {
 		return;
 	}
-	console.log("Hello Start Btn");
 	this.implementAction(this.start.bind(this), "");
 }
 
@@ -149,7 +143,6 @@ Kruskal.prototype.testCallback = function(event) {
 	if ($(".btn").is(":disabled")) {
 		return;
 	}
-	console.log("Hello test Btn");
 	this.implementAction(this.testing.bind(this), "");
 } 
 
@@ -197,15 +190,12 @@ Kruskal.prototype.edge = function() {
 			this.removeCircleColor();
 			edgeWeight[fromEdge + " - " + toEdge] = $("#edgeWeight").val();
 			kruskalArr.push({key: fromEdge + " - " + toEdge, val: $("#edgeWeight").val()});
-			
 			tempArr.push({u: fromEdge, v: toEdge, w: $("#edgeWeight").val()});
 			elist["data"] = tempArr;
-			
 			edgesMap[fromEdge + " - " + toEdge] = true;
 			index++;
 		}
 	} else {
-		//tooltipCount++; 
 		display_Prompt();
 	}
 	return this.commands;
@@ -224,8 +214,6 @@ function display_Prompt() {
 
 Kruskal.prototype.testing = function() {
 	this.commands = new Array();
-	console.log("testing");
-	
 	if ($("#fromID .active").text() != "" && $("#toID .active").text() != "" && $("#edgeWeight").val() != "") {
 		if (Number.isInteger(parseInt($("#edgeWeight").val()))) {
 			if (parseInt($("#edgeWeight").val()) <= 0) {
@@ -312,8 +300,6 @@ Kruskal.prototype.start = function() {
 		}
 	}
 	
-	//console.log(visit);
-	//console.log(Object.keys(visit));
 	if (VERTICES_SIZE == 0) { 
 		alertify.alert("Graph is empty!!");
 	} else if (VERTICES_SIZE != Object.keys(visit).length) {
@@ -340,7 +326,6 @@ Kruskal.prototype.sortTheEdges = function() {
 	var text = "Order the <y>edge</y> weights by <y>ascending</y> order.";
 	this.cmd("BFSTEXT", text);
 	this.cmd("Step");
-	//tooltipCount++;
 	this.cmd("BFSButton", "play");
 	this.cmd("Step");
 	this.cmd("hide", ".canvas-tooltip");
@@ -353,8 +338,8 @@ function sort() {
      var i, j;
     var temp;
     
-    for(i = 1; i < VERTICES_SIZE; i++)
-        for(j = 0; j < VERTICES_SIZE-1; j++)
+    for(i = 1; i < kruskalArr.length; i++)
+        for(j = 0; j < kruskalArr.length - 1; j++)
             if(parseInt(elist.data[j].w) > parseInt(elist.data[j + 1].w))
             {
                 temp = elist.data[j];
@@ -363,38 +348,32 @@ function sort() {
             }
 }
 
-
 function kruskalFun() {
 	sort();
 	for (i = 0; i < VERTICES_SIZE; i++) {
 		parent[i] = i;
 	}
     spanlist.n = 0;
-	tempArr = [];
-    for(i = 0; i < VERTICES_SIZE; i++) {
+    spanListArr = [];
+    for(i = 0; i < kruskalArr.length; i++) {
             cno1 = find(parent,elist.data[i].u);
             cno2 = find(parent,elist.data[i].v);
             if(cno1 != cno2)
             {
-            	tempArr.push(elist.data[i]);
-            	spanlist["data"] = tempArr;
+            	spanListArr.push(elist.data[i]);
+            	spanlist["data"] = spanListArr;
                 spanlist.n = spanlist.n+1;
                 union1(parent,cno1,cno2);
             }
         }
-	//console.log("Minimum cost =" ,mincost);
 }
 
-function print()
-{
+function print() {
     let i,cost=0;
-    
-    for(i = 0; i < spanlist.n; i++)
-    {
+    for(i = 0; i < spanlist.n; i++) {
         console.log(spanlist.data[i].v,spanlist.data[i].u,spanlist.data[i].w);
         cost=cost+spanlist.data[i].w;
     }
- 
     console.log("\n\nCost of the spanning tree = ",cost);
 }
 
@@ -486,12 +465,9 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 			this.cmd("Step");
 			
 			if (fnMap < spanlist.n) {
-				/*var splitVal = spanTreelist[fnMap].key.split(" - ");
-				finalFromEdge = parseInt(splitVal[0]);
-				finalToEdge = parseInt(splitVal[1]);*/
-				
 				console.log("Kruskals values fromE & toE", fromEdge, toEdge);
 				console.log("spanlist values v & u", spanlist.data[fnMap].v, spanlist.data[fnMap].u);
+				
 				if ((fromEdge == spanlist.data[fnMap].u) && (toEdge == spanlist.data[fnMap].v)) {
 					visitedVertices[fromEdge] = "1";
 					visitedVertices[toEdge] = "1";
@@ -534,7 +510,6 @@ Kruskal.prototype.drawMinSpanningTree = function() {
 		this.cmd("Step");
 		this.cmd("hide", ".canvas-tooltip");
 		this.cmd("Step");
-		
 	} else {
 		console.log("Hello Poorna!!!!!!");
 	}
@@ -563,7 +538,6 @@ Kruskal.prototype.formCircle = function(value) {
 	this.cmd("DisConnect", this.spanningTreeVertices[fromEdge], this.spanningTreeVertices[toEdge], "#e62e00", 0.4, false, "", 0, true);
 }
 
-
 function play() {
 	$(".user-btn").remove();
 	doPlayPause();
@@ -579,23 +553,3 @@ function init() {
 	var animManag = initCanvas();
 	currentAlg = new Kruskal(animManag, canvas.width, canvas.height);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
