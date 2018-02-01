@@ -310,7 +310,7 @@ polyline {
 							<div class='col-xs-6' style='padding: 2px;'>
 								<div class='col-xs-12 box-border algorithm-steps-Div opacity00 padding00' id='algorithmStepsDiv'></div>
 							</div>
-							<div class='col-xs-6 padding00''>
+							<div class='col-xs-6 padding00'>
 								<pre class="creamPreTab opacity00 box-border" id="parentPre"></pre>
 							</div>
 						</div>

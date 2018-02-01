@@ -274,32 +274,40 @@ function multipleNodes() {
 	for (var i = 1; i < 4; i++ ) {
 		createDynamicNodes(i);
 	}
-	$('#dynamicNodes .next-span:last').text('NULL');
-	$('#dynamicNodes .next-span:first').text($('.data-address').eq(1).text());
-	$('#dynamicNodes .next-span').eq(1).text($('.data-address').eq(2).text());
-	regenerateArrows(true);
+	intro.refresh();
+	$('#firstNode').removeClass('opacity00');
+	
 	setTimeout(function() {
-		$('#firstNode').removeClass('opacity00')
 		$('#firstVal').text($('.data-address:first').text());
 		for (var i = 1; i <= $('#dynamicNodes .nodes').length; i++ ) {
+			$("#prev" + (i + 1)).text($("#dataAddress" + (i)).text()).removeClass("opacity00");			
 			$('#data' + i).text(i+'0').removeClass('opacity00');
 			$('#node'+ i).removeClass('opacity00');
 			$('#line' + i).css('opacity', '1');
 		}
+		$("#prev1").text($("#dataAddress3").text()).removeClass("opacity00");
+		$("#next3").text($("#dataAddress1").text()).removeClass("opacity00");
+		//$("#next2").text("NULL").removeClass("opacity00");
+		regenerateArrows(true);
 		appendNextBtn('.introjs-tooltipbuttons', 'tempEqNull');
+		appendNextBtn('.introjs-tooltipbuttons', 'lastNodeAnimation');
 	},500);
 }
 
 function regenerateArrows(flag) {
 	for (var i = 1; i <= $('#dynamicNodes .nodes').length; i++) {
 		if (i == 1) {
-			svgAnimatingLineRightToLeft("#animationDiv", "#firstDiv", "#dataDiv1",
+			svgAnimatingLineBottomToTop("#animationDiv", "#firstDiv", "#prevDiv1",
 					"#svgId", "line"+ i +"", "arrow", flag);
 		} else {
-			svgAnimatingLineRightToLeft("#animationDiv", "#nextDiv"+ (i - 1) +"", "#dataDiv"+ (i) +"",
+			svgAnimatingLineRightToLeft("#animationDiv", "#nextDiv"+ (i - 1) +"", "#prevDiv"+ (i) +"",
 					"#svgId", "line"+ i +"", "arrow", flag);
+			svgAnimatingLineLeftToRight("#animationDiv", "#prevDiv"+ (i) +"", "#nextDiv"+ (i - 1) +"",
+					"#svgId", "line1"+ i +"", "arrow", false);
 		}
 	}
+	svgCurveUpper('#nextDiv' + ($('.nodes').length),  '#prevDiv1', "pUpLine1");
+	svgCurveDown('#prevDiv1', '#nextDiv' +  ($('.nodes').length), "pDownLine1");
 }
 
 function changeIds1(elementParent, idAttr) {
@@ -379,27 +387,29 @@ function getRandomInt(min, max) { //generate dynamic memory location (address).
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function createDynamicNodes(nodeCount) { //Create data & next field div.
-	var randomAddress = getRandomInt(1000, 5000);
-	var x = '<div class="opacity00 col-xs-2 nodes" id="node' + nodeCount + '" style="top: 0px; width: auto;">'
-						+ ' <div class="col-xs-12 padding00"><div class="col-xs-6 ct-blue-color ct-fonts padding00 text-center">'
-						+ ' data</div><div class="ct-green-color ct-fonts text-center">next</div></div>'
-						+ ' <div id="nodedata' + nodeCount + '" class="data-nodes"><div id="dataDiv' + nodeCount + '"'
-						+ ' class="div-border left-radius col-xs-6 data-div zindex"><span id="data' + nodeCount +'"'
-						+ ' class="data-span position opacity00 ct-blue-color ct-fonts" style="top: 0px; left: 0px;"></span></div>'
-						+ ' <div id="nextDiv' + nodeCount +'" class="position div-border zindex right-radius col-xs-6 next-div">'
-						+ ' <span id="next' + nodeCount +'" class="position next-span ct-green-color ct-fonts position"></span></div></div>'
-						+ ' <div class="col-xs-12 padding00"><div class="col-xs-6 padding00 text-center">'
-						+ ' <span id="dataAddress' + nodeCount + '" class="position data-address zindex padding00 ct-brown-color ct-fonts">'+ randomAddress 
-						+ '</span></div></div></div>';
+function createDynamicNodes(val) {
+	randomAddress = getRandomInt(1000, 5000);
+	var x = '<div class="col-xs-2 nodes opacity00" id="node' + val + '" style="top: 0px; width: auto;"><div class="col-xs-12 padding00">'
+					+ '<div class="col-xs-4 ct-green-color ct-fonts text-center padding00">prev</div>'
+					+ '<div class="col-xs-4 ct-blue-color ct-fonts padding00 text-center">data</div>'
+					+ '<div class="col-xs-4 ct-green-color ct-fonts text-center padding00">next</div></div>'
+					+ '<div id="nodedata' + val + '" class="data-nodes"><div id="prevDiv' + val + '" class="div-border left-radius col-xs-4 prev-div zindex">'
+					+ ' <span id="prev' + val + '" class="position prev-span ct-green-color ct-fonts inline-style opacity00"></span></div>'
+					+ '<div id="dataDiv' + val + '" class="div-border no-radius col-xs-4 data-div zindex">'
+					+ ' <span id="data' + val + '" class="data-span ct-blue-color ct-fonts opacity00" style="top: 0px; left: 0px;"></span></div>'
+					+ '<div id="nextDiv' + val + '" class="position div-border right-radius col-xs-6 next-div zindex">'
+					+ ' <span id="next' + val + '" class="position next-span ct-green-color ct-fonts inline-style opacity00"></span></div></div>'
+					+ ' <div class="col-xs-12 padding00"><div class="col-xs-4 col-xs-offset-4 padding00 text-center"><span id="dataAddress' + val + '"'
+					+ ' class="data-address padding00 ct-brown-color ct-fonts">'+ randomAddress + '</span></div></div></div>';
 	$('#dynamicNodes').append(x);
+	var toolTopText = "This is an pointer type to hold the address of the previous node";
+	tooltipDisplay(".prev-div", "top", toolTopText);
 	var toolTopText = "This is an int data type to hold the user data";
 	tooltipDisplay(".data-div", "top", toolTopText);
 	var toolTopText = "This is an pointer type to hold the address of the next node";
 	tooltipDisplay(".next-div", "top", toolTopText);
 	var toolTopText = "it indicates the address of the node";
 	tooltipDisplay(".data-address", "bottom", toolTopText);
-	
 }
 
 function declareNodesWhenFunctionCall(id1, id2, nodeName, nodeNameText, callBackFunction) {	//Temp node div declaration 
@@ -575,3 +585,62 @@ function typing(typingId, typingContent, typingCallbackFunction) {
 		$('.introjs-tooltip').show();
 	});
 }
+
+function svgCurveUpper(selector1, selector2, polyLineId, callBackFunction) {
+	$("#" + polyLineId).remove();
+	var x = (($(selector1).offset().left - $("#svgId").offset().left) + $(selector1).width());
+	var y = (($(selector1).offset().top  + $(selector1).height()) - $('#svgId').offset().top - 15);
+	var x1 = x + (($(selector1).outerWidth() / 3));
+	var y1 = y;
+	var x2 = x1;
+	var y2 = y - ($(selector1).outerHeight() * 1.2);
+	var x3 = ($(selector2).offset().left - $("#svgId").offset().left ) - $(selector1).outerWidth() / 3;
+	var y3 = y2;
+	var x4 = x3;
+	var y4 = (($(selector2).offset().top  + $(selector2).height()) - $('#svgId').offset().top - 15);
+	var x5 = x3 + $(selector2).outerWidth() / 3;
+	var y5 = y4;
+	var line = document.createElementNS("http://www.w3.org/2000/svg", 'polyline');
+	line.setAttribute("class", "svg-line upcurve");
+	line.setAttribute('id', polyLineId);
+	var points = x + " " + y + ", " + x1 + " " + y1 + ", " + x2 + " " + y2 + ", " + x3 
+				+ " " + y3 + ", " + x4 + " " + y4 + ", " + x5 + " " + y5;  
+	line.style.markerEnd = 'url("#arrow")';
+	$("#svgId").append(line);
+	setTimeout(function() {
+		TweenMax.to("#" +polyLineId, 1, {attr: {points : points}});
+	},500);
+	if (typeof callBackFunction === "function") {
+		callBackFunction();
+	}
+}
+
+function svgCurveDown(selector1, selector2, polyLineId, callBackFunction) {
+	$("#" + polyLineId).remove();
+	var x = $(selector1).offset().left - $("#svgId").offset().left;
+	var y = ($(selector1).offset().top + ($(selector1).height())) - $("#svgId").offset().top;
+	var x1 = x - $(selector1).width() / 2.1;
+	var y1 = y;
+	var x2 = x1;
+	var y2 = y1 + $(selector1).height() * 1.2 + 2.5;
+	var x3 = (($(selector2).offset().left + $(selector2).outerWidth()) - $("#svgId").offset().left) + $(selector1).width() / 2.3;
+	var y3 = y2;
+	var x4 = x3;
+	var y4 = ($(selector2).offset().top + ($(selector2).height())) - $("#svgId").offset().top;
+	var x5 = x3 - $(selector2).width() / 2;
+	var y5 = y4;
+	var line = document.createElementNS("http://www.w3.org/2000/svg", 'polyline');
+	line.setAttribute("class", "svg-line downcurve");
+	line.setAttribute('id', polyLineId);
+	var points = x + " " + y + ", " + x1 + " " + y1 + ", " + x2 + " " + y2 + ", " + x3 
+				+ " " + y3 + ", " + x4 + " " + y4 + ", " + x5 + " " + y5;  
+	line.style.markerEnd = 'url("#arrow")';
+	$("#svgId").append(line);
+	setTimeout(function() {
+		TweenMax.to("#" + polyLineId, 1, {attr: {points : points}});
+	},500);
+	if (typeof callBackFunction === "function") {
+		callBackFunction();
+	}
+}
+
