@@ -569,6 +569,21 @@ function svgAnimatingLineTopToBottom(parentSelector, selector1, selector2, svgId
 	}});
 }
 
+
+function svgAnimatingLineBottomToTop(parentSelector, selector1, selector2, svgId, svgLineId, markerId, flag, callBackFunction) {
+	var parentOffset = $(parentSelector).offset();
+	var y1 = $(selector1).offset().top - parentOffset.top + $(selector1).outerHeight();
+	var y2 = $(selector2).offset().top - parentOffset.top;
+	var x1 = $(selector1).offset().left - parentOffset.left + $(selector1).outerWidth() / 2;
+	var x2 = $(selector2).offset().left - parentOffset.left + $(selector2).outerWidth() / 2;
+	svgLineAppend(svgId, svgLineId, markerId, x1, y1, x1, y1, flag);
+	TweenMax.to($('#' + svgLineId).show(), 1, {attr: {x2: x2, y2: y2}, onComplete: function() {
+		if (typeof callBackFunction === 'function') {
+			callBackFunction();
+		}
+	}});
+}
+
 function typing(typingId, typingContent, typingCallbackFunction) {
 	$(typingId).typewriting(typingContent, {
 		"typing_interval" : '5',
