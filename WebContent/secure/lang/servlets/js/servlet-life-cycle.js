@@ -11,7 +11,7 @@ function lifeCycleAnimation() {
 
 function viewBrowser() {
 	for (var i = 1; i<=3; i++) {
-		displaybrowser('#browser'+ i +'',i);
+		displaybrowser('#browser'+ i +'', i);
 	}
 } 
  

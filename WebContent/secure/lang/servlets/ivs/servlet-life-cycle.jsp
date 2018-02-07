@@ -19,9 +19,9 @@
 <script type="text/javascript" src="/js/typewriting.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-latest.js"></script>
 
-<script type="text/javascript" src="/secure/lang/servlets/js-min/slc.min.js"></script>
+<!-- <script type="text/javascript" src="/secure/lang/servlets/js-min/slc.min.js"></script> -->
 
-<!-- <script type="text/javascript" src="/secure/lang/servlets/js/servlet-life-cycle.js"></script> -->
+<script type="text/javascript" src="/secure/lang/servlets/js/servlet-life-cycle.js"></script>
 
 <title>Servlet life cycle</title>
 

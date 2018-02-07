@@ -13,6 +13,7 @@ public class AppletLifeCycle extends Applet
     	 System.out.println("Start() called"); 
      }
      public void paint(Graphics g) {
+    	 g.drawString("Hello", 50, 80);
     	 System.out.println("Paint(() called");
      }
      public void stop() { 
