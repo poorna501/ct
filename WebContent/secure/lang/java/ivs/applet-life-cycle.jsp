@@ -20,16 +20,21 @@
 <script type="text/javascript" src='/js/intro.js'></script>
 <script type="text/javascript" src="/js/typewriting.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-latest.js"></script>
+<script type="text/javascript" src="/js/ct-svg-lines.js"></script>
 <script type="text/javascript" src="/secure/lang/java/js/applet-life-cycle.js"></script>
 
 <style type="text/css">
 .introjs-tooltip {
-	min-width: 350px;
+	min-width: 300px;
 }
 
-.introjs-duplicate-nextbutton {
-	margin: 0px !important;
+.user-btn, .userbtn {
+	margin: -10px 5px !important;
 	background-color: green;
+}
+
+.userbtn {
+	margin: 1px !important;
 }
 
 .box-border {
@@ -46,7 +51,7 @@ div, span {
 }
 
 .padding50 {
-	padding: 50px;
+	padding: 50px 30px;
 }
 
 .position {
@@ -69,26 +74,34 @@ div, span {
 	stroke-width: 2;	
 }
 
+.popover-content {
+    color: white;
+    font-size: 13px;
+    background: black;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
 .popover {
-	min-width: 100px !important;
+	/* min-width: 80px !important; */
+	/* max-width: 185px !important; */
 	z-index: 10000000 !important;
 	min-height: 20px !important;
 }
 
-.popover-content {
-	font-size: 14px;
+.popover.bottom {
+	margin-top: 50px;
 }
 
 .margin-top5 {
 	margin-top: 5px; 
 }
 
-.margin-top80 {
-	margin-top: 80px; 
+.margin-top120 {
+	margin-top: 130px; 
 }
 
 .circle {
-	padding: 12px;
+	padding: 8px 18px;
 	border-radius: 50px;
 	box-shadow: 2px 2px gray;
 }
@@ -119,6 +132,10 @@ y {
 	font-weight: bold;
 }
 
+.dummyDiv {
+	margin-top: 8px;
+}
+
 </style>
 
 </head>
@@ -130,7 +147,7 @@ y {
 		});
 	</script>
 
-	<div class="col-xs-12">
+	<div class="col-xs-12 padding00">
 		<div class="headingSection">
 			<div class="ct-box-main">
 				 <div class="text-center">
@@ -140,23 +157,28 @@ y {
 		</div>
 		<div class="col-xs-12">
 			<div class='col-xs-12 text-center margin-top5'>
-				<button type="button" class="btn btn-warning opacity00" id="restartBtn">Restart</button>
+				<button type="button" class="btn btn-warning opacity00" id="restartBtn1">Restart</button>
 			</div>
 		</div>
 		
-		<div class="col-xs-12">
-			<div class="col-xs-12" id="animationDiv">
+		<div class="col-xs-12 padding00">
+			<div class="col-xs-12 padding00" id="animationDiv">
 				<div class="col-xs-6 col-xs-offset-3 box-border margin-top5 padding50 position opacity00" id="mainDiv">
-					<div class="col-xs-12">
-						<div class="box-border circle position opacity00 blue-background" id="newState">
-							<span class="stateText" id="bornText">Initial</span>
+					<div class="col-xs-12 padding00">
+						<div class="col-xs-1 padding00">
+							<div class="position dummyDiv opacity00" id="dummyState">du</div>
 						</div>
-						<div class="box-border circle position opacity00 green-background" id="runningState" style="margin-left: 95px;">
-							<span class="stateText" id="runningText">Running</span>
+						<div class="col-xs-10 padding00">
+							<div class="box-border circle position opacity00 blue-background" id="newState">
+								<span class="stateText" id="initText">Initial</span>
+							</div>
+							<div class="box-border circle position opacity00 green-background" id="runningState" style="margin-left: 135px;">
+								<span class="stateText" id="runningText">Running</span>
+							</div>
 						</div>
 					</div>
-					<div class="col-xs-12 margin-top80">
-						<div class="box-border circle position opacity00 orange-background" id="stopState" style="margin-left: 208px;">
+					<div class="col-xs-12 margin-top120 padding00">
+						<div class="box-border circle position opacity00 orange-background" id="stopState" style="margin-left: 265px;">
 							<span class="stateText" id="stopText">Stopped</span>
 						</div>
 						<div class="box-border circle position pull-right opacity00 red-background" id="destroyState">
@@ -164,6 +186,11 @@ y {
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class='col-xs-4 text-center margin-top5'>
+				<button type="button" class="btn btn-warning opacity00" id="restartBtn">Restart</button>
 			</div>
 		</div>
 	</div>
