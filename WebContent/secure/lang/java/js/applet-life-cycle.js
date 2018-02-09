@@ -23,9 +23,8 @@ function introFunction() {
 			position: "left"
 		}, {
 			element: "#restartBtn",
-			intro: "",
-			tooltipClass: "hide",
-			position: "right"
+			intro: "Click to restart.",
+			tooltipClass: "introjs-tooltip-min-width-custom",
 		}]
 	});
 	introjs.onafterchange(function(targetElement) {
@@ -53,7 +52,7 @@ function introFunction() {
 						});
 					});
 				break;
-				case "#restartBtn" :
+				case "restartBtn" :
 					$('#restartBtn').removeClass('opacity00');
 					$('#restartBtn').click(function() {
 						location.reload();
@@ -219,6 +218,7 @@ function svgText(lineId, textValue, color, textViewpos, callBackFunction) {
 	} else if (lineId == "#line4") {
 		text.setAttribute('x', + $(lineId).attr('x1') - 25);
 		text.setAttribute('y', + (parseInt($(lineId).attr('y1')) + + $(lineId).attr('y2')) / 2);
+		//text.setAttribute("transform", "rotate(-90)");
 	} 
 	text.setAttribute('fill', color);
 	text.textContent = textValue;

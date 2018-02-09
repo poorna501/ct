@@ -24,10 +24,6 @@
 <script type="text/javascript" src="/secure/lang/java/js/applet-life-cycle.js"></script>
 
 <style type="text/css">
-.introjs-tooltip {
-	min-width: 300px;
-}
-
 .user-btn, .userbtn {
 	margin: -10px 5px !important;
 	background-color: green;
@@ -77,7 +73,7 @@ div, span {
 .popover-content {
     color: white;
     font-size: 13px;
-    background: black;
+    background: #19168a;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
@@ -142,7 +138,6 @@ y {
 <body>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			//$(".opacity00").removeClass("opacity00");
 			appletLifeCycleIntro();			
 		});
 	</script>
