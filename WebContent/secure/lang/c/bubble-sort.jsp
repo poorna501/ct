@@ -246,10 +246,7 @@ td {
 	margin-top: 12px;
 }
 
-
 </style>
-
-
 
 </head>
 
