@@ -21,8 +21,8 @@
 
 <style type="text/css">
 
-.margin-top15 {
-	margin-top: 15px;
+.margin-top25 {
+	margin-top: 25px;
 }
 
 .opacity00 {
@@ -100,7 +100,7 @@ div, span {
 }
 
 .panel-body {
-	min-height: 77px;
+	min-height: 175px;
 	padding: 15px 0 0;
 }
 
@@ -122,7 +122,8 @@ div, span {
 <body>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$(".opacity00").removeClass("opacity00")
+			//$(".opacity00").removeClass("opacity00");
+			finalKeywordAnimation();
 		});
 	</script>
 
@@ -135,7 +136,7 @@ div, span {
 			</div>
 		</div>
 		<div class="col-xs=12 margin-top15">
-			<div class="col-xs-6 col-xs-offset-3 box-border">
+			<div class="col-xs-6 col-xs-offset-3 box-border opacity00" id="FinalTextDiv">
 				<div class="col-xs-12 padding00">
 					<div class="col-xs-12 padding10">
 						The <span class="green fontWeight">final</span> keyword is used in different contexts. 
@@ -145,10 +146,10 @@ div, span {
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-12 margin-top15">
+		<div class="col-xs-12 margin-top25">
 			<div class="col-xs-5 padding00">
-				<div class="col-xs-12 padding00" id="FinalProgramCodeDiv">
-					<pre class="creamPreTab" id ="preFinalCode">
+				<div class="col-xs-12 padding00 opacity00" id="finalKeywordCodeDiv">
+					<pre class="creamPreTab opacity00" id ="preFinalCode">
 <span class="fontWeight darkPink">public class</span> FinalKeyword {
 	<span class="fontWeight darkPink">public static void</span> main(String[] <span class="fontWeight lightBrown">args</span>) {
 		String <span class="fontWeight lightBrown">subject</span> = "JAVA";
@@ -163,7 +164,7 @@ div, span {
 			</div>
 			<div class="col-xs-6">
 				<div class="col-xs-12">
-					<div id="outputDiv">
+					<div id="outputDiv" class="opacity00">
 						<div id="outputDiv" class="panel-primary output-div margin-left">
 	    					<div id="outputdiv" class="panel-heading text-center">Output</div>
 	    					<div class="panel panel-body"><div class="output"></div></div>

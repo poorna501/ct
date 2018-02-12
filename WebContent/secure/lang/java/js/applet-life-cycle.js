@@ -1,12 +1,12 @@
 var introjs, popoverCount = 0;
 
-
 function appletLifeCycleIntro() {
 	introFunction();
 	svgAppend("#mainDiv", "svgId", "markerId", "gray");
 }
 
 function introFunction() {
+	
 	introjs = introJs();
 	introjs.setOptions({
 		showStepNumbers : false,
@@ -14,21 +14,24 @@ function introFunction() {
 		showBullets : false,
 		exitOnEsc : false,
 		keyboardNavigation : false,
+		
 		steps : [{
 			element: "#headingSection",
 			intro: "",
 		},{
 			element: "#mainDiv",
 			intro: "",
-			position: "left"
+			position: "left",
 		}, {
 			element: "#restartBtn",
 			intro: "Click to restart.",
 			tooltipClass: "introjs-tooltip-min-width-custom",
 		}]
 	});
+	
 	introjs.onafterchange(function(targetElement) {
 		$(".introjs-nextbutton, .introjs-skipbutton, .introjs-prevbutton").hide();
+		
 		var element = targetElement.id;
 		$('.introjs-helperLayer').one('transitionend', function() {
 			switch(element) {
@@ -85,7 +88,7 @@ function initalStateExplanation() {
 	svgLineRightAndLeft("#mainDiv", "#dummyState", "#newState", "line1", "", "right", "left", "", "", "", function() {
 		svgText("#line1", "init()", "blue", false, function() {
 			var text = "The <y>init()</y> method call <y>only once</y> when the <y>applet</y> is <y>first</y> loaded to "
-				+ " initialize variables, resize the applet, setting up <y>GUI</y> components, and etc.<br/><div id='btn1'></div><br/>";
+						+ " initialize variables, resize the applet, setting up <y>GUI</y> components, and etc.<br/><div id='btn1'></div><br/>";
 			displayPopover("#initText", "bottom", text, function() {
 				appendNextBtn('#btn1', true, function() {
 					runningStateExplanation();
@@ -167,15 +170,15 @@ function displayPopover(selector, position, text, callBackFunction) {
 		html: true,
 		trigger: 'focus',
 		container: "",
-		content: '<div id="popover' + popoverCount + '">'
-		+ text + '</div>',
+		content: '<div id="popover' + popoverCount + '">'+ text + '</div>',
 	 });
+	
 	$(selector).popover('show');
 	if (popoverCount != 1) {
-		$("#popover"+ popoverCount).parent().parent().css("width", "185px")
-		$("#popover" + popoverCount).parent().parent().css("top", "0")
+		$("#popover"+ popoverCount).parent().parent().css("width", "185px");
+		$("#popover" + popoverCount).parent().parent().css("top", "0");
 	} else {
-		$("#popover1").parent().parent().css("width", "280px")
+		$("#popover1").parent().parent().css("width", "280px");
 	}
 	$('#popover' + popoverCount).removeClass('opacity00');
 	typing('#popover' + popoverCount, text, function () {
@@ -231,3 +234,4 @@ function svgText(lineId, textValue, color, textViewpos, callBackFunction) {
 		}
 	}});
 }
+
