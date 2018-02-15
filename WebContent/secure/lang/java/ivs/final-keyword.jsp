@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="/css/introjs.css">
 <link rel="stylesheet" href="/css/introjs-ct.css">
 <link rel="stylesheet" href="/css/animate.css"/>
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet"href="/css/font-awesome-animation.min.css">
 
 <script type="text/javascript" src="/js/jquery-latest.js"></script>
 <script type="text/javascript" src="/js/bootstrap.js"></script>
@@ -20,6 +22,10 @@
 <script type="text/javascript" src="/secure/lang/java/js/final-keyword.js"></script>
 
 <style type="text/css">
+
+.introjs-tooltip {
+	min-width: 350px;
+}
 
 .margin-top25 {
 	margin-top: 25px;
@@ -33,8 +39,9 @@
 	padding: 0px;
 }
 
-.userbtn {
+.user-btn, .userbtn {
 	margin: 1px !important;
+	background-color: green;
 }
 
 .box-border {
@@ -44,6 +51,12 @@
 
 div, span {
 	position: relative;
+}
+
+.z-index1000000 {
+	position: relative;
+	background-color: white;
+	z-index: 1000000 !important;
 }
 
 .position {
@@ -101,7 +114,7 @@ div, span {
 
 .panel-body {
 	min-height: 175px;
-	padding: 15px 0 0;
+	padding: 12px;
 }
 
 .panel {
@@ -116,8 +129,41 @@ div, span {
 	padding: 10px;
 }
 
-</style>
+y {
+	color: yellow;
+	font-weight: bold;
+}
 
+.blinking {
+	/* animation-name: blinker;
+	animation-duration: 1s;
+	animation-iteration-count: infinity; */
+	animation: blinker 1s linear infinite;
+ }
+
+@keyframes blinker {
+	50% {
+		background:  #66a3ff;
+	}
+}
+
+.animated {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.output {
+	color: white;
+	font-weight: bold;
+}
+
+.lightgreen {
+	background-color: #3fd112;
+}
+
+</style>
 </head>
 <body>
 	<script type="text/javascript">
@@ -152,12 +198,12 @@ div, span {
 					<pre class="creamPreTab opacity00" id ="preFinalCode">
 <span class="fontWeight darkPink">public class</span> FinalKeyword {
 	<span class="fontWeight darkPink">public static void</span> main(String[] <span class="fontWeight lightBrown">args</span>) {
-		String <span class="fontWeight lightBrown">subject</span> = "JAVA";
-		<span class="fontWeight darkPink">int</span> <span class="fontWeight lightBrown">marks</span> = 80;
-		System.<span class="fontWeight blue">out</span>.println("subject = " + <span class="fontWeight lightBrown">subject</span> + " marks = " + <span class="fontWeight lightBrown">marks</span>);
-		<span class="fontWeight lightBrown">subject</span> = "C";
-		<span class="fontWeight lightBrown">marks</span> = 85;
-		System.<span class="fontWeight blue">out</span>.println("subject = " + <span class="fontWeight lightBrown">subject</span> + " marks = " + <span class="fontWeight lightBrown">marks</span>);
+		<span id="subInit"><span id="appendFinalKey"></span>String <span class="fontWeight lightBrown" id="strSubject">subject</span> = "<span id="javaText">JAVA</span>";</span>
+		<span id="marksInit"><span class="fontWeight darkPink">int</span> <span class="fontWeight lightBrown" id="intmarks">marks</span> = <span id="eighty">80</span>;</span>
+		<span id="printBeforeChange">System.<span class="fontWeight blue">out</span>.println("<span id="subjBfre">subject = </span>" + <span class="fontWeight lightBrown" id="subjVarBfre">subject</span> + "<span id="markBfre">, marks = </span>" + <span id="markVarBfre" class="fontWeight lightBrown">marks</span>);</span>
+		<span id="reInitOfSub"><b><span class="fontWeight lightBrown" id="strSubject2">subject</span> = "<span id="CText">C</span>";</b></span>
+		<span id="reInitOfMarks"><b><span class="fontWeight lightBrown" id="intMarks2">marks</span> = <span id="eightyFive">85;</span></b></span>
+		<span id="printAfterChange">System.<span class="fontWeight blue">out</span>.println("<span id="subjaftr">subject = </span>" + <span class="fontWeight lightBrown" id="subjVarAftr">subject</span> + "<span id="markAftr">, marks = </span>" + <span id="markVarAftr" class="fontWeight lightBrown">marks</span>);</span>
 	}
 }</pre>
 				</div>
