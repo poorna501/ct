@@ -1,5 +1,4 @@
 var intro;
-var popoverCount = 0;
 var typingInterval = 5;
 var tl = new TimelineLite();
 var getconnectiondriver = function() {
@@ -30,14 +29,9 @@ var getconnectiondriver = function() {
 			switch (elementId) {
 				case "mainBox":
 					$('.introjs-nextbutton').hide();
-					popoverGrayOut();
-					var text = "<br>connection..........</br>";
-					$("#animation1").removeClass("display");
-					popover('#mainBox', 'right', text, function() {
-						explainJavaApt();
-					});
+					var text = "<br>connection</br>";
+					popover('#mainBox', 'right', '1', text, 'animation1')
 				break;	
-				
 				case "restartBtn":  
 					$('.introjs-nextbutton').hide();
 					$('.introjs-tooltip').css({'min-width' : '120px'});
@@ -51,49 +45,7 @@ var getconnectiondriver = function() {
 		$('.introjs-nextbutton').show();
 		$('.introjs-prevbutton, .introjs-skipbutton,.introjs-bullets').hide();
 	}
-		
-function explainJavaApt() {
-	var text = "This is the java Application nothing but client side application.";
-	fadeInAndShowPopover("#javaBox", "left", text, function() {
-		var text = "This is database which is used to store,captures and analyze data.";
-		fadeInAndShowPopover("#driver", "left", text, function() {
-			toAndFromToEffect("#line1", "#query1" , "57%", function() {
-				var text = "This is database which is used to store,captures and analyze data.";
-				fadeInAndShowPopover("#databaseBox1", "left", text, function() {
-					toAndFromToEffect("#line2","#query2" , "81%", function() {
-						toAndFromToEffect("#line3","#query3" , "69%", function() {
-						$("#line4").show();
-							TweenMax.to($("#line4"), 1, {attr:{y2: "73%" },onComplete:function() {
-								$("#line5").show();
-								TweenMax.to($("#line5"), 1, {attr:{x2: "51.5%" },onComplete:function() {
-									$("#query4").show();
-									tl.fromTo("#query4", 0.5, {"opacity" : "0"}, {"opacity" : "1" , repeat: 1});
-									var text = "Connection Object.";
-									fadeInAndShowPopover("#circle", "right", text, function() {
-										
-									});
-								}});
-							}});
-						});
-					})
-				});
-			});
-		});
-	});
-}
-
-function fadeInAndShowPopover(selector, position, text, callBackFunction) {
-	$(".ct-btn-next").remove();
-	$(selector).removeClass("opacity00").hide().fadeIn(1500, function() {
-		popover(selector, position, text, function() {
-			popoverGrayOut();
-			if (typeof callBackFunction === "function") {
-				callBackFunction();
-			}
-		});
-	});
-}
-
+			
 function animation1() { 
 	$("text").hide();
 	$("#animation1").removeClass("display");
@@ -116,7 +68,6 @@ function animation1() {
 										TweenMax.to($("#line5"), 1, {attr:{x2: "51.5%" },onComplete:function() {
 										$("#query4").show();
 										tl.fromTo("#query4", 0.5, {"opacity" : "0"}, {"opacity" : "1" , repeat: 1});
-										
 											$("#circle").removeClass("opacity00").hide().fadeIn(2000,function() {
 											var text = "Connection Object.";
 											textappend('#circle', 'right', '5', text)
@@ -332,26 +283,18 @@ function animation3() {
 		}});
 	}
 
-function popover(selector, position, text, callBackFunction) {
+function popover(selector, position, val, text, funName) {
 	$(selector).popover({
 				placement: position,
 				viewport: selector,
 				html: true,
 				trigger: "focus",
-				content: '<div id="popover' + popoverCount +'"></div>',
-	});
-	$(selector).popover('show');
-	$(".popover").css("top" , "0");
-	typing("#popover" + popoverCount, text, function() {
-		$('#popover' + popoverCount).parents(".popover-content").append('<div class="tooltip-height">'
-				+ '<span class="btn-success ct-btn-next usr-btn">Next &#8594;</span><div>');
-		$(".usr-btn").click(function() {
-			$(".usr-btn").remove();
-			popoverCount++;
-			if (typeof callBackFunction === "function") {
-				callBackFunction();
-			}
-		});
+				content: '<div id="popover' + val +'"></div>',
+			});
+			$(selector).popover('show');
+			$(".popover").css("top" , "0");
+			typing("#popover" + val, text, function(){
+				$('#popover' + val).parents(".popover-content").append('<div class="tooltip-height"><span class="btn-success ct-btn-next" onclick=' +funName +'();>Next &#8594;</span><div>');
 	});
 }
 
@@ -383,48 +326,17 @@ function textappend(selector, position, val, text) {
 }
 function toAndFromToEffect(selector1, selector2, attrVal ,callBackFunction) {
 	$(selector1).show();
-	TweenMax.to($(selector1), 1, {attr:{y2: attrVal },onComplete:function() {
-		$(selector2).show();
-		tl.fromTo(selector2, 0.5, {"opacity" : "0"}, {"opacity" : "1" , repeat: 1});
-		if (typeof callBackFunction === "function") {
+TweenMax.to($(selector1), 1, {attr:{y2: attrVal },onComplete:function() {
+	$(selector2).show();
+	tl.fromTo(selector2, 0.5, {"opacity" : "0"}, {"opacity" : "1" , repeat: 1});
+	if (typeof callBackFunction === "function") {
 			callBackFunction();
 		}
 	}});
+
+
 } 
 function restart() {
 	$(".ct-btn-next").remove();
 	intro.nextStep();
 }
-
-function popoverGrayOut() {
-	$('.text-right').remove();
-	$("#popover"+ popoverCount).parent().addClass("popover-gray-out");
-	$('#popover' + popoverCount + ' .end-text').css({'display' : 'none'});
-	$('#popover' + popoverCount + ' .start-text').after('<span class="more" style="display: inline">.....</span>');
-	mouseEvents();
-	//count++;
-}
-
-function mouseEvents() {
-	$('.popover-gray-out > div').mouseover(function () {
-		var t = this.id;
-		$('#' + t + ' .more').css({'display': 'none'});
-		
-		if ( t == "popover6") {
-			$('#' + t + ' .end-text').css({'display': 'block'});
-		} else {
-			$('#' + t + ' .end-text').css({'display': 'inline'});
-		}
-		
-		$(this).parents('.popover').addClass('z-index');
-	});
-	
-	$('.popover-gray-out > div').mouseout(function () {
-		var t = this.id;
-		$('#' + t + ' .end-text').not('#popover' + count).css({'display': 'none'});
-		$('#' + t + ' .more').not('#popover' + count).css({'display': 'inline'});
-		$(this).parents('.popover').removeClass('z-index');
-	});
-}
-
-

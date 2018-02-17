@@ -169,8 +169,8 @@ p {
 	margin-top: 100px;
 }
 
-.margin-top-200 {
-	margin-top: 50px;
+.margin-top-90 {
+	margin-top: 90px;
 }
 
 .border-radius {
@@ -373,6 +373,7 @@ $(document).ready(function() {
 	svgLineRightAndLeft("#svgParent", "#span5", "#span6", "line113","grey", "left","right", "","", true);
 	$('#line111, #line112, #line113').css({'marker-end' : '', 'opacity' : '0'});
 	$('#restart').click(function() {
+		$("#sId").val("");
 		location.reload();
 	});
 	initIntroJs();
@@ -478,7 +479,6 @@ function initIntroJs() {
 			$('.introjs-tooltip').css('min-width','125px');
 			$('#restartDiv').removeClass('introjs-fixParent opacity00');
 			$('.introjs-helperLayer').one('transitionend', function () {
-				
 			});
 			break;
 		}
@@ -489,7 +489,6 @@ function initIntroJs() {
 function totalAnimation() {
 	count++;
 	$('.text-right').remove();
-	//zoomInEffect("#DLApi");
 	zoomInEffect("#database",function() {
 		$('#line113').css('opacity', '');
 		svgText('#line113', 'Database layer');
@@ -504,7 +503,6 @@ function totalAnimation() {
 				$('#popover2').parents(".popover-content").append('<div class = "text-right">'
 				+'<span class="introjs-button ct-btn-next" onclick="client();">Next &#8594;</span><div>');
 				window.scrollTo(0,document.body.scrollHeight);
-				//$('html').scrollTo('.ct-btn-next',{duration:'slow', offset :{left:'left', top:'top' }});
 			});
 		});
 	});
@@ -521,37 +519,20 @@ function arrowAnimation() {
 		typing(".introjs-tooltiptext > ul", text, function() {
 			$('.introjs-tooltip').css('height','100px');
 			appendUserButton('.introjs-tooltipbuttons',function() {
-				/* svgLineTopAndBottom("#svgParent","#bridge","#DLApi" ,"line3","grey", "bottom","top", "left", "left", "", function() {
+				svgLineTopAndBottom("#svgParent","#bridge","#ovalShape" ,"line4","grey", "bottom","top", "left", "left", "", function() {
 					$('.introjs-tooltiptext > ul').append("<li></li>");
 					$('.introjs-tooltip').scrollTo('.introjs-tooltipbuttons',{duration:'slow', offset :{left:'left', top:'top' }});
-					var text = "The database engine receives these calls.";
+					var text = " The <y>DBEngine</y> than queries the database by passing the query to the database";
 					typing(".introjs-tooltiptext > ul li:last", text, function() {
-						appendUserButton('.introjs-tooltipbuttons',function() { */
-							svgLineTopAndBottom("#svgParent","#bridge","#ovalShape" ,"line4","grey", "bottom","top", "left", "left", "", function() {
-								$('.introjs-tooltiptext > ul').append("<li></li>");
-								$('.introjs-tooltip').scrollTo('.introjs-tooltipbuttons',{duration:'slow', offset :{left:'left', top:'top' }});
-								var text = " The <y>DBEngine</y> than queries the database by passing the query to the database";
-								typing(".introjs-tooltiptext > ul li:last", text, function() {
-									appendUserButton('.introjs-tooltipbuttons',function() {
-										$('table:eq(1),caption:eq(1)').addClass('z-index-css');
-										responseArrowAnimaiton();
-										/* var text = "<span class='start-text'>The database when queried for the data, returns "
-												+ "records that match the query.</span>";
-										popover("#DLApi", "right", text,function() {
-										$('#popover5').parents(".popover-content").append('<div class="text-right">'
-												+'<span class="introjs-button ct-btn-next" onclick="responseArrowAnimaiton();">Next &#8594;</span><div>');
-										$('#popover5').parent().addClass('bg-blue-cl-white introjs-tooltiptext'); */
-											window.scrollTo(0,document.body.scrollHeight);
-										//}); 
-									});
-								});
-							});
-						/* });
+						appendUserButton('.introjs-tooltipbuttons',function() {
+							$('table:eq(1),caption:eq(1)').addClass('z-index-css');
+							responseArrowAnimaiton();
+								window.scrollTo(0,document.body.scrollHeight);
+						});
 					});
-				}); */
+				});
 			});
 		});
-		
 	});
 }
 
@@ -569,40 +550,30 @@ function responseArrowAnimaiton() {
 	var id1 = +$('#sId').val().trim()[4];
 	$('#tableBody > tr:eq('+id1+')').addClass('quadrat');
 	$('.text-right').remove();
-	$('#popover5').append('<ul class="end-text"></ul>');
-	svgLineTopAndBottom("#svgParent","#ovalShape","#DLApi" ,"line5","grey", "top","bottom", "right", "right", "", function() {
-		var text = "<li>Here the specific <y>student </y>record is picked ie <y>"+ (+$('#sId').val().trim()) 
-					+" </y>and sent to the <y>db engine</y>.</li>";
-		typing("#popover5 > ul", text, function() {
+	//$('#popover5 > ul').append('<li></li>');
+	svgLineTopAndBottom("#svgParent","#ovalShape","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
+	var text = "<ul><li>The <y>driver</y> changes this database format data into its own format and sends it to "
+				+ "the <y>bridge driver</y>.</ul></li>";
+		popover("#nativeProtcol", "right", text, function() {
 			var pid = $('#popover5').parents(".popover-content");
+			window.scrollTo(0,document.body.scrollHeight);
 			appendUserButton(pid,function() {
-					svgLineTopAndBottom("#svgParent","#DLApi","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
+				svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
 					$('#popover5 > ul').append('<li></li>');
-					var text = "The <y>driver</y> changes this database format data into its own format and sends it to "
-								+ "the <y>bridge driver</y>";
+					var text = "The <y>bridge</y> now converts the result(<y>native</y> format) data in a <y>JDBC</y> format(java) "
+								+ "that the client application understands.";
 					typing("#popover5 > ul li:last", text, function() {
 						window.scrollTo(0,document.body.scrollHeight);
 						appendUserButton(pid,function() {
-							svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
-								$('#popover5 > ul').append('<li></li>');
-								var text = "The <y>bridge</y> now converts the result(<y>native</y> format) data in a <y>JDBC</y> format(java) "
-											+ "that the client application understands.";
-								typing("#popover5 > ul li:last", text, function() {
-									window.scrollTo(0,document.body.scrollHeight);
-									appendUserButton(pid,function() {
-										window.scrollTo(0,document.body.scrollHeight);
-										$('.bg-blue-cl-white').removeClass('bg-blue-cl-white introjs-tooltiptext');
-										introjs.nextStep();
-									});
-								});
-							});
+							window.scrollTo(0,document.body.scrollHeight);
+							$('.bg-blue-cl-white').removeClass('bg-blue-cl-white introjs-tooltiptext');
+							introjs.nextStep();
 						});
 					});
 				});
 			});
 		});
 	});
-	
 }
 
 function client() {
@@ -835,7 +806,7 @@ function validation(selector) {
 							<div id="bridge" class="col-xs-offset-4 col-xs-4  text-center  padding00 border-radius opacity00">
 								<div class="col-xs-12 driver-manager-css">Driver Manager</div>
 								<div class="col-xs-12 dash"></div>
-								<div class="col-xs-12">Native-Protocol driver (Type-4 Driver)</div>
+								<div class="col-xs-12" id="nativeProtcol">Native-Protocol driver (Type-4 Driver)</div>
 							</div>
 						</div>
 
@@ -861,7 +832,7 @@ function validation(selector) {
 								</div>
 							</div>
 						</div>
-						<div class="col-xs-12 margin-top-20"></div>
+						<div class="col-xs-12 margin-top-90"></div>
 					</div>
 				</div>
 				<div class="col-xs-5 padding00" id="BrowserTableDiv">

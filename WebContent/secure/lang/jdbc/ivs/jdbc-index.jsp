@@ -100,7 +100,7 @@
 						<td>3</td>
 						<td>Type2 Driver</td>
 						<td><a class='btn btn-xs btn-success'
-							href="javascript:opendialog('Jdbc type 2 driver', 'Type-2DriverCopy.jsp', 1, 1)"><i
+							href="javascript:opendialog('Type 2 driver', 'type-two-driver-interactive.jsp', 1, 1)"><i
 								class='fa fa-eye'></i>&nbsp;Live Demo</a> &emsp; <span style = "color : green">Type2 Driver</span></td>
 						<td></td>
 						<td></td>
@@ -112,7 +112,7 @@
 						<td>4</td>
 						<td>Type3 Driver</td>
 						<td><a class='btn btn-xs btn-success'
-							href="javascript:opendialog('C++ program life cycle', 'c-plus-pus-program-life-cycle.jsp', 1, 1)"><i
+							href="javascript:opendialog('Type 3 driver', 'type-three-driver-interactive.jsp', 1, 1)"><i
 								class='fa fa-eye'></i>&nbsp;Live Demo</a> &emsp; <span style = "color : green">Type3 Driver</span></td>
 						<td></td>
 						<td></td>
@@ -124,7 +124,7 @@
 						<td>5</td>
 						<td>Type4 Driver</td>
 						<td><a class='btn btn-xs btn-success'
-							href="javascript:opendialog('C++ program life cycle', 'c-plus-pus-program-life-cycle.jsp', 1, 1)"><i
+							href="javascript:opendialog('Type 4 driver', 'type-four-driver-interactive.jsp', 1, 1)"><i
 								class='fa fa-eye'></i>&nbsp;Live Demo</a> &emsp; <span style = "color : green">Type4 Driver</span></td>
 						<td></td>
 						<td></td>
