@@ -13,10 +13,13 @@
 <script src="/js/intro.js" type="text/javascript"></script>
 <script src="/js/typewriting.min.js" type="text/javascript"></script>
 <script src="/js/gs/TweenMax.min.js"></script>
-<script src ="/secure/lang/jdbc/js/get-connection1.js"text/javascript"></script>
+<script src ="/secure/lang/jdbc/js/get-connection-new.js"text/javascript"></script>
 <title>get-connection</title>
 <style type="text/css">
-
+y {
+	color:yellow;
+	font-weight: 700;
+}
 .main-box-border {
 	border: 2px solid transparent;
 	border-radius: 10px;
@@ -28,7 +31,10 @@
 	display: flex;
 	align-items: center;
 }
-
+.user-btn {
+	background-color: green;
+	/* cursor: default; */
+}
 .box-border {
 	align-items: center;
     border: 1px solid gray;
@@ -47,8 +53,9 @@
     text-align: center;
     background-color: rgba(249, 145, 145, 0.26);
     height:40px;
-    margin-left:17px;
-    margin-top:75px
+    margin-top: -16px
+    /* margin-left:17px;
+    margin-top:75px */
 }
 .box {
 	align-items: center;
@@ -130,9 +137,8 @@
 	cursor: pointer;
 }
 
-.tooltip-height {
-	height: 20px;
-	margin-top: 5px;
+#showBtn {
+	pull: right;
 }
 
 .ui-effects-transfer {
@@ -144,10 +150,12 @@
 .green-color {
 	color : green;
 	font-weight: bold;
+	display:none;
 }
 .green-color1 {
 	color : green;
 	font-weight: normal;
+	display:none;
 }
 .border {
 	border: 2px solid gray;
@@ -308,8 +316,9 @@
 	width: 100%;
 }
 .svg-line, .svg-line1, .svg-line2, .svg-line3 {
-	stroke: gray;
+	stroke: green;
 	stroke-width: 2;
+	display:none;
 }
 .green-color {
 	color : green;
@@ -354,7 +363,8 @@
     height: 91px;
     width: 59.667%;
     margin-top:30px;
-  }
+}
+  
  .con {
 	background-color: rgba(255, 143, 11, 0.15);
     border: 2px dashed green; 
@@ -437,7 +447,7 @@
     display: inline-flex;
     height: 45px;
     position: relative;
-  	width:93px;
+  	width:100px;
     margin-top: 24px;
     background-color:  #8ce884;
     }
@@ -445,6 +455,12 @@
 </style>
 </head>
 <body>
+	<script>
+		$(document).ready(function() {
+			getConnectionDriver();
+			$('[data-toggle="popover"]').popover(); 
+		})
+	</script> 
 	<div>
 		<h2 class="text-center">
 			<span class="label label-default ct-demo-heading">Getting Connection to DB</span>
@@ -455,19 +471,19 @@
 	<div class="col-xs-10">
 		<div class="main-box-border" id="mainBox">
 			<svg class = "svg-css">
-				 <marker id="flow4Marker" refX="3" refY="2.5" markerWidth="5" markerHeight="5" orient="auto" style="fill: gray;">
+				 <marker id="flow4Marker" refX="3" refY="2.5" markerWidth="5" markerHeight="5" orient="auto" style="fill: red;">
                			<path d="M0,0 L5,2.5 L0,5 Z"/>
            		 </marker>
            			<line class="svg-line" id = "line1" x1="38%" y1="49%" x2="38%" y2="50%" style="marker-end: url(#flow4Marker);"/>
 					<text y="314" x="300" font-size="15" id="query1" class="green-color ani">getConnection</text>
-					<line class="svg-line" id = "line2" x1="37%" y1="68%" x2="37%" y2="67.9%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line" id = "line2" x1="38%" y1="68%" x2="38%" y2="67.9%" style="marker-end: url(#flow4Marker);"/>
 					<text y="415" x="297" font-size="15" id="query2" class="green-color ani">connect to db</text>
-					<line class="svg-line" id = "line3" x1="38%" y1="81%" x2="38%" y2="82%" style="marker-end: url(#flow4Marker);"/>
-					<text y="429" x="396" font-size="15" id="query3" class="green-color ani">get the connection</text>
+					<line class="svg-line" id = "line3" x1="39%" y1="81%" x2="39%" y2="82%" style="marker-end: url(#flow4Marker);"/>
+					<text y="429" x="410" font-size="15" id="query3" class="green-color ani">get the connection</text>
 					<line class="svg-line " id = "line5" x1="46%" y1="62%" x2="47%" y2="62%" style="marker-end: url(#flow4Marker);"/>
 					<text y="377" x="481" font-size="15" id="query4" class="green-color ani">data base(url)</text>
 					<line class="svg-line" id = "line6" x1="57%" y1="59%" x2="57%" y2="58.5%"/>
-					<line class="svg-line " id = "line7" x1="57%" y1="47%" x2="57%" y2="47%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line" id = "line7" x1="57%" y1="47%" x2="57%" y2="47%" style="marker-end: url(#flow4Marker);"/>
 					<line class="svg-line1" id = "line10" x1="10%" y1="12%" x2="10%" y2="15%" style="marker-end: url(#flow4Marker);"/>
 					<text y="79" x="31" font-size="10"class="green-color1 ani2">getConnection</text>
 					<line class="svg-line1" id = "line11" x1="9%" y1="25%" x2="9%" y2="29%" style="marker-end: url(#flow4Marker);"/>
@@ -491,8 +507,8 @@
 					<line class="svg-line2" id = "line30" x1="53%" y1="27%" x2="53%" y2="30.3%" style="marker-end: url(#flow4Marker);"/>
 					<line class="svg-line2" id = "line31" x1="53%" y1="31%" x2="53%" y2="26.8%" style="marker-end: url(#flow4Marker);"/> 
 					<line class="svg-line3" id = "line35" x1="44%" y1="10%" x2="44%" y2="11%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3" id = "line36" x1="43%" y1="53%" x2="43%" y2="54%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3" id = "line37" x1="44%" y1="65%" x2="44%" y2="64%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line36" x1="44%" y1="53%" x2="44%" y2="54%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line37" x1="45%" y1="65%" x2="45%" y2="64%" style="marker-end: url(#flow4Marker);"/>
 					<line class="svg-line3" id = "line38" x1="49.2%" y1="49%" x2="49.5%" y2="49%"/>
 					<line class="svg-line3" id = "line39" x1="58.5%" y1="49%" x2="58.5%" y2="48%" style="marker-end: url(#flow4Marker);"/>	
 					<line class="svg-line3" id = "line40" x1="59%" y1="11%" x2="59%" y2="16%"/>
@@ -507,7 +523,7 @@
 					<line stroke-dasharray= "5"  class="svg-line3" id = "line49" x1="66%" y1="24.5%" x2="69%" y2="24.5%" style="marker-end: url(#flow4Marker);"/>
 					<line stroke-dasharray= "5" class="svg-line3" id = "line50" x1="58%" y1="32%" x2="58%" y2="27%"/>
 					<line stroke-dasharray= "5" class="svg-line3" id = "line51" x1="58%" y1="50%" x2="57%" y2="50%" style="marker-end: url(#flow4Marker);"/>
-					<line stroke-dasharray= "5" class="svg-line3" id = "line52" x1="45%" y1="53%" x2="45%" y2="54%" style="marker-end: url(#flow4Marker);"/>
+					<line stroke-dasharray= "5" class="svg-line3" id = "line52" x1="46%" y1="53%" x2="46%" y2="54%" style="marker-end: url(#flow4Marker);"/>
 					<line class="svg-line3" id = "line53" x1="75%" y1="24.5%" x2="75%" y2="24.5%" style="marker-end: url(#flow4Marker);"/>
 					<line class="svg-line3" id = "line54" x1="84%" y1="16%" x2="84%" y2="16%"/>
 					<line class="svg-line3" id = "line55" x1="84%" y1="6%" x2="84%" y2="6%" style="marker-end: url(#flow4Marker);"/>
@@ -600,31 +616,40 @@
 									</div>
 								</div>
 							</div>
-							<div class = col-xs-12">
-			  					<div class = "col-xs-offset-3 col-xs-9 context opacity00" id = context >
-			  						<div class = col-xs-3>
-										<div class="context-con opacity00 col-xs-3" id = "connection">
-											<span class = "connection-text">Connection </span>
+							<div class ="col-xs-12 padding0 text-center">
+			  					<div class = "col-xs-offset-4 col-xs-2 opacity00" id = context  style= "padding-left: 5px;">
+			  						<div class="col-xs-12 text-center padding0">
+			  							<div class="col-xs-12 padding0">
+											<div class="context-con opacity00 col-xs-3" id="resultset">
+												<span class = "connection-text">resultset</span>
+											</div>
 										</div> 
 									</div>
-									<div class = col-xs-3 style = "margin-left:36px;">
-										<div class="statment opacity00  col-xs-3" id = "statment">
-											<span class = "connection-text"> statment </span>
-										</div>
-									</div> 
-									<div class = col-xs-3 style = "margin-left:45px;" >
-										<div class="statment opacity00  col-xs-3" id = "resultset">
-											<span class = "connection-text">resultset </span>
-										</div>
-									</div> 
+									<div class="col-xs-12 text-center padding0">
+										<div class="col-xs-12 padding0">
+											<div class="context-con opacity00 col-xs-3 context-con" id="statment">
+												<span class="connection-text"> statment </span>
+											</div>
+										</div> 
+									</div>
+									<div class="col-xs-12 text-center padding0">
+										<div class="col-xs-12 padding0">
+											<div class="statment opacity00 col-xs-3" id = "connection">
+												<span class = "connection-text">connection </span>
+											</div>
+										</div> 
+									</div>
+									<div class="col-xs-12 margin-top10" id="dummy"></div>
 								</div>
 						</div>
-			 			<div class = col-xs-3>
-			   				 <div class=" driver-box padding0 opacity00" id="driver2">
-								<div class="text-font"><b>Driver Manager</b></div>
+						<div class="col-xs-12">
+				 			<div class = col-xs-3>
+				   				 <div class=" driver-box padding0 opacity00" id="driver2">
+									<div class="text-font"><b>Driver Manager</b></div>
+								</div>
 							</div>
 						</div>
-						 <div class = "col-xs-12"> 
+						 <div class = "col-xs-12" style = "margin-left: 10px;"> 
 			  			 	<div class= "col-xs-offset-1 col-xs-3 database2 opacity00" id = db2>
 								<div class="oval1" style="background-color: thistle;"></div>
 									<span class="text-font db2-span"> <b>D/B</b>
@@ -657,7 +682,7 @@
 									</div>
 								</div>
 							</div>
-							<div class=" col-xs-12 text" style = "display:inline-block;position:relative;margin-top: 85px;">
+							<div class=" col-xs-12 text" style = "display:inline-block;position:relative;margin-top: 85px;margin-left: 5px;">
 								<div class= "col-xs-offset-3 col-xs-4 database-box opacity00" id="databaseBox1" style ="height:80px; width:130px;">
 									<div class="oval1 oval1style"></div>
 									<span class="text-font database-text-middle databasestyle"> <b>D/B</b></span>
@@ -670,12 +695,5 @@
 		</svg>
 	</div>
 </div>
-	
-	<script>
-			$(document).ready(function() {
-				getconnectiondriver();
-				$('[data-toggle="popover"]').popover(); 
-			})
-	</script> 
 	</body>
 </html>

@@ -25,6 +25,7 @@
 </head>
 
 <style type="text/css">
+
 .introjs-tooltip {
 	min-width: 350px;
 }

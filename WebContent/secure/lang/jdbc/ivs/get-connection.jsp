@@ -16,7 +16,10 @@
 <script src ="/secure/lang/jdbc/js/get-connection.js"text/javascript"></script>
 <title>get-connection</title>
 <style type="text/css">
-
+y {
+	color:yellow;
+	font-weight: 700;
+}
 .main-box-border {
 	border: 2px solid transparent;
 	border-radius: 10px;
@@ -28,7 +31,11 @@
 	display: flex;
 	align-items: center;
 }
-
+.user-btn {
+	background-color: green;
+	
+	/* cursor: default; */
+}
 .box-border {
 	align-items: center;
     border: 1px solid gray;
@@ -73,11 +80,9 @@
 
 
 .invisable-div {
-	
     border: 1px solid gray;
     border-radius: 15px;
-   
-     height: 220px;
+    height: 220px;
     justify-content: center;
 }
 
@@ -133,6 +138,7 @@
 .tooltip-height {
 	height: 20px;
 	margin-top: 5px;
+	float: right;
 }
 
 .ui-effects-transfer {
@@ -144,10 +150,12 @@
 .green-color {
 	color : green;
 	font-weight: bold;
+	display:none;
 }
 .green-color1 {
 	color : green;
 	font-weight: normal;
+	display:none;
 }
 .border {
 	border: 2px solid gray;
@@ -308,8 +316,9 @@
 	width: 100%;
 }
 .svg-line, .svg-line1, .svg-line2, .svg-line3 {
-	stroke: gray;
+	stroke: green;
 	stroke-width: 2;
+	display:none;
 }
 .green-color {
 	color : green;
@@ -446,79 +455,85 @@
 </head>
 <body>
 	<script>
-		$(document).ready(function() {
-			getconnectiondriver();
-			$('[data-toggle="popover"]').popover(); 
-		});
+			$(document).ready(function() {
+				$(".opacity00").removeClass("opacity00");
+				$(".visibility-hidden").removeClass("visibility-hidden");
+				$(".display").removeClass("display");
+				
+				//$(".svg-line,.svg-line1,.svg-line2,.svg-line3,.ani,.ani2").hide();
+				getconnectiondriver();
+				
+				$('[data-toggle="popover"]').popover(); 
+			})
 	</script> 
-	
+
+
 	<div>
 		<h2 class="text-center">
 			<span class="label label-default ct-demo-heading">Getting Connection to DB</span>
 		</h2>
 		<div class='buttons-div text-center'>
-				<button type="button" class="btn btn-warning visibility-hidden" id="restartBtn">Restart</button>
-		</div>
+				<button type="button" class="btn btn-warning visibility-hidden" id="restartBtn">Restart</button></div>
 	</div>
 	<div class="col-xs-10">
 		<div class="main-box-border" id="mainBox">
 			<svg class = "svg-css">
-				 <marker id="flow4Marker" refX="3" refY="2.5" markerWidth="5" markerHeight="5" orient="auto" style="fill: gray;">
+				 <marker id="flow4Marker" refX="3" refY="2.5" markerWidth="5" markerHeight="5" orient="auto" style="fill: red;">
                			<path d="M0,0 L5,2.5 L0,5 Z"/>
            		 </marker>
-           			<line class="svg-line " id = "line1" x1="38%" y1="49%" x2="38%" y2="50%" style="marker-end: url(#flow4Marker);"/>
-					<text y="314" x="410" font-size="15" id="query1" class="green-color ani ">getConnection</text>
-					<line class="svg-line " id = "line2" x1="37%" y1="68%" x2="37%" y2="67.9%" style="marker-end: url(#flow4Marker);"/>
-					<text y="415" x="297" font-size="15" id="query2" class="green-color ani ">connect to db</text>
-					<line class="svg-line " id = "line3" x1="38%" y1="81%" x2="38%" y2="82%" style="marker-end: url(#flow4Marker);"/>
-					<text y="429" x="410" font-size="15" id="query3" class="green-color ani ">get the connection</text>
-					<line class="svg-line " id = "line5 " x1="46%" y1="62%" x2="47%" y2="62%" style="marker-end: url(#flow4Marker);"/>
-					<text y="377" x="481" font-size="15" id="query4" class="green-color ani ">data base(url)</text>
-					<line class="svg-line " id = "line6" x1="57%" y1="59%" x2="57%" y2="58.5%"/>
-					<line class="svg-line " id = "line7" x1="57%" y1="47%" x2="57%" y2="47%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line1 " id = "line10" x1="10%" y1="12%" x2="10%" y2="15%" style="marker-end: url(#flow4Marker);"/>
-					<text y="79" x="31" font-size="10"class="green-color1 ani2 ">getConnection</text>
-					<line class="svg-line1 " id = "line11" x1="9%" y1="25%" x2="9%" y2="29%" style="marker-end: url(#flow4Marker);"/>
-					<text y="156" x="25" font-size="10" class="green-color1 ani2 ">connect to db</text>
-					<line class="svg-line1 " id = "line12" x1="11%" y1="30%" x2="11%" y2="26%" style="marker-end: url(#flow4Marker);"/>
-					<text y="160" x="124" font-size="10"class="green-color1 ani2 ">get the connection</text>
-					<line class="svg-line1 " id = "line14" x1="14%" y1="20%" x2="18%" y2="20%" style="marker-end: url(#flow4Marker);"/>
-					<text y="134" x="151" font-size="10" class="green-color1 ani2 ">data base(url)</text>
-					<line class="svg-line1 " id = "line17" x1="23%" y1="5%" x2="23%" y2="15.5%"/>
-					<line class="svg-line1 " id = "line18" x1="23%" y1="5%" x2="15%" y2="5%" style="marker-end: url(#flow4Marker);"/>
-				    <line class="svg-line2 " id = "line19" x1="59%" y1="7%" x2="66%" y2="7%"/>
-					<line class="svg-line2 " id = "line20" x1="66%" y1="7%" x2="66%" y2="11%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line2 " id = "line26" x1="70%" y1="16%" x2="73%" y2="16%" style="marker-end: url(#flow4Marker);"/>
-			     	<line class="svg-line2 " id = "line27" x1="81%" y1="16%" x2="83%" y2="16%" style="marker-end: url(#flow4Marker);"/>
-			        <line class="svg-line2 " id = "line32" x1="67%" y1="21%" x2="67%" y2="25%"/> 
-			        <line class="svg-line2 " id = "line33" x1="67%" y1="25%" x2="60%" y2="25%" style="marker-end: url(#flow4Marker);"/>
-			        <line class="svg-line2 " id = "line34" x1="67%" y1="25%" x2="60%" y2="25%"/>
-			        <line class="svg-line2 " id = "l35" x1="67%" y1="25%" x2="67%" y2="21%" style="marker-end: url(#flow4Marker);"/> 
-					<line class="svg-line2 " id = "line28" x1="88%" y1="12%" x2="88%" y2="5%"/>
-					<line class="svg-line2 " id = "line29" x1="88%" y1="5%" x2="60%" y2="5%"style="marker-end: url(#flow4Marker);"/> 
-					<line class="svg-line2 " id = "line30" x1="53%" y1="27%" x2="53%" y2="30.3%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line2 " id = "line31" x1="53%" y1="31%" x2="53%" y2="26.8%" style="marker-end: url(#flow4Marker);"/> 
-					<line class="svg-line3 " id = "line35" x1="44%" y1="10%" x2="44%" y2="11%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line36" x1="43%" y1="53%" x2="43%" y2="54%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line37" x1="44%" y1="65%" x2="44%" y2="64%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line38" x1="49.2%" y1="49%" x2="49.5%" y2="49%"/>
-					<line class="svg-line3 " id = "line39" x1="58.5%" y1="49%" x2="58.5%" y2="48%" style="marker-end: url(#flow4Marker);"/>	
-					<line class="svg-line3 " id = "line40" x1="59%" y1="11%" x2="59%" y2="16%"/>
-					<line class="svg-line3 " id = "line41" x1="59%" y1="6%" x2="58%" y2="6%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line42" x1="50%" y1="4%" x2="50%" y2="4%"/>
-					<line class="svg-line3 " id = "line43" x1="60%" y1="4%" x2="60%" y2="5%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line44" x1="62%" y1="24.5%" x2="64%" y2="24.5%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line45" x1="70%" y1="16%" x2="70%" y2="16%"/>
-					<line class="svg-line3 " id = "line46" x1="70%" y1="6%" x2="70%" y2="6%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line47" x1="50%" y1="4%" x2="50%" y2="4%"/>
-					<line class="svg-line3 " id = "line48" x1="72%" y1="4%" x2="72%" y2="5%" style="marker-end: url(#flow4Marker);"/>
-					<line stroke-dasharray= "5"  class="svg-line3 " id = "line49" x1="66%" y1="24.5%" x2="69%" y2="24.5%" style="marker-end: url(#flow4Marker);"/>
-					<line stroke-dasharray= "5" class="svg-line3 " id = "line50" x1="58%" y1="32%" x2="58%" y2="27%"/>
-					<line stroke-dasharray= "5" class="svg-line3 " id = "line51" x1="58%" y1="50%" x2="57%" y2="50%" style="marker-end: url(#flow4Marker);"/>
-					<line stroke-dasharray= "5" class="svg-line3 " id = "line52" x1="45%" y1="53%" x2="45%" y2="54%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line53" x1="75%" y1="24.5%" x2="75%" y2="24.5%" style="marker-end: url(#flow4Marker);"/>
-					<line class="svg-line3 " id = "line54" x1="84%" y1="16%" x2="84%" y2="16%"/>
-					<line class="svg-line3 " id = "line55" x1="84%" y1="6%" x2="84%" y2="6%" style="marker-end: url(#flow4Marker);"/>
+           			<line class="svg-line" id = "line1" x1="38%" y1="49%" x2="38%" y2="50%" style="marker-end: url(#flow4Marker);"/>
+					<text y="314" x="300" font-size="15" id="query1" class="green-color ani">getConnection</text>
+					<line class="svg-line" id = "line2" x1="38%" y1="68%" x2="38%" y2="67.9%" style="marker-end: url(#flow4Marker);"/>
+					<text y="415" x="297" font-size="15" id="query2" class="green-color ani">connect to db</text>
+					<line class="svg-line" id = "line3" x1="39%" y1="81%" x2="39%" y2="82%" style="marker-end: url(#flow4Marker);"/>
+					<text y="429" x="410" font-size="15" id="query3" class="green-color ani">get the connection</text>
+					<line class="svg-line " id = "line5" x1="46%" y1="62%" x2="47%" y2="62%" style="marker-end: url(#flow4Marker);"/>
+					<text y="377" x="481" font-size="15" id="query4" class="green-color ani">data base(url)</text>
+					<line class="svg-line" id = "line6" x1="57%" y1="59%" x2="57%" y2="58.5%"/>
+					<line class="svg-line" id = "line7" x1="57%" y1="47%" x2="57%" y2="47%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line1" id = "line10" x1="10%" y1="12%" x2="10%" y2="15%" style="marker-end: url(#flow4Marker);"/>
+					<text y="79" x="31" font-size="10"class="green-color1 ani2">getConnection</text>
+					<line class="svg-line1" id = "line11" x1="9%" y1="25%" x2="9%" y2="29%" style="marker-end: url(#flow4Marker);"/>
+					<text y="156" x="25" font-size="10" class="green-color1 ani2">connect to db</text>
+					<line class="svg-line1" id = "line12" x1="11%" y1="30%" x2="11%" y2="26%" style="marker-end: url(#flow4Marker);"/>
+					<text y="160" x="124" font-size="10"class="green-color1 ani2">get the connection</text>
+					<line class="svg-line1" id = "line14" x1="14%" y1="20%" x2="18%" y2="20%" style="marker-end: url(#flow4Marker);"/>
+					<text y="134" x="151" font-size="10" class="green-color1 ani2">data base(url)</text>
+					<line class="svg-line1" id = "line17" x1="23%" y1="5%" x2="23%" y2="15.5%"/>
+					<line class="svg-line1" id = "line18" x1="23%" y1="5%" x2="15%" y2="5%" style="marker-end: url(#flow4Marker);"/>
+				    <line class="svg-line2" id = "line19" x1="59%" y1="7%" x2="66%" y2="7%"/>
+					<line class="svg-line2" id = "line20" x1="66%" y1="7%" x2="66%" y2="11%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line2" id = "line26" x1="70%" y1="16%" x2="73%" y2="16%" style="marker-end: url(#flow4Marker);"/>
+			     	<line class="svg-line2" id = "line27" x1="81%" y1="16%" x2="83%" y2="16%" style="marker-end: url(#flow4Marker);"/>
+			        <line class="svg-line2" id = "line32" x1="67%" y1="21%" x2="67%" y2="25%"/> 
+			        <line class="svg-line2" id = "line33" x1="67%" y1="25%" x2="60%" y2="25%" style="marker-end: url(#flow4Marker);"/>
+			        <line class="svg-line2" id = "line34" x1="67%" y1="25%" x2="60%" y2="25%"/>
+			        <line class="svg-line2" id = "l35" x1="67%" y1="25%" x2="67%" y2="21%" style="marker-end: url(#flow4Marker);"/> 
+					<line class="svg-line2" id = "line28" x1="88%" y1="12%" x2="88%" y2="5%"/>
+					<line class="svg-line2" id = "line29" x1="88%" y1="5%" x2="60%" y2="5%"style="marker-end: url(#flow4Marker);"/> 
+					<line class="svg-line2" id = "line30" x1="53%" y1="27%" x2="53%" y2="30.3%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line2" id = "line31" x1="53%" y1="31%" x2="53%" y2="26.8%" style="marker-end: url(#flow4Marker);"/> 
+					<line class="svg-line3" id = "line35" x1="44%" y1="10%" x2="44%" y2="11%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line36" x1="44%" y1="53%" x2="44%" y2="54%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line37" x1="45%" y1="65%" x2="45%" y2="64%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line38" x1="49.2%" y1="49%" x2="49.5%" y2="49%"/>
+					<line class="svg-line3" id = "line39" x1="58.5%" y1="49%" x2="58.5%" y2="48%" style="marker-end: url(#flow4Marker);"/>	
+					<line class="svg-line3" id = "line40" x1="59%" y1="11%" x2="59%" y2="16%"/>
+					<line class="svg-line3" id = "line41" x1="59%" y1="6%" x2="58%" y2="6%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line42" x1="50%" y1="4%" x2="50%" y2="4%"/>
+					<line class="svg-line3" id = "line43" x1="60%" y1="4%" x2="60%" y2="5%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line44" x1="62%" y1="24.5%" x2="64%" y2="24.5%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line45" x1="70%" y1="16%" x2="70%" y2="16%"/>
+					<line class="svg-line3" id = "line46" x1="70%" y1="6%" x2="70%" y2="6%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line47" x1="50%" y1="4%" x2="50%" y2="4%"/>
+					<line class="svg-line3" id = "line48" x1="72%" y1="4%" x2="72%" y2="5%" style="marker-end: url(#flow4Marker);"/>
+					<line stroke-dasharray= "5"  class="svg-line3" id = "line49" x1="66%" y1="24.5%" x2="69%" y2="24.5%" style="marker-end: url(#flow4Marker);"/>
+					<line stroke-dasharray= "5" class="svg-line3" id = "line50" x1="58%" y1="32%" x2="58%" y2="27%"/>
+					<line stroke-dasharray= "5" class="svg-line3" id = "line51" x1="58%" y1="50%" x2="57%" y2="50%" style="marker-end: url(#flow4Marker);"/>
+					<line stroke-dasharray= "5" class="svg-line3" id = "line52" x1="46%" y1="53%" x2="46%" y2="54%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line53" x1="75%" y1="24.5%" x2="75%" y2="24.5%" style="marker-end: url(#flow4Marker);"/>
+					<line class="svg-line3" id = "line54" x1="84%" y1="16%" x2="84%" y2="16%"/>
+					<line class="svg-line3" id = "line55" x1="84%" y1="6%" x2="84%" y2="6%" style="marker-end: url(#flow4Marker);"/>
 					
 				 <div class="col-xs-12 margin-top10 padding0">
 						<div class="col-xs-4">
@@ -632,7 +647,7 @@
 								<div class="text-font"><b>Driver Manager</b></div>
 							</div>
 						</div>
-						 <div class = "col-xs-12"> 
+						 <div class = "col-xs-12" style = "margin-left: 10px;"> 
 			  			 	<div class= "col-xs-offset-1 col-xs-3 database2 opacity00" id = db2>
 								<div class="oval1" style="background-color: thistle;"></div>
 									<span class="text-font db2-span"> <b>D/B</b>
@@ -665,7 +680,7 @@
 									</div>
 								</div>
 							</div>
-							<div class=" col-xs-12 text" style = "display:inline-block;position:relative;margin-top: 85px;">
+							<div class=" col-xs-12 text" style = "display:inline-block;position:relative;margin-top: 85px;margin-left: 5px;">
 								<div class= "col-xs-offset-3 col-xs-4 database-box opacity00" id="databaseBox1" style ="height:80px; width:130px;">
 									<div class="oval1 oval1style"></div>
 									<span class="text-font database-text-middle databasestyle"> <b>D/B</b></span>

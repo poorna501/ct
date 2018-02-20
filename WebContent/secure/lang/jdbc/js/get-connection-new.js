@@ -4,63 +4,63 @@ var tl = new TimelineLite();
 var typingSpeed = 10;
 var count = 1;
 var popoverCount = 0;
-var getconnectiondriver = function() {
-	
+
+var getConnectionDriver = function() {
 	$("#animation2, #animation1, #invisableDiv2").addClass("display");
 	$('#restartBtn').click(function() {
 		location.reload();
 	});
-		intro = introJs();
-		intro.setOptions({
-			showStepNumbers: false,
-			exitOnOverlayClick: false,
-			showBullets: false,
-			exitOnEsc: false,
-			keyboardNavigation: false,
-			steps : [{
-				element : "#mainBox",
-				intro : "",
-				position:"right"
-				//tooltipClass : "hide"
-				}, {
-				element :"#restartBtn",
-			    intro :"Click to Restart",
-			    position : "right"
-			}]
-		});
-		intro.onafterchange(function(targetElement) {
-			$('.introjs-nextbutton').hide();
-			var elementId = targetElement.id;
-			switch (elementId) {
-				case "mainBox":
-					var text = "<ol><li>A <y>connection</y> object in jdbc is used to connect to a database."
-								+ "Let us understand how we get a connection object.</li>";
-					typing(".introjs-tooltiptext", text,  function() {
-						$("#animation1").removeClass("display");
-						intro.insertOption(intro._currentStep + 1, insertionIntro("animationDiv", "", "right", "", ""));
-						$('.introjs-tooltipbuttons').append('<a class="user-btn introjs-button" onClick="explainJavaApt()">Next &#8594;</a>');
-					});
-				break;	
-				case "animationDiv":
-					$(".introjs-helperLayer").one("transitionend", function() {
-					$('.introjs-nextbutton').hide();
-					animation1()
-						intro.insertOption(intro._currentStep + 1, insertionIntro("restartBtn", "", "right", "", ""));
-					})
-				break;	
-				case "restartBtn":  
-					$('.introjs-nextbutton').hide();
-					$('.introjs-tooltip').css({'min-width' : '120px'});
-					$('.introjs-helperLayer').one('transitionend', function () {
-						$("#restartBtn").removeClass('visibility-hidden');
-					});
-					break;
-			}
-		});
-		intro.start();
-		//$('.introjs-nextbutton').show();
-		$('.introjs-prevbutton, .introjs-skipbutton,.introjs-bullets').hide();
-	}
+	intro = introJs();
+	intro.setOptions({
+		showStepNumbers: false,
+		exitOnOverlayClick: false,
+		showBullets: false,
+		exitOnEsc: false,
+		keyboardNavigation: false,
+		steps : [{
+			element : "#mainBox",
+			intro : "",
+			position:"right"
+			},{
+			element :"#restartBtn",
+		    intro :"Click to Restart",
+		    position : "right"
+		}]
+	});
+	intro.onafterchange(function(targetElement) {
+		$('.introjs-nextbutton').hide();
+		var elementId = targetElement.id;
+		switch (elementId) {
+			case "mainBox":
+				var text = "<ol><li>A <y>connection</y> object in jdbc is used to connect to a database."+
+				"Let us understand how we get a connection object.</li>";
+				typing(".introjs-tooltiptext", text,  function() {
+					$('.introjs-tooltipbuttons').append('<a class="user-btn introjs-button" onClick="animation2()">Next &#8594;</a>');
+					intro.insertOption(intro._currentStep + 1, insertionIntro("animationDiv", "", "right", "", ""));
+				});
+			break;	
+					case "animationDiv":
+						$(".introjs-helperLayer").one("transitionend", function() {
+						$('.introjs-nextbutton').hide();
+						animation1();
+							intro.insertOption(intro._currentStep + 1, insertionIntro("restartBtn", "", "right", "", ""));
+						})
+					break;	
+				
+			
+			case "restartBtn":  
+				$('.introjs-nextbutton').hide();
+				$('.introjs-tooltip').css({'min-width' : '120px'});
+				$('.introjs-helperLayer').one('transitionend', function () {
+					$("#restartBtn").removeClass('visibility-hidden');
+				});
+				break;
+		}
+	});
+	intro.start();
+	$('.introjs-prevbutton, .introjs-skipbutton,.introjs-bullets').hide();
+}
+
 function typing(selector, text, callBackFunction) {
 	$(selector).typewriting(text, {
 		"typing_interval" : typingSpeed,
@@ -91,143 +91,92 @@ function insertionIntro(element, msg, position, tooltip, action) {
 		insert["action"] = action;
 	}
 	return insert;
-
 }
 
-function explainJavaApt() {
-	console.log("Hello");
-	$(".user-btn").remove();
-	var text = "This is the java Application nothing but client side application.";
-	fadeInAndShowPopover("#javaBox", "left", text, function() {
-		var text = "This is database which is used to store,captures and analyze data.";
-		fadeInAndShowPopover("#driver", "left", text, function() {
-			toAndFromToEffect("#line1", "#query1" , "57%", function() {
-				var text = "This is database which is used to store,captures and analyze data.";
-				fadeInAndShowPopover("#databaseBox1", "left", text, function() {
-					toAndFromToEffect("#line2","#query2" , "81%", function() {
-						toAndFromToEffect("#line3","#query3" , "69%", function() {
-						$("#line4").show();
-							TweenMax.to($("#line4"), 1, {attr:{y2: "73%" },onComplete:function() {
-								$("#line5").show();
-								TweenMax.to($("#line5"), 1, {attr:{x2: "51.5%" },onComplete:function() {
-									$("#query4").show();
-									tl.fromTo("#query4", 0.5, {"opacity" : "0"}, {"opacity" : "1" , repeat: 1});
-									var text = "Connection Object.";
-									fadeInAndShowPopover("#circle", "right", text, function() {
-										
-									});
+function firstAnimation() {
+	toAndFromToEffect("#line2","#query2" , "81%", function() {
+		toAndFromToEffect("#line3","#query3" , "69%", function() {
+		$("#line4").show();
+			TweenMax.to($("#line4"), 1, {attr:{y2: "73%" },onComplete:function() {
+				$("#line5").show();
+					TweenMax.to($("#line5"), 1, {attr:{x2: "51.5%" },onComplete:function() {
+					$("#query4").show();
+					tl.fromTo("#query4", 0.5, {"opacity" : "0"}, {"opacity" : "1" , repeat: 1});
+						$("#circle").removeClass("opacity00").hide().fadeIn(2000,function() {
+						var text = "A connection object is created by the driver manager after making a connection witha database "
+									+ " and this connection object is returned to the Client Application.";
+						textappend('#circle', 'right', '5', text, function() {
+							appendBtn(5, function() {
+								popoverGrayOut();
+								$("#line6").show();
+								TweenMax.to($("#line6"), 1, {attr:{y1: "47%" },onComplete:function() {
+									$("#line7").show();
+									TweenMax.to($("#line7"), 1, {attr:{x2: "47%" },onComplete:function() {
+										$("#line8").show();
+										TweenMax.to($("#line8"), 1, {attr:{x2: "48%" },onComplete:function() {
+											$("#line9").show();
+											TweenMax.to($("#line9"), 1, {attr:{y2: "58%" },onComplete:function() {
+												appendBtn(5, function() {
+													transferAnimation1();
+													//$(".introjs-tooltipbuttons").append('<a class="introjs-button user-btn" onclick="transferAnimation1()"><span>Next &#8594;</span></a>');
+												});
+											}});
+										}});
+									}});
 								}});
-							}});
+							});
 						});
-					})
-				});
-			});
+					});
+				}});
+			}});
 		});
 	});
 }
-
-function fadeInAndShowPopover(selector, position, text, callBackFunction) {
-	$(".ct-btn-next").remove();
-	$(selector).removeClass("opacity00").hide().fadeIn(1500, function() {
-		popover(selector, position, text, function() {
-			popoverGrayOut();
-			if (typeof callBackFunction === "function") {
-				callBackFunction();
-			}
-		});
-	});
-}
-
-
-function popover(selector, position, text, callBackFunction) {
-	$(selector).popover({
-				placement: position,
-				viewport: selector,
-				html: true,
-				trigger: "focus",
-				content: '<div id="popover' + popoverCount +'"></div>',
-	});
-	$(selector).popover('show');
-	$(".popover").css("top" , "0");
-	typing("#popover" + popoverCount, text, function() {
-		$('#popover' + popoverCount).parents(".popover-content").append('<div class="tooltip-height">'
-				+ '<span class="btn-success introjs-button user-btn">Next &#8594;</span><div>');
-		$(".usr-btn").click(function() {
-			$(".user-btn").remove();
-			popoverCount++;
-			if (typeof callBackFunction === "function") {
-				callBackFunction();
-			}
-		});
-	});
-}
-
-
 
 function animation1() { 
 	count++
 	$("text").hide();
 	$("#animation1").removeClass("display");
-	$(".ct-btn-next").remove();
+	$(".user-btn").remove();
 	$("#javaBox").removeClass("opacity00").hide().fadeIn(2000,function() {
-		var text = "<span class='start-text'>A client application to get data from the database needs a connection to the database.</span>"+
-		"<span class='end-text'>So it asks the driver manager to give a connection object."
-			textappend('#javaBox', 'left', '2', text, function(){
-			popoverGrayOut()
-			$("#driver").removeClass("opacity00").hide().fadeIn(2000,function() {
-				var text = "The Driver Manager using the driver tries to establish a connection with the underlying database.";
-				textappend('#driver', 'left', '3', text)
-				toAndFromToEffect("#line1","#query1" , "57%", function() {
-					$("#databaseBox1").removeClass("opacity00").hide().fadeIn(2000,function() {
-						var text = "A connection if established with the database,is returned to the driver manager. ";
-						textappend('#databaseBox1', 'left', '4', text)
-						toAndFromToEffect("#line2","#query2" , "81%", function() {
-							toAndFromToEffect("#line3","#query3" , "69%", function() {
-							$("#line4").show();
-								TweenMax.to($("#line4"), 1, {attr:{y2: "73%" },onComplete:function() {
-									$("#line5").show();
-										TweenMax.to($("#line5"), 1, {attr:{x2: "51.5%" },onComplete:function() {
-										$("#query4").show();
-										tl.fromTo("#query4", 0.5, {"opacity" : "0"}, {"opacity" : "1" , repeat: 1});
-											$("#circle").removeClass("opacity00").hide().fadeIn(2000,function() {
-											var text = "A connection object is created by the driver manager after making a connection witha database "+
-											" and this connection object is returned to the Client Application.";
-											textappend('#circle', 'right', '5', text)
-											$("#line6").show();
-												TweenMax.to($("#line6"), 1, {attr:{y1: "47%" },onComplete:function() {
-												$("#line7").show();
-													TweenMax.to($("#line7"), 1, {attr:{x2: "47%" },onComplete:function() {
-													$("#line8").show();
-														TweenMax.to($("#line8"), 1, {attr:{x2: "48%" },onComplete:function() {
-														$("#line9").show();
-															TweenMax.to($("#line9"), 1, {attr:{y2: "58%" },onComplete:function() {
-																$(".introjs-tooltipbuttons").append('<a class="introjs-button user-btn" onclick="transferAnimation1()"><span>Next &#8594;</span></a>');
-															}});
-														}});
-													}});
-												}});
-											});
-										}});
-									}});
+		var text = "<span class='start-text'>A client application to get data from the database needs a connection to the database.</span>"
+					+"<span class='end-text'>So it asks the driver manager to give a connection object."
+			textappend('#javaBox', 'left', '2', text, function() {
+			appendBtn(2, function() {
+				popoverGrayOut();
+				$("#driver").removeClass("opacity00").hide().fadeIn(2000,function() {
+					var text = "The Driver Manager using the driver tries to establish a connection with the underlying database.";
+					textappend('#driver', 'left', '3', text, function() {
+						appendBtn(3, function() {
+							popoverGrayOut();
+							toAndFromToEffect("#line1","#query1" , "57%", function() {
+								$("#databaseBox1").removeClass("opacity00").hide().fadeIn(2000,function() {
+									var text = "A connection if established with the database,is returned to the driver manager. ";
+									textappend('#databaseBox1', 'left', '4', text, function() {
+										appendBtn(4, function() {
+											firstAnimation();
+										});
+									});
 								});
 							});
 						});
 					});
 				});
-			})
 			});
-		}
+		});
+	});
+}
 function textappend(selector, position, val, text,callBackFunction ) {
 	$(selector).popover({
 				placement: position,
 				viewport: selector,
 				html: true,
 				trigger: "focus",
-				content: '<div id="popover' + val +'"></div>',
+				content: '<div id="popover' + val +'"><div id="dispText"></div><div class="showBtn"></div></div>',
 			});
 			$(selector).popover('show');
 			$(".popover").css("top" , "0");
-			typing("#popover" + val, text, function(){
+			typing("#popover" + val + " #dispText", text, function(){
 				if (typeof callBackFunction === "function") {
 					callBackFunction();
 				}
@@ -261,7 +210,7 @@ function point2() {
 	$(".user-btn").remove()
 	$(".tooltip-height").remove();
 	$(".introjs-tooltiptext").append("<div></div>")
-	var text = "<y>2</y>Once a connection is established with the database a connection object is returned to the"+
+	var text = "<y>2</y>. Once a connection is established with the database a connection object is returned to the"+
 	" application,the application now needs a staement object that can be used to write a query and send it over"+
 	"the connection object.";
 	typing(".introjs-tooltiptext div:last", text, function(){
@@ -472,3 +421,14 @@ function popoverGrayOut() {
 	mouseEvents();
 	count++;
 } 
+
+function appendBtn(count, callBackFunction) {
+	$('#popover' + count + ' .showBtn').append('<div class="introjs-button user-btn">Next &#8594;</div>');
+	$(".user-btn").click(function() {
+		$(".user-btn").remove();
+		if (typeof callBackFunction === "function") {
+			callBackFunction();
+		}
+	});
+}
+
