@@ -153,17 +153,9 @@ p {
 	margin-top: 20px;
 }
 
-.margin-top-30 {
+.margin-top-50 {
 	margin-top: 50px;
 }
-
-.margin-top-50 {
-	margin-top: 30px;
-}
-
-.margin-top70 {
-	margin-top: 70px;
-}	
 
 .margin-top-100 {
 	margin-top: 100px;
@@ -255,10 +247,6 @@ caption, table.table-bordered, table.table-bordered > thead > tr > th, table.tab
     border:1px solid blue;
 }
 
-.table {
-	margin-bottom: 4px;
-}
-
 .dash {
   border: 0 none;
   border-top: 2px dashed #322f32;
@@ -302,11 +290,12 @@ caption, table.table-bordered, table.table-bordered > thead > tr > th, table.tab
 }
 
 .quadrat {
-  animation: blinking 1s infinite;
- }
+  -webkit-animation: blinking 1s infinite; 
+  -moz-animation: blinking 1s infinite; 
+}
 
-@keyframes blinking {
-	0%, 49% {
+@-webkit-keyframes blinking {
+  0%, 49% {
     background-color: 	rgb(255,255,0);
     border: 3px solid #e50000;
   }
@@ -314,13 +303,6 @@ caption, table.table-bordered, table.table-bordered > thead > tr > th, table.tab
     background-color: rgb(154,205,50);
     border: 3px solid rgb(117, 209, 63);
   }
-}
-
-.animated {
-  -webkit-animation-duration: 0.5s;
-  animation-duration: 0.5s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
 }
 
 #browserText {
@@ -331,9 +313,8 @@ caption, table.table-bordered, table.table-bordered > thead > tr > th, table.tab
 	background: #003399;
 	color: white;
 }
-
 y {
-	color: green;
+	color: green ;
 	font-weight : bold;
 	font-family : monospace;
 }
@@ -346,20 +327,10 @@ y {
 	color:  yellow;
 }
 
-.driver-manager-css {
-    background: #c0fff8;
-    border-top-right-radius: 6px;
-    border-top-left-radius: 6px;
-}
-
-caption {
-	padding: 4px 0px;
-}
 </style>
 </head>
 <body>
 <script type="text/javascript">
-
 var count = 1;
 var introjs;
 var arr = ['10030','10031','10032'];
@@ -373,7 +344,6 @@ $(document).ready(function() {
 	svgLineRightAndLeft("#svgParent", "#span5", "#span6", "line113","grey", "left","right", "","", true);
 	$('#line111, #line112, #line113').css({'marker-end' : '', 'opacity' : '0'});
 	$('#restart').click(function() {
-		$("#sId").val("");
 		location.reload();
 	});
 	initIntroJs();
@@ -396,11 +366,10 @@ function initIntroJs() {
 		  	}, {
 			    element: '#htmlBody',
 			    intro: '',
-			    position: "top",
 			}, {
 			    element: '#arrowAnimationDiv',
 			    intro: '',
-			    //position: 'right',
+			    position: 'bottom',
 			} , {
 			    element: '#browser',
 			    intro: '',
@@ -462,7 +431,6 @@ function initIntroJs() {
 				typing(".introjs-tooltiptext", text, function() {
 					var id = $('#sId').val().trim();
 					$('tr.hide:eq('+id[id.length-1]+')').removeClass('hide').addClass('temp');
-					zoomInEffect("#browserTable caption");
 					zoomInEffect('#browserTable',function() {
 						$('.quadrat').removeClass('quadrat');
 						$('.temp').addClass('quadrat');
@@ -496,8 +464,6 @@ function totalAnimation() {
 	$('.text-right').remove();
 	zoomInEffect("#DLApi");
 	zoomInEffect("#database",function() {
-		$('#line113').css('opacity', '');
-		svgText('#line113', 'Database layer');
 		$('#sId').attr('disabled','disabled');
 		zoomInEffect('#databaseTable',function() {
 			var text = "<span class='start-text'>This is the <y>database</y>. <br/><br/>Let us assume we are using an <y>RDBMS</y> like <y>Oracle</y>.</span>"+
@@ -505,11 +471,8 @@ function totalAnimation() {
 			" In <y>RDBMS</y> the data is stored in tables.<br/><br/>Consider, we have a <y>STUDENT</y> TABLE that has details of Students in a class."+
 			"<br/><br/>Every database has a <y>database engine</y> which takes the input, queries the database and returns the results.</span>";
 			popover("#database", "left", text,function() {
-				window.scrollTo(0,document.body.scrollHeight);
 				$('#popover2').parents(".popover-content").append('<div class = "text-right">'
-				+'<span class="introjs-button ct-btn-next" onclick="client();">Next &#8594;</span><div>');
-				window.scrollTo(0,document.body.scrollHeight);
-				//$('html').scrollTo('.ct-btn-next',{duration:'slow', offset :{left:'left', top:'top' }});
+				+'<span class="introjs-button ct-btn-next" onclick="client();">Next &#8594;</span><div>');	
 			});
 		});
 	});
@@ -529,7 +492,7 @@ function arrowAnimation() {
 					$('.introjs-tooltiptext > ul').append("<li></li>");
 					$('.introjs-tooltip').scrollTo('.introjs-tooltipbuttons',{duration:'slow', offset :{left:'left', top:'top' }});
 					var text = "The converted <y>Odbc</y> calls are now sent to the <y>ODBC driver</y> which "+ 
-								"  changes them into a query language that the database engine understands.";
+					"  changes them into a query language that the database engine understands.";
 					$('.introjs-tooltip').css('height','100px');
 					typing(".introjs-tooltiptext > ul li:last", text, function() {
 						appendUserButton('.introjs-tooltipbuttons',function() {
@@ -548,10 +511,9 @@ function arrowAnimation() {
 													$('table:eq(1),caption:eq(1)').addClass('z-index-css');
 													var text = "<span class='start-text'>The database when queried for the data, returns records that match the query.</span>";
 													popover("#DLApi", "right", text,function() {
-													$('#popover6').parent().addClass('bg-blue-cl-white introjs-tooltiptext');
+													$('#popover6').parent().addClass('bg-blue-cl-white');
 													$('#popover6').parents(".popover-content").append('<div class = "text-right">'
 													+'<span class="introjs-button ct-btn-next" onclick="responseArrowAnimaiton();">Next &#8594;</span><div>');
-														window.scrollTo(0,document.body.scrollHeight);
 													}); 
 												});
 											});
@@ -584,8 +546,7 @@ function responseArrowAnimaiton() {
 	$('.text-right').remove();
 	$('#popover6').append('<ul class="end-text"></ul>');
 	svgLineTopAndBottom("#svgParent","#ovalShape","#DLApi" ,"line5","grey", "top","bottom", "right", "right", "", function() {
-		var text = "<li>Here the specific <y>student </y>record is picked ie <y>"+ (+$('#sId').val().trim()) 
-					+" </y>and sent to the <y>db engine</y>.</li>";
+		var text = "<li>Here the specific <y>student </y>record is picked ie <y> </y>and sent to the db engine</li>";
 		typing("#popover6 > ul", text, function() {
 			var pid = $('#popover6').parents(".popover-content");
 			appendUserButton(pid,function() {
@@ -599,16 +560,13 @@ function responseArrowAnimaiton() {
 								$('#popover6 > ul').append('<li></li>');
 								var text = "The <y>ODBC driver</y> changes this database format data into its own format and sends it to the <y>bridge driver</y>";
 								typing("#popover6 > ul li:last", text, function() {
-									window.scrollTo(0,document.body.scrollHeight);
 									appendUserButton(pid,function() {
 										svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
 											$('#popover6 > ul').append('<li></li>');
 											var text = "The <y>bridge</y> now converts the result(ODBC format) data in a <y>JDBC</y> format(java) that the client application understands.";
 											typing("#popover6 > ul li:last", text, function() {
-												window.scrollTo(0,document.body.scrollHeight);
 												appendUserButton(pid,function() {
-													window.scrollTo(0,document.body.scrollHeight);
-													$('.bg-blue-cl-white').removeClass('bg-blue-cl-white introjs-tooltiptext');
+													$('.bg-blue-cl-white').removeClass('bg-blue-cl-white');
 													introjs.nextStep();
 												});
 											});
@@ -651,8 +609,8 @@ function client() {
 	count++;
 	$('.text-right').remove();
 	zoomInEffect('#oDriver',function() {
-		/* $('#line113').css('opacity', '');
-		svgText('#line113', 'Database layer'); */
+		$('#line113').css('opacity', '');
+		svgText('#line113', 'Database layer');
 		var text = "<span class='start-text'><b>ODBC Driver</b> : This driver was developed by </span><span class='end-text'><y>Microsoft</y> long before <y>JDBC</y> driver was developed."+
 					"<br/><br/> The <y>ODBC</y> driver takes the calls that are made and converts them "+
 					"to the language that is understood by the <y>Database Engine.</y></span>"
@@ -838,65 +796,64 @@ function validation(selector) {
 </script>
 	<div class="col-xs-12 margin-top-20">
 		<div class="col-xs-12 text-center">
-			<h1 class="label ct-demo-heading">JDBC Driver - 1 (or) JDBC-ODBC bridge Driver</h1>
+			<h1 class="label ct-demo-heading">JDBC Driver - 1</h1>
 		</div>
-		
-		<div class="col-xs-12 margin-top-30">
+		<div class="col-xs-12 margin-top-20">
 			<div class="col-xs-10 border-radius" id="driverOne">
 				<div id="arrowAnimationDiv" class="col-xs-7">
 					<div class="col-xs-12" id="svgParent">
-						<div class="col-xs-12  padding00">
-							<span class="col-xs-1 text-left padding00">
-								<div class="display-css" id="span1"></div>
-							</span>
-							 <span class="col-xs-1 col-xs-offset-10 text-right padding00">
-							 	<div class="display-css" id="span2"></div>
-							 </span>
-						</div>
-						<div class="col-xs-12">
-							<div class="col-xs-offset-4 col-xs-4 border-radius padding00 opacity00" id="javaApp">
-								<div class="col-xs-12  text-center rounded-top padding00">Client App</div>
-								<div class="col-xs-12 dash"></div>
-								<div id="jAPI" class="col-xs-12  text-center rounded-bottom padding00">JDBC API</div>
-							</div>
-						</div>
-						
 						<div class="col-xs-12 margin-top-10 padding00">
-							<span class="col-xs-1 text-left padding00">
-								<div class="display-css" id="span3"></div>
-							</span> 
-							<span class="col-xs-1 col-xs-offset-10 text-right padding00">
-								<div class="display-css" id="span4"></div>
-							</span>
+							<span class="col-xs-1 text-left padding00"><div
+									class="display-css" id="span1"></div></span> <span
+								class="col-xs-1 col-xs-offset-10 text-right padding00"><div
+									class="display-css" id="span2"></div></span>
 						</div>
-						
 						<div class="col-xs-12 margin-top-20">
-							<div id="bridge" class="col-xs-offset-4 col-xs-4  text-center  padding00 border-radius opacity00">
-								<div class="col-xs-12 driver-manager-css">Driver Manager</div>
+							<div class="col-xs-offset-4 col-xs-4 border-radius padding00 opacity00"
+								id="javaApp">
+								<div class="col-xs-12  text-center rounded-top padding00">
+									Client App</div>
 								<div class="col-xs-12 dash"></div>
-								<div class="col-xs-12">JDBC-ODBC Bridge (Type-1 Driver)</div>
+								<div id="jAPI"
+									class="col-xs-12  text-center rounded-bottom padding00">JDBC
+									API</div>
 							</div>
 						</div>
 						
+						<div class="col-xs-12 margin-top-20 padding00">
+							<span class="col-xs-1 text-left padding00"><div
+									class="display-css" id="span3"></div></span> <span
+								class="col-xs-1 col-xs-offset-10 text-right padding00"><div
+									class="display-css" id="span4"></div></span>
+						</div>
+						
 						<div class="col-xs-12 margin-top-50">
-							<div id="oDriver" class="col-xs-offset-4 col-xs-4 border-radius text-center opacity00"> ODBC Driver</div>
-						</div>
-						<div class="col-xs-12 margin-top-10 padding00">
-							<span class="col-xs-1 text-left padding00">
-								<div class="display-css" id="span5"></div>
-							</span> 
-							<span class="col-xs-1 col-xs-offset-10 text-right padding00">
-								<div class="display-css" id="span6"></div>
-							</span>
-						</div>
-						<div class="col-xs-12">
-							<div id="DLApi" class="margin-top-10 col-xs-offset-4 col-xs-4 border-radius text-center opacity00"> DataBase Library API's</div>
+							<div id="bridge"
+								class="col-xs-offset-4 col-xs-4 border-radius text-center opacity00">JDBC-ODBC
+								Bridge (Type-1 Driver)</div>
 						</div>
 						<div class="col-xs-12 margin-top-50">
-							<div id="database" class="col-xs-offset-4 col-xs-4 text-center opacity00 padding00">
+							<div id="oDriver"
+								class="col-xs-offset-4 col-xs-4 border-radius text-center opacity00">
+								ODBC Driver</div>
+						</div>
+						<div class="col-xs-12 margin-top-20 padding00">
+							<span class="col-xs-1 text-left padding00"><div
+									class="display-css" id="span5"></div></span> <span
+								class="col-xs-1 col-xs-offset-10 text-right padding00"><div
+									class="display-css" id="span6"></div></span>
+						</div>
+						<div class="col-xs-12 margin-top-20">
+							<div id="DLApi"
+								class="margin-top-10 col-xs-offset-4 col-xs-4 border-radius text-center opacity00">
+								D/B Engine</div>
+						</div>
+						<div class="col-xs-12 margin-top-50">
+							<div id="database"
+								class="col-xs-offset-4 col-xs-4 text-center opacity00 padding00">
 								<div id="ovalShape" class="col-xs-12 oval-shape"></div>
 								<div id="databaseDiv" class="col-xs-12 database-box border-radius">
-									<div class="margin-top-10">
+									<div class="margin-top-20">
 										<span>Database</span>
 										<div></div>
 									</div>
@@ -921,38 +878,34 @@ function validation(selector) {
 							</div>
 							<div id='browser1' class='col-xs-12 padding00'>
 								<div class='col-xs-2 padding00 text-center'>
-									<span id='arrowCircle' class='col-xs-4 padding00 margin-top5'>
-										<i class="fa fa-arrow-left arrow"></i>
-									</span> 
-									<span class='col-xs-4 padding00 margin-top5'>
-										<i class="fa fa-arrow-right arrow"></i>
-									</span>
-									<span class='col-xs-4 padding00 margin-top5'>
-										<i class="fa fa-rotate-right fa-1x"></i>
-									</span>
+									<span id='arrowCircle' class='col-xs-4 padding00 margin-top5'><i
+										class="fa fa-arrow-left arrow"></i></span> <span
+										class='col-xs-4 padding00 margin-top5'><i
+										class="fa fa-arrow-right arrow"></i></span> <span
+										class='col-xs-4 padding00 margin-top5'><i
+										class="fa fa-rotate-right fa-1x"></i></span>
 								</div>
 								<div class='col-xs-8 padding00 text-center url'>
-									<input type="text" maxlength="100" class="usr-text padding00" disabled="disabled" value="students.jsp">
-									<span class='col-xs-1 padding00'>
-										<i class="fa fa-star-o fa-1x"></i>
-									</span>
+									<input type="text" maxlength="100" class="usr-text"
+										class="padding00" disabled="disabled" value="students.jsp">
+									<span class='col-xs-1 padding00'><i
+										class="fa fa-star-o fa-1x"></i></span>
 								</div>
 								<div class='col-xs-2 padding00 fa-display text-center'>
-									<span class='col-xs-6 padding00 margin-top5'>
-										<i class="fa fa-home fa-1x"></i>
-									</span>
-									<span class='col-xs-6 padding00 margin-top5'>
-										<i class="fa fa-bars fa-1x"></i>
-									</span>
+									<span class='col-xs-6 padding00 margin-top5'><i
+										class="fa fa-home fa-1x"></i></span> <span
+										class='col-xs-6 padding00 margin-top5'><i
+										class="fa fa-bars fa-1x"></i></span>
 								</div>
 							</div>
 							<div class="col-xs-12 html-body padding00" id="htmlBody">
 								<div id='browserText'
-									class="col-xs-12 padding00 margin-top-10 text-center">
-										<input maxlength="5" id="sId" placeholder="Enter student id" type="text" />
+									class="col-xs-12 padding00 margin-top-20 text-center">
+										<input maxlength="5" id="sId" placeholder="Enter student id"
+											type="text" />
 									<div class="col-xs-12 margin-top-10">
 										<table id="browserTable" class="table table-bordered opacity00">
-											<caption class="opacity00 text-center">Student Details</caption>
+											<caption class="text-center">Student Details</caption>
 											<thead>
 												<tr>
 													<th>Sid</th>
@@ -985,11 +938,12 @@ function validation(selector) {
 										</table>
 									</div>
 								</div>
-								<div id="data" class="col-xs-12 margin-top-10 text-center opacity00"></div>
+								<div id="data"
+									class="col-xs-12 margin-top-10 text-center opacity00"></div>
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-12 margin-top-50 opacity00" id="databaseTable">
+					<div class="col-xs-12 margin-top-100 opacity00" id="databaseTable">
 					<div class="col-xs-12"><table class="table table-bordered" >
 					<caption class="text-center">Student Details</caption>
 							<thead><tr>
@@ -1018,13 +972,14 @@ function validation(selector) {
 							</tr></tbody>
 						</table></div>
 					</div>
-					<div id="temp" class="col-xs-12 margin-top-20 text-center opacity00"></div>
 				</div>
 			</div>
 		</div>
 		<div id="restartDiv" class="col-xs-12 margin-top-20 text-center hide opacity00">
-			<span id='restart' class='btn btn-warning btn-sm'><i class='fa fa-refresh'></i>&nbsp;Restart</span>
-		</div>
+				<span id='restart' class='btn btn-warning btn-sm'> <i
+					class='fa fa-refresh'></i>&nbsp;Restart
+				</span>
+			</div>
 	</div>
 </body>
 </html>

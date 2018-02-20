@@ -416,9 +416,9 @@ function initIntroJs() {
 		var elementId = targetElement.id;
 		switch(elementId) {
 		case "driverOne":
-			var text = "The <y>JDBC Type-4 driver</y> is also known as the <b>Native-API Driver.</b><br> <span><span id ='jdbc'>Here,<br> "
-						+"<ul><li>This driver gets its name, as it was the second driver that was created in <y>Java.<y></li> "
-						+ "<li>It was used to communicate to the underlying database through a <y>Native-API</y> driver.</li></ul>"
+			var text = "The <y>JDBC Type-4 driver</y> is also known as the <b>Pure Java Driver.</b><br> <span><span id ='jdbc'>Here,<br> "
+						+"<ul><li>This driver gets its name, as it was also purely written in <y>Java.<y></li> "
+						+ "<li>It can communicate to the underlying database directly and is <y>platform independent</y>.</li></ul>"
 						+ "<br/> Let us now understand how this driver works in detail.";
 						
 			popover("#totalPopoverDiv", "right", text,function() {
@@ -431,7 +431,7 @@ function initIntroJs() {
 				introjs.refresh();
 				var text = "Here, An input(studentid) is taken from a client application (jsp on the browser).<br/> "+
 				"The jsp gets the student details from the database for this student<br/>"
-				+"<br/><y> Please enter a valid student id that exists in the below table</y> ";
+				+"<br/><y> Please enter a valid sid that exists in the below table</y> ";
 				typing(".introjs-tooltiptext", text, function() {
 					validation("#sId");
 				});
@@ -441,7 +441,7 @@ function initIntroJs() {
 			$('#sId').attr('disabled','disabled');
 			$('.introjs-helperLayer').one('transitionend', function () {
 				introjs.refresh();
-				var text = "The student id i.e (<y>"+ (+$('#sId').val().trim()) +"</y>) is then used to get the specific record from "
+				var text = "The sid i.e (<y>"+ (+$('#sId').val().trim()) +"</y>) is then used to get the specific record from "
 							+ "the database. <br><y>Let us understand how the flow happens</y>.";
 				typing(".introjs-tooltiptext", text, function() {
 					$('.introjs-tooltipbuttons').append('<a class="user-btn introjs-button" onClick="arrowAnimation()">Next &#8594;</a>');
@@ -513,8 +513,8 @@ function arrowAnimation() {
 	count++;
 	$('.user-btn').remove();
 	svgLineTopAndBottom("#svgParent","#javaApp","#bridge" ,"line1","grey", "bottom","top", "left", "left", "", function() {
-		var text = "<li>The first step is the <y>Native-API Driver</y>, which gets the input through a <y>JDBC</y> API function"
-					+ " and coverts it to <y>native</y> function call.</li>";
+		var text = "<li>The first step is to the <y>Driver</y> through the Driver Manager, which gets the input from the client application through a <y>JDBC</y> API function"
+					+ " call. It coverts it to the underlying <y>database</y> command.</li>";
 		$('.introjs-tooltiptext').append("<ul></ul>");
 		typing(".introjs-tooltiptext > ul", text, function() {
 			$('.introjs-tooltip').css('height','100px');
@@ -522,7 +522,7 @@ function arrowAnimation() {
 				svgLineTopAndBottom("#svgParent","#bridge","#ovalShape" ,"line4","grey", "bottom","top", "left", "left", "", function() {
 					$('.introjs-tooltiptext > ul').append("<li></li>");
 					$('.introjs-tooltip').scrollTo('.introjs-tooltipbuttons',{duration:'slow', offset :{left:'left', top:'top' }});
-					var text = " The <y>DBEngine</y> than queries the database by passing the query to the database";
+					var text = " The <y>Database</y> is queried using the database command sent by the Driver.";
 					typing(".introjs-tooltiptext > ul li:last", text, function() {
 						appendUserButton('.introjs-tooltipbuttons',function() {
 							$('table:eq(1),caption:eq(1)').addClass('z-index-css');
@@ -552,15 +552,15 @@ function responseArrowAnimaiton() {
 	$('.text-right').remove();
 	//$('#popover5 > ul').append('<li></li>');
 	svgLineTopAndBottom("#svgParent","#ovalShape","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
-	var text = "<ul><li>The <y>driver</y> changes this database format data into its own format and sends it to "
-				+ "the <y>bridge driver</y>.</ul></li>";
+	var text = "<ul><li>The <y>driver</y> gets this database result data."
+				+ "</ul></li>";
 		popover("#nativeProtcol", "right", text, function() {
 			var pid = $('#popover5').parents(".popover-content");
 			window.scrollTo(0,document.body.scrollHeight);
 			appendUserButton(pid,function() {
 				svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
 					$('#popover5 > ul').append('<li></li>');
-					var text = "The <y>bridge</y> now converts the result(<y>native</y> format) data in a <y>JDBC</y> format(java) "
+					var text = "The <y>result</y>is now converted into <y>JDBC</y> format(java) "
 								+ "that the client application understands.";
 					typing("#popover5 > ul li:last", text, function() {
 						window.scrollTo(0,document.body.scrollHeight);
@@ -587,7 +587,7 @@ function client() {
 			svgText('#line111', 'Application layer');
 			var text = "<span class='start-text'>This is the <y>Client side Application</y> which displays the student "
 						+ "data</span><span class='end-text'> that is stored in the database."
-						+ " A client side application can be a <y>jsp</y> which, <ul><li> using the <y>Jdbc API</y> "
+						+ " A client side application can be a <y>jsp</y> which, <ul><li> Using the <y>Jdbc API</y> "
 						+ "talks to the jdbc driver</li><li>And gets the needed data from the driver.</li>"
 						+ "<li>It then displays the data on the browser.</li></ul></span>";
 			popover("#javaApp", "left", text,function() {
@@ -605,8 +605,8 @@ function client() {
 	 zoomInEffect('#bridge',function() {
 		$('#line112').css('opacity', '');
 		svgText('#line112', 'Middle / Service layer');
-		var text = "<span class='start-text'>The <y>Type-4 </y> driver also known as the <y>Native-Protocol driver</y>,</span>"
-					+ "<span class='end-text'> takes the <y>Jdbc</y> function calls and converts them to <y>native</y> function calls."
+		var text = "<span class='start-text'>The <y>Type-4 </y> driver also known as the <y>Pure java driver</y>,<y>Native Protocol Driver.</y></span>"
+					+ "It <span class='end-text'> takes the <y>Jdbc</y> function calls and converts them to <y>native(db)</y> calls."
 					+ "<br/></span>"		
 		popover("#bridge", "left", text,function() {
 			$('#popover4').parents(".popover-content").append('<div class = "text-right">'
@@ -620,7 +620,7 @@ function client() {
 	 introjs.nextStep();
 	 introjs.refresh();
 	 $('.text-right').remove();
-	 var text = "Enter valid student id";
+	 var text = "Enter valid sid";
  }
 
 function nextStep() {
@@ -755,13 +755,13 @@ function validation(selector) {
 					introjs.nextStep();
 				}
 			} else {
-				$('.introjs-tooltiptext').append('<div class="error-text ct-fonts errMsg">Invaid student id.</div>');	
+				$('.introjs-tooltiptext').append('<div class="error-text ct-fonts errMsg">Invaid sid.</div>');	
 			}
 		
 		} else {
 			$('.introjs-nextbutton').hide();
 			$('.error-text').remove();
-			$('.introjs-tooltiptext').append('<div class="error-text ct-fonts errMsg">Student id must be 5 digit number.</div>');
+			$('.introjs-tooltiptext').append('<div class="error-text ct-fonts errMsg">sid must be 5 digit number.</div>');
 		}
 	});
 }
@@ -770,7 +770,7 @@ function validation(selector) {
 </script>
 	<div class="col-xs-12 margin-top-20">
 		<div class="col-xs-12 text-center">
-			<h1 class="label ct-demo-heading">JDBC Driver - 4 (or) Native Protocol Driver</h1>
+			<h1 class="label ct-demo-heading">JDBC Type-4 Driver</h1>
 		</div>
 		
 		<div class="col-xs-12 margin-top-30">
@@ -806,7 +806,7 @@ function validation(selector) {
 							<div id="bridge" class="col-xs-offset-4 col-xs-4  text-center  padding00 border-radius opacity00">
 								<div class="col-xs-12 driver-manager-css">Driver Manager</div>
 								<div class="col-xs-12 dash"></div>
-								<div class="col-xs-12" id="nativeProtcol">Native-Protocol driver (Type-4 Driver)</div>
+								<div class="col-xs-12" id="nativeProtcol">Type-4 Driver (Native-Protocol driver)</div>
 							</div>
 						</div>
 
@@ -878,7 +878,7 @@ function validation(selector) {
 							<div class="col-xs-12 html-body padding00" id="htmlBody">
 								<div id='browserText'
 									class="col-xs-12 padding00 margin-top-10 text-center">
-										<input maxlength="5" id="sId" placeholder="Enter student id" type="text" />
+										<input maxlength="5" id="sId" placeholder="Enter sid" type="text" />
 									<div class="col-xs-12 margin-top-10">
 										<table id="browserTable" class="table table-bordered opacity00">
 											<caption class="opacity00 text-center">Student Details</caption>

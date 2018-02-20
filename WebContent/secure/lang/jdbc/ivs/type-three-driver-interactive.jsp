@@ -18,7 +18,6 @@
 <script src="/js/gs/TweenMax.min.js"></script>
 <script src='/js/jquery.scrollTo.js'></script>
 <script src="../js/ct-svg-lines.js"></script>
-
 <title>driver-3-with-browser</title>
 <style>
 
@@ -419,13 +418,10 @@ function initIntroJs() {
 		switch(elementId) {
 		case "driverOne":
 			var text = "The <y>JDBC Type-3 driver</y> is also known as the <b>Network-Protocol driver.</b><br> <span><span id ='jdbc'>Here,<br> "
-						+"<ul><li>Here <b>JDBC  </b>stands for <y>Java Database Connectivity</y>.</span><br><span id = 'odbc'><b>ODBC for </b> "+
-						" <y>Open Database Connectivity</y>.<br></span></span></li> "+
-						"<li>This driver gets its name, as it was the first driver that was created in <y>Java.<y></li> "+
-						"<li>It was used to communicate to the underlying database through a <y>JDBC-ODBC</y> bridge.</li><li>This bridge connected this driver to the ODBC driver that"+
-						" was built by <y>Microsoft</y>.</li><li>The <y>ODBC</y> driver could directly connect to the databases and get data.</li></ul>"+
+						+"<ul><li>This driver is a <y>pure Java driver</y>, which means it is completely written in Java language.</li>"+
+						"<li>This driver removes the <y>database specific protocol</y> code that has to be written by the client application making it <y>platform independent.</y></li>"+
+						"<li>The driver sends the jdbc calls to the <y>middleware server</y> which converts them as per vendor database specification.</li></ul>"+
 						"<br/> Let  us now understand how this driver works in detail.";
-						
 			popover("#totalPopoverDiv", "right", text,function() {
 				$('#popover1').parents(".popover-content").append('<div class = "text-right">'
 				+'<span class="introjs-button ct-btn-next" onclick="totalAnimation();">Next &#8594;</span><div>');	
@@ -434,9 +430,9 @@ function initIntroJs() {
 		case "htmlBody":
 			$('.introjs-helperLayer').one('transitionend', function () {
 				introjs.refresh();
-				var text = "Here, An input(studentid) is taken from a client application (jsp on the browser).<br/> "+
-				"The jsp gets the student details from the database for this student<br/>"
-				+"<br/><y> Please enter a valid student id that exists in the below table</y> ";
+				var text = "Here, An input(<y>sid</y>) is taken from a client application (jsp on the browser).<br/> "+
+				"The jsp gets the student details from the database for this sid<br/>"
+				+"<br/><y> Please enter a valid <b>sid</b> that exists in the below table</y> ";
 				typing(".introjs-tooltiptext", text, function() {
 					validation("#sId");
 				});
@@ -446,7 +442,7 @@ function initIntroJs() {
 			$('#sId').attr('disabled','disabled');
 			$('.introjs-helperLayer').one('transitionend', function () {
 				introjs.refresh();
-				var text = "The student id is then used  to get the specific record from the database. "+
+				var text = "The <y>sid</y> is then used  to get the specific record from the database. "+
 				"<br><y>Let us understand how the flow happens</y>.";
 				typing(".introjs-tooltiptext", text, function() {
 					$('.introjs-tooltipbuttons').append('<a class="user-btn introjs-button" onClick="arrowAnimation()">Next &#8594;</a>');
@@ -494,6 +490,7 @@ function initIntroJs() {
 }
 
 function totalAnimation() {
+	popoverGrayOut();
 	count++;
 	$('.text-right').remove();
 	zoomInEffect("#DLApi");
@@ -524,8 +521,8 @@ function arrowAnimation() {
 	$('.user-btn').remove();
 	$('.introjs-tooltip').css('height','100px');
 	svgLineTopAndBottom("#svgParent","#javaApp","#bridge" ,"line1","grey", "bottom","top", "left", "left", "", function() {
-		var text = "<li>The first step is the <y>JDBC-ODBC Bridge Driver</y>, which gets the input through a <y>JDBC</y> API function"+
-		" and coverts it to <y>Odbc</y> function call.</li>";
+		var text = "<li>The first step is the <y>Driver Manager</y>, which connects the calls to the driver.The <y>JDBC</y> function calls"+
+		" are sent to the <y>Driver</y> via the Driver Manager.</li>";
 		$('.introjs-tooltiptext').append("<ul></ul>");
 		typing(".introjs-tooltiptext > ul", text, function() {
 			window.scrollTo(0,document.body.scrollHeight);
@@ -533,8 +530,8 @@ function arrowAnimation() {
 				svgLineTopAndBottom("#svgParent","#bridge","#middleWare" ,"line2","grey", "bottom","top", "left", "left", "", function() {
 					$('.introjs-tooltiptext > ul').append("<li></li>");
 					$('.introjs-tooltip').scrollTo('.introjs-tooltipbuttons',{duration:'slow', offset :{left:'left', top:'top' }});
-					var text = "The converted <y>Odbc</y> calls are now sent to the <y>ODBC driver</y> which "+ 
-					"  changes them into a query language that the database engine understands.";
+					var text = "These  <y>JDBC</y> calls are now sent to the <y>Middleware</y> server which "+ 
+					"  changes them into the <y>database specific commands</y> that the database engine understands.";
 					typing(".introjs-tooltiptext > ul li:last", text, function() {
 						appendUserButton('.introjs-tooltipbuttons',function() {
 							svgLineTopAndBottom("#svgParent","#middleWare","#DLApi" ,"line3","grey", "bottom","top", "left", "left", "", function() {
@@ -588,26 +585,26 @@ function responseArrowAnimaiton() {
 	$('.text-right').remove();
 	$('#popover6').append('<ul class="end-text"></ul>');
 	svgLineTopAndBottom("#svgParent","#ovalShape","#DLApi" ,"line5","grey", "top","bottom", "right", "right", "", function() {
-		var text = "<li>Here the specific <y>student </y>record is picked ie <y>"+ (+$('#sId').val().trim()) 
+		var text = "<li>Here the specific <y>sid </y>record is picked ie <y>"+ (+$('#sId').val().trim()) 
 					+" </y>and sent to the <y>db engine</y>.</li>";
 		typing("#popover6 > ul", text, function() {
 			var pid = $('#popover6').parents(".popover-content");
 			appendUserButton(pid,function() {
 				svgLineTopAndBottom("#svgParent","#DLApi","#middleWare" ,"line6","grey", "top","bottom", "right", "right", "", function() {
 					$('#popover6 > ul').append('<li></li>');
-					var text = "This result is now sent to the <y>ODBC</y> driver.";
+					var text = "This result is now sent to the <y>Middleware</y> server which sends it to the JDBC Driver.";
 					typing("#popover6 > ul li:last", text, function() {
 						pid = $('#popover6').parents(".popover-content");
 							appendUserButton(pid,function() {
 								svgLineTopAndBottom("#svgParent","#middleWare","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
 								$('#popover6 > ul').append('<li></li>');
-								var text = "The <y>ODBC driver</y> changes this database format data into its own format and sends it to the <y>bridge driver</y>";
+								var text = "The <y>JDBC driver</y> sends it to the  <y>Client Application.</y>";
 								typing("#popover6 > ul li:last", text, function() {
 									window.scrollTo(0,document.body.scrollHeight);
 									appendUserButton(pid,function() {
 										svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
 											$('#popover6 > ul').append('<li></li>');
-											var text = "The <y>bridge</y> now converts the result(ODBC format) data in a <y>JDBC</y> format(java) that the client application understands.";
+											var text = "The <y>client application</y> picks the data to process it.";
 											typing("#popover6 > ul li:last", text, function() {
 												window.scrollTo(0,document.body.scrollHeight);
 												appendUserButton(pid,function() {
@@ -657,9 +654,10 @@ function client() {
 	zoomInEffect('#middleWare',function() {
 		/* $('#line113').css('opacity', '');
 		svgText('#line113', 'Database layer'); */
-		var text = "<span class='start-text'><b>ODBC Driver</b> : This driver was developed by </span><span class='end-text'><y>Microsoft</y> long before <y>JDBC</y> driver was developed."+
-					"<br/><br/> The <y>ODBC</y> driver takes the calls that are made and converts them "+
-					"to the language that is understood by the <y>Database Engine.</y></span>"
+		var text = "<span class='start-text'><b>Middleware Server</b> : The <y>middleware-net-server</y>< translates "
+					+ "the jdbc function calls into"
+					+ "<y> database commands</y> <span class='end-text'>that can be understood by the underlying database.<br/><br/>"
+					+ " With the help of this server, the type 3 driver becomes <y>platform independent.</y></span>"
 		popover("#middleWare", "right", text,function() {
 			$('#popover5').parents(".popover-content").append('<div class = "text-right">'
 					+'<span class="introjs-button ct-btn-next" onclick="inputIntroStep();">Next &#8594;</span><div>');
@@ -829,11 +827,11 @@ function validation(selector) {
 			} else {
 				$('.introjs-tooltiptext').append('<div class="error-text ct-fonts errMsg">Invaid student id.</div>');	
 			}
-		
+		 
 		} else {
 			$('.introjs-nextbutton').hide();
 			$('.error-text').remove();
-			$('.introjs-tooltiptext').append('<div class="error-text ct-fonts errMsg">Student id must be 5 digit number.</div>');
+			$('.introjs-tooltiptext').append('<div class="error-text ct-fonts errMsg">Sid must be the one that exists in the below table.</div>');
 		}
 	});
 }

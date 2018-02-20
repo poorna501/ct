@@ -157,10 +157,6 @@ p {
 	margin-top: 30px;
 }
 
-.margin-top-30 {
-	margin-top: 50px;
-}
-
 .margin-top70 {
 	margin-top: 70px;
 }	
@@ -373,7 +369,6 @@ $(document).ready(function() {
 	svgLineRightAndLeft("#svgParent", "#span5", "#span6", "line113","grey", "left","right", "","", true);
 	$('#line111, #line112, #line113').css({'marker-end' : '', 'opacity' : '0'});
 	$('#restart').click(function() {
-		$("#sId").val("");
 		location.reload();
 	});
 	initIntroJs();
@@ -400,6 +395,7 @@ function initIntroJs() {
 			}, {
 			    element: '#arrowAnimationDiv',
 			    intro: '',
+			    position: 'right',
 			} , {
 			    element: '#browser',
 			    intro: '',
@@ -458,7 +454,7 @@ function initIntroJs() {
 				typing(".introjs-tooltiptext", text, function() {
 					var id = $('#sId').val().trim();
 					$('tr.hide:eq('+id[id.length-1]+')').removeClass('hide').addClass('temp');
-					zoomInEffect("#browserTable caption");
+					//zoomInEffect("#browserTable caption");
 					zoomInEffect('#browserTable',function() {
 						$('.quadrat').removeClass('quadrat');
 						$('.temp').addClass('quadrat');
@@ -520,7 +516,6 @@ function arrowAnimation() {
 					+ " and coverts it to <y>native</y> function call.</li>";
 		$('.introjs-tooltiptext').append("<ul></ul>");
 		typing(".introjs-tooltiptext > ul", text, function() {
-			$('.introjs-tooltip').css('height','100px');
 			appendUserButton('.introjs-tooltipbuttons',function() {
 				svgLineTopAndBottom("#svgParent","#bridge","#DLApi" ,"line3","grey", "bottom","top", "left", "left", "", function() {
 					$('.introjs-tooltiptext > ul').append("<li></li>");
@@ -637,7 +632,7 @@ function client() {
 		var text = "<span class='start-text'>The <y>Type-2 </y> driver also known as the <y>Native-API driver</y>,</span>"
 					+ "<span class='end-text'> takes the <y>Jdbc</y> function calls and converts them to <y>native</y> function calls."
 					+ "<br/></span>"		
-		popover("#bridge", "left", text,function() {
+		popover("#bridge", "right", text,function() {
 			$('#popover4').parents(".popover-content").append('<div class = "text-right">'
 					+'<span class="introjs-button ct-btn-next" onclick="inputIntroStep();">Next &#8594;</span><div>');
 		});
@@ -802,7 +797,7 @@ function validation(selector) {
 			<h1 class="label ct-demo-heading">JDBC Driver - 2 (or) Native API Driver</h1>
 		</div>
 		
-		<div class="col-xs-12 margin-top-30">
+		<div class="col-xs-12 margin-top-20">
 			<div class="col-xs-10 border-radius" id="driverOne">
 				<div id="arrowAnimationDiv" class="col-xs-7">
 					<div class="col-xs-12" id="svgParent">
@@ -814,7 +809,7 @@ function validation(selector) {
 							 	<div class="display-css" id="span2"></div>
 							 </span>
 						</div>
-						<div class="col-xs-12 margin-top-20">
+						<div class="col-xs-12">
 							<div class="col-xs-offset-4 col-xs-4 border-radius padding00 opacity00" id="javaApp">
 								<div class="col-xs-12  text-center rounded-top padding00">Client App</div>
 								<div class="col-xs-12 dash"></div>
@@ -865,7 +860,7 @@ function validation(selector) {
 					</div>
 				</div>
 				<div class="col-xs-5 padding00" id="BrowserTableDiv">
-					<div id ="totalPopoverDiv" class="col-xs-12 padding00 margin-top-10"><div id='browserHead' class="col-xs-12 text-center opacity00">Browser</div></div>
+					<div id ="totalPopoverDiv" class="col-xs-12 padding00"><div id='browserHead' class="col-xs-12 text-center opacity00">Browser</div></div>
 					<div class="col-xs-12">
 						<div class='col-xs-12 opacity00 container' id='browser'>
 							<div class='tab-container'>
@@ -910,7 +905,7 @@ function validation(selector) {
 										<input maxlength="5" id="sId" placeholder="Enter student id" type="text" />
 									<div class="col-xs-12 margin-top-10">
 										<table id="browserTable" class="table table-bordered opacity00">
-											<caption class="opacity00 text-center">Student Details</caption>
+											<caption class="text-center">Student Details</caption>
 											<thead>
 												<tr>
 													<th>Sid</th>
@@ -976,7 +971,6 @@ function validation(selector) {
 							</tr></tbody>
 						</table></div>
 					</div>
-					<!-- <div id="temp" class="col-xs-12 margin-top-50 text-center opacity00"></div> -->
 				</div>
 			</div>
 		</div>
