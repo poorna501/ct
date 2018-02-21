@@ -18,10 +18,20 @@
 <script type="text/javascript" src='/js/intro.js'></script>
 <script type="text/javascript" src="/js/typewriting.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-latest.js"></script>
+<script type="text/javascript" src="/js/ct-svg-lines.js"></script>
+
+<script type="text/javascript" src="/secure/lang/jdbc/js/callable-statement-new.js"></script>
 
 <title>Callable Statement</title>
 
 <style type="text/css">
+.text-right{
+	margin-bottom: -10px;
+}
+.user-btn {
+	background-color: green;
+	margin: 0px !important;
+}
 .box-border {
 	border-radius: 12px;
 	border: 1px solid gray;
@@ -117,6 +127,13 @@ div, span {
 .data-base-content {
 	padding: 0 42px;
 }
+y {
+	font-family: monospace;
+	font-weight: bold;
+	color: yellow;
+}
+
+
 
 #dummyDiv {
 	position: absolute;
@@ -150,20 +167,32 @@ div, span {
 .tube.x {
     height: 15px;
     border-color:skyblue white;
-    width: 137px;
+    width: 0px;
     top: 63px;
     left: -32px;
     z-index: 6;
 }
-.tube.y {
+.tube.y-axis {
     border-color: white skyblue;
-    height: 104px;
-    left: 112px;
+    height: 0px;
+    left: 125px;
     position: absolute;
-    top: -9px;
+    top: 90px;
     width: 15px;
     z-index: 5;
 }
+
+#yValues span {
+	 top: 100px; 
+	 left: 2px;
+	 position: absolute;
+}
+#xValues span {
+	 top: -5px; 
+	 left: -10px;
+	 position: absolute;
+}
+
 
 </style>
 </head>
@@ -172,6 +201,13 @@ div, span {
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#dummyDiv").css("height", $("#mainDiv").height());
+			callableStatementAnimation();
+			//$(".opacity00").removeClass("opacity00");
+			for (var i = 0; i <= 5; i++) {
+				$("#yValues").append('<span class="opacity00">'+ i % 2 +'</span>');
+				$("#xValues").append('<span class="opacity00">'+ i % 2 +'</span>')
+				
+			}
 		});
 	</script>
 
@@ -185,8 +221,8 @@ div, span {
 		</div>
 		<div class="col-xs-12">
 			<div class="col-xs-12">
-				<div class="col-xs-8 col-xs-offset-2 margin-top-10 text-center" id="mainDiv">
-					<div class="col-xs-12 box-border">
+				<div class="col-xs-8 col-xs-offset-2 margin-top-10 text-center">
+					<div class="col-xs-12 box-border opacity00" id="mainDiv">
 						<div class="col-xs-12">
 							<div class="col-xs-3 margin-top-30">
 								<div class="col-xs-12 padding00">
@@ -207,7 +243,7 @@ div, span {
 							</div>
 							<div class="col-xs-2">
 								<div class="tube x opacity00" id="xPipeLine">
-									<div class="water left"></div>
+									<div id="xValues"></div>
 								</div>
 							</div>
 							<div class="col-xs-6 position padding00">
@@ -226,28 +262,29 @@ div, span {
 							</div>
 						</div>
 						<div class="col-xs-12">
-							<div class="tube y opacity00" id="yPipeLine">
-								<div class="water top" style="height: 0%;"></div>
+							<div class="tube y-axis opacity00" id="yPipeLine">
+								<div id="yValues"></div>
 							</div>
 						</div>
-						<div class="col-xs-12">
-							<div class="col-xs-3 margin-top-50">
-								<div class="col-xs-12 padding00 margin-top-50 opacity00" id="dataBaseDiv">
+						<div class="col-xs-12 margin-top-50">
+							<div class="col-xs-3 margin-top-50" >
+								<div class="col-xs-12 padding00 opacity00" id="dataBaseDiv">
 									<div class="col-xs-12 padding00">
-										<div class="data-base-open" style="background-color: thistle;"></div>
+										<div class="data-base-open" id="dataBaseOpen"style="background-color: thistle;"></div>
 									</div>
 									<div class="position padding00 database-box" id="dataBase">
 										<div class="col-xs-12 data-base-content margin-top-30">
 											<div class="col-xs-12 padding00">
-												<div class="user-box padding1">sp1</div>
-												<div class="user-box padding1">sp2</div>
-												<div class="user-box padding1">sp3</div>
-												<div class="">.....</div>
-												<div class="user-box padding1">spn</div>
+												<div class="user-box box padding1 opacity00">sp1</div>
+												<div class="user-box box padding1 opacity00">sp2</div>
+												<div class="user-box box padding1 opacity00">sp3</div>
+												<div class="opacity00 box">.....</div>
+												<div class="user-box box padding1 opacity00">spn</div>
 											</div>
 											<div class="col-xs-12 margin-top-10"></div>
 										</div>
 									</div>
+									<div class="">Data Base</div>
 								</div>
 							</div>
 						</div>
