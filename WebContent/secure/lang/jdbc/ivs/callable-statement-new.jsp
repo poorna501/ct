@@ -64,6 +64,13 @@ div, span {
 	stroke:	green;
 	stroke-width: 2;	
 }
+.svg-rect {
+	position: relative;
+	stroke: skyblue;
+	width: 5;
+	fill-opacity:0.1;
+	fill:blue;
+}
 .popover {
 	min-width: 100px !important;
 	z-index: 1;
@@ -95,14 +102,15 @@ div, span {
     border-radius: 50%;
     position: relative;
     background-color: antiquewhite;
-    padding: 10px;
+    padding: 15px;
 }
 .margin-12 {
-	margin: 12px;
+	 margin: 12px 12px 12px 31px;
 }
 #driverManager {
 	padding: 10px 20px;
 	background-color: rosybrown;
+	z-index: 10
 }
 .database-box {
     border: 1px solid gray;
@@ -112,14 +120,12 @@ div, span {
 }
 .data-base-open {
     border: 2px solid gray;
-	border-radius: 50%;
-	display: table-cell;
-	position: absolute;
-	width: 97%;
-	height: 25px;
-	margin-top: -8px;
-	margin-left: 3px;
-	z-index: 10 !important
+    border-radius: 50%;
+    display: inline-block;
+    height: 25px;
+    margin-top: -8px;
+    width: 99%;
+    z-index: 10;
 }
 .padding1 {
 	padding: 1px;
@@ -135,15 +141,16 @@ y {
 
 
 
+
 #dummyDiv {
 	position: absolute;
 }
-
 
 .tube {
 	background-color: #f3f3f3;
 	border: 2px solid skyblue;
 }
+
 .x-tube {
   	background:url("/images/pipes.png") -17px -9px;
     height: 39px;
@@ -152,7 +159,6 @@ y {
     top: 141px;
     transform: rotate(180deg);
     width: 144px;
-    z-index: 100000 !important;
 }
 .y-tube {
   	background: url("/images/pipes.png") -47px 0;
@@ -160,28 +166,22 @@ y {
     left: 50px;
     position: absolute;
     top: 14px;
-    /* transform: rotate(180deg); */
     width: 144px;
-    z-index: 100000 !important;
 }
-.tube.x {
+.x {
     height: 15px;
-    border-color:skyblue white;
     width: 0px;
     top: 63px;
     left: -32px;
-    z-index: 6;
 }
 .tube.y-axis {
     border-color: white skyblue;
-    height: 0px;
+    height: -20px;
     left: 125px;
     position: absolute;
     top: 90px;
     width: 15px;
-    z-index: 5;
 }
-
 #yValues span {
 	 top: 100px; 
 	 left: 2px;
@@ -192,7 +192,17 @@ y {
 	 left: -10px;
 	 position: absolute;
 }
-
+#streProc {
+	position: absolute;
+	top: 28px;
+	color: blue;
+	font-weight: bold;
+}
+#contextDiv {
+	z-index: 1000 !important;
+	box-shadow: 0 1px 4px 1px gray;
+	background-color: antiquewhite;
+}
 
 </style>
 </head>
@@ -206,7 +216,6 @@ y {
 			for (var i = 0; i <= 5; i++) {
 				$("#yValues").append('<span class="opacity00">'+ i % 2 +'</span>');
 				$("#xValues").append('<span class="opacity00">'+ i % 2 +'</span>')
-				
 			}
 		});
 	</script>
@@ -227,7 +236,7 @@ y {
 							<div class="col-xs-3 margin-top-30">
 								<div class="col-xs-12 padding00">
 									<div class="position margin-top-10 user-box padding00 opacity00" id="userAplication">
-										<div class="col-xs-12" style="background-color: khaki"><b>Java Application</b></div>								
+										<div class="col-xs-12" style="background-color: khaki" id="javaAppli"><b>Java Application</b></div>								
 										<div class="col-xs-12 user-box padding00" style = "background-color: sandybrown"><b>JBCD API</b></div>
 									</div>
 								</div>
@@ -242,13 +251,14 @@ y {
 								</div>
 							</div>
 							<div class="col-xs-2">
-								<div class="tube x opacity00" id="xPipeLine">
+								<div class="x opacity00" id="xPipeLine">
 									<div id="xValues"></div>
 								</div>
 							</div>
+							
 							<div class="col-xs-6 position padding00">
 								<div class="col-xs-12 context margin-top-30 opacity00" id="contextDiv">
-									<div class="margin-12 position">
+									<div class="position">
 										<div class="elipse-shape opacity00" id="connection">
 											<div><b>Connection</b></div>
 										</div>
@@ -256,6 +266,7 @@ y {
 									<div class="margin-12 position">
 										<div class="elipse-shape opacity00" id="callbleStatmt">
 											<div><b>callable statement</b></div>
+											<span id="streProc" class="opacity00">sp2</span>
 										</div>
 									</div>
 								</div>
@@ -268,17 +279,15 @@ y {
 						</div>
 						<div class="col-xs-12 margin-top-50">
 							<div class="col-xs-3 margin-top-50" >
-								<div class="col-xs-12 padding00 opacity00" id="dataBaseDiv">
-									<div class="col-xs-12 padding00">
-										<div class="data-base-open" id="dataBaseOpen"style="background-color: thistle;"></div>
-									</div>
+							<div class="col-xs-12 padding00 opacity00" id="dataBaseDiv">
 									<div class="position padding00 database-box" id="dataBase">
+    									<div class="data-base-open" id="dataBaseOpen" style="background-color: thistle;" data-original-title="" title="" aria-describedby="popover890423"></div>
 										<div class="col-xs-12 data-base-content margin-top-30">
 											<div class="col-xs-12 padding00">
 												<div class="user-box box padding1 opacity00">sp1</div>
 												<div class="user-box box padding1 opacity00">sp2</div>
 												<div class="user-box box padding1 opacity00">sp3</div>
-												<div class="opacity00 box">.....</div>
+												<div class="box opacity00">.....</div>
 												<div class="user-box box padding1 opacity00">spn</div>
 											</div>
 											<div class="col-xs-12 margin-top-10"></div>
@@ -288,17 +297,15 @@ y {
 								</div>
 							</div>
 						</div>
-						<div class="col-xs-12 margin-top-30"></div>
+						<div class="col-xs-12 margin-top-30"></div>						
 					</div>
 				</div>
-				<!-- <div class="col-xs-8 col-xs-offset-2 margin-top-10 text-center bg" id="dummyDiv">
-					<img class="x-tube">
-					<img class="y-tube"> 
-					<div class="tube x" style="width: 200px; top: 20px; left: 20px; z-index: 6;"><div class="water left" style="width: 0%;"></div></div>
-					<div class="tube y" style="height: 85px; top: 184px; left: 175px; z-index: 5;"><div class="water top" style="height: 0%;"></div></div>
-					<div></div>
-				</div> -->
 			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class='buttons-div text-center'>
+				<button type="button" class="btn btn-warning opacity00" id="restartBtn">Restart</button></div>
+		</div>
 		</div>
 	</div>
 
