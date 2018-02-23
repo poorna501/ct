@@ -95,7 +95,8 @@ div, span {
 }
 .context {
     background-color: rgba(255, 143, 11, 0.15);
-    border: 2px dashed green;
+    /* border: 2px dashed green; */
+    box-shadow: 0 1px 4px 1px gray;
 }
 .elipse-shape {
     border: 2px solid gray;
@@ -130,15 +131,16 @@ div, span {
 .padding1 {
 	padding: 1px;
 }
-.data-base-content {
-	padding: 0 42px;
-}
 y {
 	font-family: monospace;
 	font-weight: bold;
 	color: yellow;
 }
-
+.blue {
+	background-color: blue;
+	font-weight: bold;
+	color: white;
+}
 
 
 
@@ -200,8 +202,16 @@ y {
 }
 #contextDiv {
 	z-index: 1000 !important;
-	box-shadow: 0 1px 4px 1px gray;
-	background-color: antiquewhite;
+	/* background-color: antiquewhite; */
+}
+.box {
+	position: relative;
+	display: inline-block;
+}
+i {
+	position: absolute;
+	/* top: 5px; */
+	left: 1px;
 }
 
 </style>
@@ -257,7 +267,7 @@ y {
 							</div>
 							
 							<div class="col-xs-6 position padding00">
-								<div class="col-xs-12 context margin-top-30 opacity00" id="contextDiv">
+								<div class="col-xs-12 margin-top-30 opacity00" id="contextDiv">
 									<div class="position">
 										<div class="elipse-shape opacity00" id="connection">
 											<div><b>Connection</b></div>
@@ -282,11 +292,12 @@ y {
 							<div class="col-xs-12 padding00 opacity00" id="dataBaseDiv">
 									<div class="position padding00 database-box" id="dataBase">
     									<div class="data-base-open" id="dataBaseOpen" style="background-color: thistle;" data-original-title="" title="" aria-describedby="popover890423"></div>
-										<div class="col-xs-12 data-base-content margin-top-30">
+										<div class="col-xs-12 data-base-content margin-top-10 padding00">
 											<div class="col-xs-12 padding00">
 												<div class="user-box box padding1 opacity00">sp1</div>
-												<div class="user-box box padding1 opacity00">sp2</div>
-												<div class="user-box box padding1 opacity00">sp3</div>
+												<div class="user-box box padding1 opacity00"><span>sp2</span>
+													<i class="fa fa-gear faa-spin animated fa-2x opacity00" id="run"></i>
+												</div>
 												<div class="box opacity00">.....</div>
 												<div class="user-box box padding1 opacity00">spn</div>
 											</div>

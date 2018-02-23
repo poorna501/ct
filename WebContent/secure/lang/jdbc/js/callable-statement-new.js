@@ -100,30 +100,34 @@ function viewPipeLines() {
 	$("#yPipeLine").removeClass("opacity00");
 	TweenLite.to($('#yPipeLine'), 0.8, {css:{height: "114px", top: "-18px"},  onComplete:function() {
 		dataFlow("#yValues", true, function() {
-			tube1();
-			tube2();
-			setTimeout(function() {
-				$("#xPipeLine").removeClass("opacity00");
-				zoomInEffect("#contextDiv", function() {
-					zoomInEffect("#connection", function() {
-						dataFlow("#xValues", false, function() {
-							svgDoubleLineTopOrBottomToRightOrLeft("#mainDiv", "#contextDiv", "#userAplication", "line4", "line5", "", "top", "right", "left", "bottom", "", function() {
-								svgDoubleLineRightOrLeftToBottomOrTop("#mainDiv", "#userAplication", "#contextDiv", "line6", "line7", "", "right", "top", "top", "", "", function() {
-									zoomInEffect("#callbleStatmt", function() {
-										svgLineRightAndLeft("#mainDiv", "#connection", "#callbleStatmt", "line8", "", "right", "left", "", "", true, function() {
-											var text = "Callable statement............."
-														+ "<br/><div id='streProcText'></div>";
-											popover("#contextDiv", "right", text, function() {
-												dataSendToDataBase();
+			$("#xPipeLine").removeClass("opacity00");
+			zoomInEffect("#contextDiv", function() {
+				zoomInEffect("#connection", function() {
+					tube1();
+					tube2();
+					setTimeout(function() {
+						$("#contextDiv").addClass("context");
+						TweenMax.to("#contextDiv", 1, { css: {border: "2px dashed green"},onComplete:function() { 
+							$("#contextDiv").addClass("context").css({border: "2px dashed green"});
+							dataFlow("#xValues", false, function() {
+								svgDoubleLineTopOrBottomToRightOrLeft("#mainDiv", "#contextDiv", "#userAplication", "line4", "line5", "", "top", "right", "left", "bottom", "", function() {
+									svgDoubleLineRightOrLeftToBottomOrTop("#mainDiv", "#userAplication", "#contextDiv", "line6", "line7", "", "right", "top", "top", "", "", function() {
+											svgLineRightAndLeft("#mainDiv", "#connection", "#callbleStatmt", "line8", "", "right", "left", "", "", true, function() {
+												zoomInEffect("#callbleStatmt", function() {
+												var text = "Callable statement............."
+															+ "<br/><div id='streProcText'></div>";
+												popover("#contextDiv", "right", text, function() {
+													dataSendToDataBase();
+												});
 											});
 										});
 									});
 								});
 							});
-						});
-					});
+						}});
+					},800);
 				});
-			},800);
+			});
 		});
 	}});
 }
@@ -134,10 +138,13 @@ function dataSendToDataBase() {
 		svgDoubleLineRightOrLeftToBottomOrTop("#mainDiv", "#userAplication", "#contextDiv", "line11", "line12", "", "right", "top", "top", "", "", function() {
 			$("#line6, #line7").remove();
 			zoomInEffect("#streProc", function() {
-				var text = "call to store processor.........";
-				typing("#streProcText", text, function() {
-					appendNextBtn(function() {
-						storeProcessRequestSend();
+				$("#line8").remove();
+				svgLineRightAndLeft("#mainDiv", "#callbleStatmt", "#connection", "line18", "", "left", "right", "", "", true, function() {
+					var text = "call to store processor.........";
+					typing("#streProcText", text, function() {
+						appendNextBtn(function() {
+							storeProcessRequestSend();
+						});
 					});
 				});
 			});
@@ -152,28 +159,37 @@ function storeProcessRequestSend() {
 			var text = "Select storeProcess..........";
 			popover("#dataBase", "right", text, function() {
 				$(".box").eq(1).css("border-color", "green").effect("highlight", {color: 'blue'}, 500, function() {
-					dataFlowCount = 0
-					dataFlow("#yValues", true, function() {
-						dataFlow("#xValues", false, function() {
-							$("#streProcText").after("<div id='receiveStreProcText'></div>")
-							var text = "receive data ......"
-									+ "<div id='appendBtn'></div>";
-							typing("#receiveStreProcText", text, function() {
-								$('#appendBtn').append('<div class="text-right"><br/><span class="introjs-button user-btn">Next &#8594;</span></div>');
-								$(".user-btn").click(function() {
-									$(".user-btn").remove();
-									$(".line9, .line10, .line11, .line12").remove()
-									svgDoubleLineTopOrBottomToRightOrLeft("#mainDiv", "#contextDiv", "#userAplication", "line13", "line14", 
-											"", "top", "right", "left", "bottom", "", function() {
-										var text = "Successfully receive data.....";
-										popover("#javaAppli", "right", text, function() {
-											introjs.nextStep();
+					$(".box").eq(1).addClass("blue");
+					//$(".box:eq(1) span").css("color", "white");
+					$("#run").removeClass("opacity00");
+					setTimeout(function() {
+						$("#run").removeClass("faa-spin").addClass("opacity00");
+						dataFlowCount = 0
+						dataFlow("#yValues", true, function() {
+							dataFlow("#xValues", false, function() {
+								$("#line18").remove();
+								svgLineRightAndLeft("#mainDiv", "#connection", "#callbleStatmt", "line8", "", "right", "left", "", "", true, function() {
+									$("#streProcText").after("<div id='receiveStreProcText'></div>")
+									var text = "receive data ......"
+										+ "<div id='appendBtn'></div>";
+									typing("#receiveStreProcText", text, function() {
+										$('#appendBtn').append('<div class="text-right"><br/><span class="introjs-button user-btn">Next &#8594;</span></div>');
+										$(".user-btn").click(function() {
+											$(".user-btn").remove();
+											$("#line9, #line10, #line11, #line12").remove();
+											svgDoubleLineTopOrBottomToRightOrLeft("#mainDiv", "#contextDiv", "#userAplication", "line13", "line14", 
+													"", "top", "right", "", "bottom", "", function() {
+												var text = "Successfully receive data.....";
+												popover("#javaAppli", "right", text, function() {
+													introjs.nextStep();
+												});
+											});
 										});
 									});
 								});
 							});
 						});
-					});
+					}, 2500);
 				});
 			});
 		});
@@ -194,19 +210,19 @@ function dataFlow(selector, flag, callBackFunction) {
 	  $(selector + " span").eq(count).removeClass("opacity00");
 	  if (dataFlowCount == 0) {
 		  if (flag) {
-			  TweenMax.to( $(selector + " span").eq(count), 0.5, { top : -20});
+			  TweenMax.to( $(selector + " span").eq(count), 1, { top : -20});
 		  } else {
-			  TweenMax.to( $(selector + " span").eq(count), 0.5, { left : 145});
+			  TweenMax.to( $(selector + " span").eq(count), 1, { left : 165});
 		  }
 	  } else {
 		  if (flag) {
-			  TweenMax.to( $(selector + " span").eq(count), 0.5, { top : 120 });
+			  TweenMax.to( $(selector + " span").eq(count), 1, { top : 120 });
 		  } else {
-			  TweenMax.to( $(selector + " span").eq(count), 0.5, { left : -20 });
+			  TweenMax.to( $(selector + " span").eq(count), 1, { left : -20 });
 		  }
 	  }
 	  count++;  
-	}, 350);
+	}, 500);
 }
 
 function setTimeToIntroGoNextStep() { //set time to Intro goes to next step
@@ -280,7 +296,6 @@ function svgRectDisplay(selector1, selector2, rectLineId, callBackFunction) {
 	}
 }
 
-
 function tube1() {
 	var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 	x1 = ($("#driverManager").offset().left - $("svg").offset().left) + $("#driverManager").width(); 
@@ -289,9 +304,9 @@ function tube1() {
 	line.setAttribute("id", "tube2");
 	line.setAttribute("class", "svg-line");
 	line.setAttribute("x1", x1);
-	line.setAttribute("y1", "31%");
+	line.setAttribute("y1", "39%");
 	line.setAttribute("x2", x1);
-	line.setAttribute("y2", "31%");
+	line.setAttribute("y2", "39%");
 	line.style.stroke = "skyblue";
 	$("#svgId").append(line);
 	
@@ -307,9 +322,9 @@ function tube2() {
 	line.setAttribute("id", "tube3");
 	line.setAttribute("class", "svg-line");
 	line.setAttribute("x1", x1);
-	line.setAttribute("y1", "28%");
+	line.setAttribute("y1", "36%");
 	line.setAttribute("x2", x1);
-	line.setAttribute("y2", "28%");
+	line.setAttribute("y2", "36%");
 	line.style.stroke = "skyblue";
 	$("#svgId").append(line);
 	TweenMax.to($('#tube3').show(), 0.8, {attr: {x2: x2}, onComplete: function() {

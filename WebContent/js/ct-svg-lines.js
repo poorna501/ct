@@ -214,7 +214,7 @@ function svgDoubleLineRightOrLeftToBottomOrTop(parentId, fromSelector, toSelecto
 
 function lineAnimation(parentId, lineId, lineColor, x1, y1, x2, y2, styleFlag, callBackFunction) {
 	svgLineAppend(parentId, lineId, lineColor, x1, y1, x1, y1, styleFlag);
-	TweenMax.to($('#' + lineId).show(), 0.8, {attr: {x2: x2, y2: y2}, onComplete: function() {
+	TweenMax.to($('#' + lineId).show(), 1, {attr: {x2: x2, y2: y2}, onComplete: function() {
 		if (typeof callBackFunction === "function") {
 			callBackFunction();
 		}

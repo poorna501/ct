@@ -235,6 +235,10 @@ p {
 	background: turquoise;
 }
 
+.z-index {
+	z-index: 100000000 !important;	
+}
+
 #DLApi, .database-box, #ovalShape {
 	background: thistle;
 } 
@@ -545,29 +549,37 @@ function responseArrowAnimaiton() {
 	$('#tableBody > tr:eq('+id1+')').addClass('quadrat');
 	$('.text-right').remove();
 	$('#popover6').append('<ul class="end-text"></ul>');
-	svgLineTopAndBottom("#svgParent","#ovalShape","#DLApi" ,"line5","grey", "top","bottom", "right", "right", "", function() {
-		var text = "<li>Here the specific <y>student </y>record is picked ie <y> </y>and sent to the db engine</li>";
-		typing("#popover6 > ul", text, function() {
-			var pid = $('#popover6').parents(".popover-content");
-			appendUserButton(pid,function() {
-				svgLineTopAndBottom("#svgParent","#DLApi","#oDriver" ,"line6","grey", "top","bottom", "right", "right", "", function() {
-					$('#popover6 > ul').append('<li></li>');
-					var text = "This result is now sent to the <y>ODBC</y> driver.";
-					typing("#popover6 > ul li:last", text, function() {
-						pid = $('#popover6').parents(".popover-content");
-							appendUserButton(pid,function() {
-								svgLineTopAndBottom("#svgParent","#oDriver","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
-								$('#popover6 > ul').append('<li></li>');
-								var text = "The <y>ODBC driver</y> changes this database format data into its own format and sends it to the <y>bridge driver</y>";
-								typing("#popover6 > ul li:last", text, function() {
-									appendUserButton(pid,function() {
-										svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
-											$('#popover6 > ul').append('<li></li>');
-											var text = "The <y>bridge</y> now converts the result(ODBC format) data in a <y>JDBC</y> format(java) that the client application understands.";
-											typing("#popover6 > ul li:last", text, function() {
-												appendUserButton(pid,function() {
-													$('.bg-blue-cl-white').removeClass('bg-blue-cl-white');
-													introjs.nextStep();
+	
+	/* svgLineTopAndBottom("#svgParent","#ovalShape","#DLApi" ,"line5","grey", "top","bottom", "right", "right", "", function() { */
+		tube2("#ovalShape", "#DLApi", "tubeLine12");
+		tube1("#ovalShape", "#DLApi", "tubeLine11");
+		setTimeout(function() {
+			var text = "<li>Here the specific <y>student </y>record is picked ie <y> </y>and sent to the db engine</li>";
+			typing("#popover6 > ul", text, function() {
+				var pid = $('#popover6').parents(".popover-content");
+				appendUserButton(pid,function() {
+					tube2("#DLApi", "#oDriver", "tubeLine21")
+					tube1("#DLApi", "#oDriver", "tubeLine22")
+				setTimeout(function() {
+					/* svgLineTopAndBottom("#svgParent","#DLApi","#oDriver" ,"line6","grey", "top","bottom", "right", "right", "", function() { */
+						$('#popover6 > ul').append('<li></li>');
+						var text = "This result is now sent to the <y>ODBC</y> driver.";
+						typing("#popover6 > ul li:last", text, function() {
+							pid = $('#popover6').parents(".popover-content");
+								appendUserButton(pid,function() {
+									svgLineTopAndBottom("#svgParent","#oDriver","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
+									$('#popover6 > ul').append('<li></li>');
+									var text = "The <y>ODBC driver</y> changes this database format data into its own format and sends it to the <y>bridge driver</y>";
+									typing("#popover6 > ul li:last", text, function() {
+										appendUserButton(pid,function() {
+											svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
+												$('#popover6 > ul').append('<li></li>');
+												var text = "The <y>bridge</y> now converts the result(ODBC format) data in a <y>JDBC</y> format(java) that the client application understands.";
+												typing("#popover6 > ul li:last", text, function() {
+													appendUserButton(pid,function() {
+														$('.bg-blue-cl-white').removeClass('bg-blue-cl-white');
+														introjs.nextStep();
+													});
 												});
 											});
 										});
@@ -575,12 +587,12 @@ function responseArrowAnimaiton() {
 								});
 							});
 						});
-					});
+					/* }); */
+				},800);
 				});
 			});
-		});
-	});
-	
+		}, 800);
+	/* }); */
 }
 
 function client() {
@@ -792,6 +804,63 @@ function validation(selector) {
 	});
 }
 
+function tube1(selector1, selector2, lineNum) {
+	var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+	y1 = ($(selector1).offset().top - $("svg").offset().top) + $(selector1).height(); 
+	y2 = ($(selector2).offset().top - $("svg").offset().top) + 23;
+
+	line.setAttribute("id", lineNum);
+	line.setAttribute("class", "svg-line");
+	line.setAttribute("x1", "56%");
+	line.setAttribute("y1", y1);
+	line.setAttribute("x2", "56%");
+	line.setAttribute("y2", y1);
+	line.style.stroke = "skyblue";
+	$("#totalSvg").append(line);
+	TweenMax.to($('#' + lineNum).show(), 0.8, {attr: {y2: y2}});
+}
+
+function tube2(selector1, selector2, lineNum) {
+	var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+	y1 = ($(selector1).offset().top - $("svg").offset().top) + $(selector1).height(); 
+	y2 = ($(selector2).offset().top - $("svg").offset().top) + 23;
+
+	line.setAttribute("id", lineNum);
+	line.setAttribute("class", "svg-line");
+	line.setAttribute("x1", "58%");
+	line.setAttribute("y1", y1);
+	line.setAttribute("x2", "58%");
+	line.setAttribute("y2", y1);
+	line.style.stroke = "skyblue";
+	$("#totalSvg").append(line);
+	
+	TweenMax.to($('#' + lineNum).show(), 0.8, {attr: {y2: y2}, onComplete: function() {
+		if (typeof callBackFunction === 'function') {
+			callBackFunction();
+		}
+	}});
+}
+
+function textMove(selector1, selector2, textId, val) {
+	var textTag = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+	y1 = ($(selector1).offset().top - $("svg").offset().top) + $(selector1).height();
+	y2 = ($(selector2).offset().top - $("svg").offset().top) + 23;
+	textTag.setAttribute("id", textId);
+	textTag.setAttribute("class", "svg-text");
+	textTag.setAttribute("x", "56%");
+	textTag.setAttribute("y", y1);
+	$("#totalSvg").append(textTag);
+	
+	var textNode = document.createTextNode(val);
+	textTag.appendChild(textNode);
+	//document.getElementById("g").appendChild(newText);
+	
+	$(textId).text(val);
+	TweenMax.to($('#' + textId).show(), 0.8, {attr: {y: y2}, onComplete: function() {
+		
+	}});
+}
+
 
 </script>
 	<div class="col-xs-12 margin-top-20">
@@ -809,7 +878,7 @@ function validation(selector) {
 									class="display-css" id="span2"></div></span>
 						</div>
 						<div class="col-xs-12 margin-top-20">
-							<div class="col-xs-offset-4 col-xs-4 border-radius padding00 opacity00"
+							<div class="col-xs-offset-4 col-xs-4 border-radius padding00 opacity00 z-index"
 								id="javaApp">
 								<div class="col-xs-12  text-center rounded-top padding00">
 									Client App</div>
@@ -829,12 +898,12 @@ function validation(selector) {
 						
 						<div class="col-xs-12 margin-top-50">
 							<div id="bridge"
-								class="col-xs-offset-4 col-xs-4 border-radius text-center opacity00">JDBC-ODBC
+								class="col-xs-offset-4 col-xs-4 border-radius text-center opacity00 z-index">JDBC-ODBC
 								Bridge (Type-1 Driver)</div>
 						</div>
 						<div class="col-xs-12 margin-top-50">
 							<div id="oDriver"
-								class="col-xs-offset-4 col-xs-4 border-radius text-center opacity00">
+								class="col-xs-offset-4 col-xs-4 border-radius text-center opacity00 z-index">
 								ODBC Driver</div>
 						</div>
 						<div class="col-xs-12 margin-top-20 padding00">
@@ -845,12 +914,12 @@ function validation(selector) {
 						</div>
 						<div class="col-xs-12 margin-top-20">
 							<div id="DLApi"
-								class="margin-top-10 col-xs-offset-4 col-xs-4 border-radius text-center opacity00">
+								class="margin-top-10 col-xs-offset-4 col-xs-4 border-radius text-center opacity00 z-index">
 								D/B Engine</div>
 						</div>
 						<div class="col-xs-12 margin-top-50">
 							<div id="database"
-								class="col-xs-offset-4 col-xs-4 text-center opacity00 padding00">
+								class="col-xs-offset-4 col-xs-4 text-center opacity00 padding00 z-index">
 								<div id="ovalShape" class="col-xs-12 oval-shape"></div>
 								<div id="databaseDiv" class="col-xs-12 database-box border-radius">
 									<div class="margin-top-20">
