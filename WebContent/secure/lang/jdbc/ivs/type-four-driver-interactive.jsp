@@ -18,7 +18,7 @@
 <script src="/js/gs/TweenMax.min.js"></script>
 <script src='/js/jquery.scrollTo.js'></script>
 <script src="../js/ct-svg-lines.js"></script>
-<title>driver-4-with-browser</title>
+<title>Type - 4 Driver</title>
 <style>
 
 /* *********************** starting of the browser styles ********************* */
@@ -551,29 +551,36 @@ function responseArrowAnimaiton() {
 	$('#tableBody > tr:eq('+id1+')').addClass('quadrat');
 	$('.text-right').remove();
 	//$('#popover5 > ul').append('<li></li>');
-	svgLineTopAndBottom("#svgParent","#ovalShape","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
-	var text = "<ul><li>The <y>driver</y> gets this database result data."
-				+ "</ul></li>";
-		popover("#nativeProtcol", "right", text, function() {
-			var pid = $('#popover5').parents(".popover-content");
-			window.scrollTo(0,document.body.scrollHeight);
-			appendUserButton(pid,function() {
-				svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
-					$('#popover5 > ul').append('<li></li>');
-					var text = "The <y>result</y>is now converted into <y>JDBC</y> format(java) "
-								+ "that the client application understands.";
-					typing("#popover5 > ul li:last", text, function() {
-						window.scrollTo(0,document.body.scrollHeight);
-						appendUserButton(pid,function() {
-							window.scrollTo(0,document.body.scrollHeight);
-							$('.bg-blue-cl-white').removeClass('bg-blue-cl-white introjs-tooltiptext');
-							introjs.nextStep();
+	tube2("#ovalShape", "#bridge", "tubeLine12");
+	tube1("#ovalShape", "#bridge", "tubeLine11");
+	setTimeout(function() {
+		pipeLineText("#ovalShape", "#bridge", 0);
+		setTimeout(function() {
+			//svgLineTopAndBottom("#svgParent","#ovalShape","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
+			var text = "<ul><li>The <y>driver</y> gets this database result data."
+						+ "</ul></li>";
+				popover("#nativeProtcol", "right", text, function() {
+					var pid = $('#popover5').parents(".popover-content");
+					window.scrollTo(0,document.body.scrollHeight);
+					appendUserButton(pid,function() {
+						svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
+							$('#popover5 > ul').append('<li></li>');
+							var text = "The <y>result</y>is now converted into <y>JDBC</y> format(java) "
+										+ "that the client application understands.";
+							typing("#popover5 > ul li:last", text, function() {
+								window.scrollTo(0,document.body.scrollHeight);
+								appendUserButton(pid,function() {
+									window.scrollTo(0,document.body.scrollHeight);
+									$('.bg-blue-cl-white').removeClass('bg-blue-cl-white introjs-tooltiptext');
+									introjs.nextStep();
+								});
+							});
 						});
 					});
 				});
-			});
-		});
-	});
+			//});
+		},3500);
+	},800);
 }
 
 function client() {
@@ -766,11 +773,82 @@ function validation(selector) {
 	});
 }
 
+function tube1(selector1, selector2, lineNum) {
+	var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+	y1 = ($(selector1).offset().top - $("svg").offset().top) + $(selector1).height(); 
+	y2 = ($(selector2).offset().top - $("svg").offset().top) + 23;
+
+	line.setAttribute("id", lineNum);
+	line.setAttribute("class", "svg-line");
+	line.setAttribute("x1", "56%");
+	line.setAttribute("y1", y1);
+	line.setAttribute("x2", "56%");
+	line.setAttribute("y2", y1);
+	line.style.stroke = "skyblue";
+	$("#totalSvg").append(line);
+	TweenMax.to($('#' + lineNum).show(), 0.8, {attr: {y2: y2}});
+}
+
+function tube2(selector1, selector2, lineNum) {
+	var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+	y1 = ($(selector1).offset().top - $("svg").offset().top) + $(selector1).height(); 
+	y2 = ($(selector2).offset().top - $("svg").offset().top) + 23;
+
+	line.setAttribute("id", lineNum);
+	line.setAttribute("class", "svg-line");
+	line.setAttribute("x1", "58%");
+	line.setAttribute("y1", y1);
+	line.setAttribute("x2", "58%");
+	line.setAttribute("y2", y1);
+	line.style.stroke = "skyblue";
+	$("#totalSvg").append(line);
+	
+	TweenMax.to($('#' + lineNum).show(), 0.8, {attr: {y2: y2}, onComplete: function() {
+		if (typeof callBackFunction === 'function') {
+			callBackFunction();
+		}
+	}});
+}
+
+function textMove(selector1, selector2, textId, val, callBackFunction) {
+	var textTag = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+	y1 = ($(selector1).offset().top - $("svg").offset().top) + $(selector1).height();
+	y2 = ($(selector2).offset().top - $("svg").offset().top) + 23;
+	textTag.setAttribute("id", textId);
+	textTag.setAttribute("class", "svg-text");
+	textTag.setAttribute("x", "56.3%");
+	textTag.setAttribute("y", y1);
+	$("#totalSvg").append(textTag);
+	
+	var textNode = document.createTextNode(val);
+	textTag.appendChild(textNode);
+	$(textId).text(val);
+	TweenMax.to($('#' + textId).show(), 0.8, {attr: {y: y2}, onComplete: function() {
+		if (typeof callBackFunction === 'function') {
+			callBackFunction();
+		}
+	}});
+}
+
+function pipeLineText(selector1, selector2, count, callBackFunction) {
+	var pipeEle = ["1", "0", "1", "1", "0"];
+	if (count == pipeEle.length) {
+		if (typeof callBackFunction === 'function') {
+			callBackFunction();
+		}
+	} else {
+		textMove(selector1, selector2, "text" + count, pipeEle[count], function() {
+			count++;
+			pipeLineText(selector1, selector2, count);
+		});
+	}
+}
+
 
 </script>
 	<div class="col-xs-12 margin-top-20">
 		<div class="col-xs-12 text-center">
-			<h1 class="label ct-demo-heading">JDBC Type-4 Driver</h1>
+			<h1 class="label ct-demo-heading">Type-4 Driver</h1>
 		</div>
 		
 		<div class="col-xs-12 margin-top-30">
@@ -786,7 +864,7 @@ function validation(selector) {
 							 </span>
 						</div>
 						<div class="col-xs-12">
-							<div class="col-xs-offset-4 col-xs-4 border-radius padding00 opacity00" id="javaApp">
+							<div class="col-xs-offset-4 col-xs-4 border-radius padding00 opacity00 z-index" id="javaApp">
 								<div class="col-xs-12  text-center rounded-top padding00">Client App</div>
 								<div class="col-xs-12 dash"></div>
 								<div id="jAPI" class="col-xs-12  text-center rounded-bottom padding00">JDBC API</div>
@@ -803,7 +881,7 @@ function validation(selector) {
 						</div>
 						
 						<div class="col-xs-12 margin-top-20">
-							<div id="bridge" class="col-xs-offset-4 col-xs-4  text-center  padding00 border-radius opacity00">
+							<div id="bridge" class="col-xs-offset-4 col-xs-4  text-center  padding00 border-radius opacity00 z-index">
 								<div class="col-xs-12 driver-manager-css">Driver Manager</div>
 								<div class="col-xs-12 dash"></div>
 								<div class="col-xs-12" id="nativeProtcol">Type-4 Driver (Native-Protocol driver)</div>
@@ -822,7 +900,7 @@ function validation(selector) {
 							<div id="DLApi" class="margin-top-10 col-xs-offset-4 col-xs-4 border-radius text-center opacity00">  DataBase Library API's</div>
 						</div> -->
 						<div class="col-xs-12 margin-top-50">
-							<div id="database" class="col-xs-offset-4 col-xs-4 text-center opacity00 padding00">
+							<div id="database" class="col-xs-offset-4 col-xs-4 text-center opacity00 padding00 z-index">
 								<div id="ovalShape" class="col-xs-12 oval-shape"></div>
 								<div id="databaseDiv" class="col-xs-12 database-box border-radius">
 									<div class="margin-top-10">
@@ -836,7 +914,7 @@ function validation(selector) {
 					</div>
 				</div>
 				<div class="col-xs-5 padding00" id="BrowserTableDiv">
-					<div id ="totalPopoverDiv" class="col-xs-12 padding00"><div id='browserHead' class="col-xs-12 text-center opacity00">Browser</div></div>
+					<div id ="totalPopoverDiv" class="col-xs-12 padding00"><div id='browserHead' class="col-xs-12 text-center opacity00 ">Browser</div></div>
 					<div class="col-xs-12">
 						<div class='col-xs-12 opacity00 container' id='browser'>
 							<div class='tab-container'>

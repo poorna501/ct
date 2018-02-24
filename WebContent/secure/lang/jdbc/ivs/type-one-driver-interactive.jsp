@@ -18,7 +18,7 @@
 <script src="/js/gs/TweenMax.min.js"></script>
 <script src='/js/jquery.scrollTo.js'></script>
 <script src="../js/ct-svg-lines.js"></script>
-<title>driver-1-with-browser</title>
+<title>Type 1 Driver</title>
 <style>
 
 /* *********************** starting of the browser styles ********************* */
@@ -233,10 +233,6 @@ p {
 
 #bridge , #oDriver {
 	background: turquoise;
-}
-
-.z-index {
-	z-index: 100000000 !important;	
 }
 
 #DLApi, .database-box, #ovalShape {
@@ -549,50 +545,61 @@ function responseArrowAnimaiton() {
 	$('#tableBody > tr:eq('+id1+')').addClass('quadrat');
 	$('.text-right').remove();
 	$('#popover6').append('<ul class="end-text"></ul>');
-	
-	/* svgLineTopAndBottom("#svgParent","#ovalShape","#DLApi" ,"line5","grey", "top","bottom", "right", "right", "", function() { */
-		tube2("#ovalShape", "#DLApi", "tubeLine12");
-		tube1("#ovalShape", "#DLApi", "tubeLine11");
+	tube2("#ovalShape", "#DLApi", "tubeLine12");
+	tube1("#ovalShape", "#DLApi", "tubeLine11");
+	setTimeout(function() {
+		pipeLineText("#ovalShape", "#DLApi", 0);
 		setTimeout(function() {
-			var text = "<li>Here the specific <y>student </y>record is picked ie <y> </y>and sent to the db engine</li>";
-			typing("#popover6 > ul", text, function() {
-				var pid = $('#popover6').parents(".popover-content");
-				appendUserButton(pid,function() {
-					tube2("#DLApi", "#oDriver", "tubeLine21")
-					tube1("#DLApi", "#oDriver", "tubeLine22")
-				setTimeout(function() {
-					/* svgLineTopAndBottom("#svgParent","#DLApi","#oDriver" ,"line6","grey", "top","bottom", "right", "right", "", function() { */
+			//svgLineTopAndBottom("#svgParent","#ovalShape","#DLApi" ,"line5","grey", "top","bottom", "right", "right", "", function() {
+				var text = "<li>Here the specific <y>student </y>record is picked ie <y> </y>and sent to the db engine</li>";
+				typing("#popover6 > ul", text, function() {
+					var pid = $('#popover6').parents(".popover-content");
+					appendUserButton(pid,function() {
+						pipeLineFromApiToODBCDriver();
+						//svgLineTopAndBottom("#svgParent","#DLApi","#oDriver" ,"line6","grey", "top","bottom", "right", "right", "", function() {
+							
+						//});
+					});
+				});
+			//});
+		},3500);
+	},800);
+}
+
+function pipeLineFromApiToODBCDriver() {
+	var pid = $('#popover6').parents(".popover-content");
+	tube2("#DLApi", "#oDriver", "tubeLine21");
+	tube1("#DLApi", "#oDriver", "tubeLine22");
+	setTimeout(function() {
+		pipeLineText("#DLApi", "#oDriver", 0);
+		setTimeout(function() {
+			$('#popover6 > ul').append('<li></li>');
+			var text = "This result is now sent to the <y>ODBC</y> driver.";
+			typing("#popover6 > ul li:last", text, function() {
+				pid = $('#popover6').parents(".popover-content");
+					appendUserButton(pid,function() {
+						svgLineTopAndBottom("#svgParent","#oDriver","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
 						$('#popover6 > ul').append('<li></li>');
-						var text = "This result is now sent to the <y>ODBC</y> driver.";
+						var text = "The <y>ODBC driver</y> changes this database format data into its own format and sends it to the <y>bridge driver</y>";
 						typing("#popover6 > ul li:last", text, function() {
-							pid = $('#popover6').parents(".popover-content");
-								appendUserButton(pid,function() {
-									svgLineTopAndBottom("#svgParent","#oDriver","#bridge" ,"line7","grey", "top","bottom", "right", "right", "", function() {
+							appendUserButton(pid,function() {
+								svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
 									$('#popover6 > ul').append('<li></li>');
-									var text = "The <y>ODBC driver</y> changes this database format data into its own format and sends it to the <y>bridge driver</y>";
+									var text = "The <y>bridge</y> now converts the result(ODBC format) data in a <y>JDBC</y> format(java) that the client application understands.";
 									typing("#popover6 > ul li:last", text, function() {
 										appendUserButton(pid,function() {
-											svgLineTopAndBottom("#svgParent","#bridge","#javaApp" ,"line8","grey", "top","bottom", "right", "right", "", function() {
-												$('#popover6 > ul').append('<li></li>');
-												var text = "The <y>bridge</y> now converts the result(ODBC format) data in a <y>JDBC</y> format(java) that the client application understands.";
-												typing("#popover6 > ul li:last", text, function() {
-													appendUserButton(pid,function() {
-														$('.bg-blue-cl-white').removeClass('bg-blue-cl-white');
-														introjs.nextStep();
-													});
-												});
-											});
+											$('.bg-blue-cl-white').removeClass('bg-blue-cl-white');
+											introjs.nextStep();
 										});
 									});
 								});
 							});
 						});
-					/* }); */
-				},800);
+					});
 				});
 			});
-		}, 800);
-	/* }); */
+		},3500);
+	},800);
 }
 
 function client() {
@@ -804,6 +811,7 @@ function validation(selector) {
 	});
 }
 
+
 function tube1(selector1, selector2, lineNum) {
 	var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 	y1 = ($(selector1).offset().top - $("svg").offset().top) + $(selector1).height(); 
@@ -817,7 +825,7 @@ function tube1(selector1, selector2, lineNum) {
 	line.setAttribute("y2", y1);
 	line.style.stroke = "skyblue";
 	$("#totalSvg").append(line);
-	TweenMax.to($('#' + lineNum).show(), 0.8, {attr: {y2: y2}});
+	TweenMax.to($('#' + lineNum).show(), 0.5, {attr: {y2: y2}});
 }
 
 function tube2(selector1, selector2, lineNum) {
@@ -841,31 +849,44 @@ function tube2(selector1, selector2, lineNum) {
 	}});
 }
 
-function textMove(selector1, selector2, textId, val) {
+function textMove(selector1, selector2, textId, val, callBackFunction) {
 	var textTag = document.createElementNS("http://www.w3.org/2000/svg", 'text');
 	y1 = ($(selector1).offset().top - $("svg").offset().top) + $(selector1).height();
 	y2 = ($(selector2).offset().top - $("svg").offset().top) + 23;
 	textTag.setAttribute("id", textId);
 	textTag.setAttribute("class", "svg-text");
-	textTag.setAttribute("x", "56%");
+	textTag.setAttribute("x", "56.3%");
 	textTag.setAttribute("y", y1);
 	$("#totalSvg").append(textTag);
 	
 	var textNode = document.createTextNode(val);
 	textTag.appendChild(textNode);
-	//document.getElementById("g").appendChild(newText);
-	
 	$(textId).text(val);
 	TweenMax.to($('#' + textId).show(), 0.8, {attr: {y: y2}, onComplete: function() {
-		
+		if (typeof callBackFunction === 'function') {
+			callBackFunction();
+		}
 	}});
 }
 
+function pipeLineText(selector1, selector2, count, callBackFunction) {
+	var pipeEle = ["1", "0", "1", "1", "0"];
+	if (count == pipeEle.length) {
+		if (typeof callBackFunction === 'function') {
+			callBackFunction();
+		}
+	} else {
+		textMove(selector1, selector2, "text" + count, pipeEle[count], function() {
+			count++;
+			pipeLineText(selector1, selector2, count);
+		});
+	}
+}
 
 </script>
 	<div class="col-xs-12 margin-top-20">
 		<div class="col-xs-12 text-center">
-			<h1 class="label ct-demo-heading">JDBC Driver - 1</h1>
+			<h1 class="label ct-demo-heading">Type - 1 Driver</h1>
 		</div>
 		<div class="col-xs-12 margin-top-20">
 			<div class="col-xs-10 border-radius" id="driverOne">

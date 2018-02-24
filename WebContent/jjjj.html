@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style type="text/css">
+.box-border {
+	border: 2px solid black;
+	padding: 12px;
+	margin: 15px;
+}
+#parent {
+	margin-top: 20px;
+}
+</style>
+
+
+</head>
+<body>
+
+<input type="text" id="creation"/>
+<button onclick="fun()">button</button>
+
+<div id="parent"></div>
+
+<script type="text/javascript">
+	function fun() {
+		var diamond = document.getElementById('creation').value;
+	    var numOfBox = parseInt(diamond);
+	    var parent = document.getElementById('parent')
+	   
+
+	    //alert(numOfBox);
+		 for (i = 0; i <= numOfBox; i++) {
+			 var boxCreatre  = document.createElement("span"); 
+			 parent.appendChild(boxCreatre);
+			 boxCreatre.classList.add("box-border");
+		} 
+	}
+
+</script>
+
+
+	
