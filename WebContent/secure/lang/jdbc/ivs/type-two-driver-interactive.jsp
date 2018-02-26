@@ -369,6 +369,7 @@ $(document).ready(function() {
 	svgLineRightAndLeft("#svgParent", "#span5", "#span6", "line113","grey", "left","right", "","", true);
 	$('#line111, #line112, #line113').css({'marker-end' : '', 'opacity' : '0'});
 	$('#restart').click(function() {
+		$("#sId").val("");
 		location.reload();
 	});
 	initIntroJs();

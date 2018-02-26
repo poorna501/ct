@@ -344,6 +344,7 @@ $(document).ready(function() {
 	svgLineRightAndLeft("#svgParent", "#span5", "#span6", "line113","grey", "left","right", "","", true);
 	$('#line111, #line112, #line113').css({'marker-end' : '', 'opacity' : '0'});
 	$('#restart').click(function() {
+		$("#sId").val("");
 		location.reload();
 	});
 	initIntroJs();
@@ -825,7 +826,7 @@ function tube1(selector1, selector2, lineNum) {
 	line.setAttribute("y2", y1);
 	line.style.stroke = "skyblue";
 	$("#totalSvg").append(line);
-	TweenMax.to($('#' + lineNum).show(), 0.5, {attr: {y2: y2}});
+	TweenMax.to($('#' + lineNum).show(), 0.8, {attr: {y2: y2}});
 }
 
 function tube2(selector1, selector2, lineNum) {

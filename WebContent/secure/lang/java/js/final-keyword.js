@@ -22,7 +22,6 @@ function introFunction() {
 		},{
 			element : "#outputDiv",
 			intro: "",
-			position: "left",
 			tooltipClass: "hide",
 			animate : "printWithoutFinalKeyWord"
 		},{
@@ -31,7 +30,29 @@ function introFunction() {
 			position: "right",
 			tooltipClass: "hide",
 			animate : "finalKeyWithError"
-		}]
+		},{
+			element: "#outputDiv",
+			intro: "",
+			animate: "finalKeywordWithError"
+		},{
+			element : "#finalKeywordCodeDiv",
+			intro : "",
+			position: "right",
+			tooltipClass: "hide",
+			animate : "finalKeyWithoutError"
+		},{
+			element: "#outputDiv",
+			intro: "",
+			animate: "finalKeywordWithoutError"
+		},{
+			element: "#finalTextDiv",
+			intro: "",
+			tooltipClass: "hide"
+		},{
+		    element: '#restart',
+		    intro: 'Click to restart.',
+		    position: 'right'
+	  	}]
 	});
 	
 	introjs.onbeforechange(function(targetElement) {
@@ -66,6 +87,22 @@ function introFunction() {
 							});
 						});
 					break;
+					case "finalKeyWithoutError":
+						$('.introjs-helperLayer').one('transitionend', function() {
+							$("#reInitOfSub").removeClass("blinkRed");
+							$("#reInitOfSub").css("border-bottom", "");
+							$(".arrow").remove();
+							$(".introjs-tooltip").removeClass("hide");
+							var text = "Now commant the line <y>subject = \"C\"</y> and see what will happend";
+							typing(".introjs-tooltiptext", text, function() {
+								appendNextBtn('.introjs-tooltipbuttons', function() {
+									$("#strSubject2").before("//").removeClass("lightBrown");
+									$("#reInitOfSub").css("color", "green");
+									$(".introjs-nextbutton").show();
+								});
+							});
+						});
+					break
 				}
 			break;
 			case "outputDiv" :
@@ -74,14 +111,17 @@ function introFunction() {
 					var animate = introjs._introItems[introjs._currentStep].animate;
 					switch (animate) {
 					case "printWithoutFinalKeyWord" :
-							$(".output").html('<div id="outputLine1"><span id="outSubText1" class="opacity00">subject = </span> '
+						compileFile(".output", "compileCmd", function() {
+							runJavaProgram("#compileCmd", "runProg", "outputLine1", "outputLine2");
+						});
+							/*$(".output").html('<div id="outputLine1"><span id="outSubText1" class="opacity00">subject = </span> '
 									+ '<span id="outSubVal1" class="position opacity00">Java</span> '
 									+ '<span id="outMarksText1" class="opacity00"> , marks = </span> '
 									+ '<span id="outMarks1" class="opacity00">80</span></div>');
 							$("")
 							
-							//arrow("#printBeforeChange", "#printBeforeChange");
-							/*displayOutputText("#printBeforeChange", "#subjBfre", "#outSubText1", "#subjVarBfre", "#strSubject", "#javaText", "#outSubVal1", function() {
+							arrow("#printBeforeChange", "#printBeforeChange");
+							displayOutputText("#printBeforeChange", "#subjBfre", "#outSubText1", "#subjVarBfre", "#strSubject", "#javaText", "#outSubVal1", function() {
 								displayOutputText("#printBeforeChange", "#markBfre", "#outMarksText1", "#markVarBfre", "#intmarks", "#eighty", "#outMarks1", function() {
 									$("#printBeforeChange").removeClass("z-index1000000");
 									$("#outputLine1").after('<div id="outputLine2"><span id="outSubText2" class="opacity00">subject = </span> '
@@ -102,13 +142,109 @@ function introFunction() {
 								});
 							});*/
 						break;
+					case "finalKeywordWithError" :
+						$("#outputLine2").after('<div id="compile2"></div><div id="errorMsg"></div>')
+						compileFile("#compile2", "compileCmd2", function() {
+							$("#preFinalCode").addClass("z-index1000000");
+							$(".lightgreen").removeClass("lightgreen");
+							arrow("#strSubject2", "#strSubject2", function() {
+								$("#reInitOfSub").css("border-bottom", "2px dashed red");
+								$("#reInitOfSub").addClass("blinkRed");
+								var text = "FinalKeyword.java:6: <r>error: cannot assign a value to final variable subject<br/>"
+											+ "\t\t\t\tsubject = \"C\"<br/>^<br/>1 error</r>";
+								typing("#errorMsg", text, function() {
+									$(".panel-body").scrollTo("#errorMsg", 500, function() {
+										var text = "Compilear shows an <r>error</r> at <r>subject = \"C\"</r> because we are reassign "
+											+ " <y>subject</y> value from <y>\"java\"</y> to <y>\"C\"</y> "
+											$(".introjs-tooltiptext ul li:last").append("<li></li>");
+										typing(".introjs-tooltiptext ul li:last", text, function() {
+											var text = "In <y>java</y> whenever you declare variable as <y>final</y> the "
+												+ "value of the variable is not changed through out the program. "
+												$(".introjs-tooltiptext ul li:last").append("<li></li>");
+											typing(".introjs-tooltiptext ul li:last", text, function() {
+												$(".introjs-nextbutton").show();
+											});
+										});
+									});
+								})
+							});
+						});
+					break;
+					case "finalKeywordWithoutError" :
+						$("#errorMsg").after('<div id="compile3"></div><div id="outputShow"></div>');
+						compileFile("#compile3", "compileCmd3", function() {
+							runJavaProgram("#compileCmd3", "runProgram", "ouput1", "output2");
+						});
+					break;
 					}
 				});
 			break;
+			case "finalTextDiv" :
+				$('.introjs-helperLayer').one('transitionend', function() {
+					zoomInEffect("#finalTextDiv", function() {
+						appendNextBtn('#btnDiv', function() {
+							introjs.nextStep();
+						});
+					});
+				});
+			break;
+			case "restart":
+				$('.introjs-tooltip').css('min-width','125px');
+			$('#restartDiv').removeClass('hide introjs-fixParent opacity00');
+				$('.introjs-helperLayer').one('transitionend', function() {
+					$('#restart').click(function() {
+						location.reload();
+					});
+				});
+			break;
+		
 		}
 	});
 	introjs.start();
 	$('.introjs-skipbutton, .introjs-prevbutton, .introjs-nextbutton').hide();
+}
+function compileFile(selector1, selector2, callBackFunction) {
+	$(".introjs-tooltip").removeClass("hide");
+	var text = "<ul><li>Now <y>compile</y> the program <y>javac FinalKeyword.java</y></li></ul>";
+	typing(".introjs-tooltiptext", text, function() {
+		appendNextBtn('.introjs-tooltipbuttons', function() {
+			$(selector1).html('<div id="'+ selector2 +'"></div>')
+			var text = "<g>&gt;&gt;</g> <y>javac</y> <g>FinalKeyword.java</g>";
+			typing("#" + selector2, text, function() {
+				$(".panel-body").scrollTo("#" + selector2, 500);
+				appendNextBtn('.introjs-tooltipbuttons', function() {
+					if (typeof callBackFunction === "function") {
+						callBackFunction();
+					}
+				});
+			});
+		});
+	});
+}
+
+function runJavaProgram(selector1, selector2, out1, out2) {
+	var text = "After <y>compilation</y> run the program <y>java FinalKeyword</y>";
+	$(".introjs-tooltiptext ul li:last").append("<li></li>");
+	typing(".introjs-tooltiptext ul li:last", text, function() {
+		$(selector1).after("<div id='"+ selector2 +"'></div>");
+		var text = "<g>&gt;&gt;</g> <y>java</y> <g>FinalKeyword</g>";
+		typing("#" + selector2, text, function() {
+			$(".panel-body").scrollTo("#" + selector2, 500);
+			$("#" + selector2).after('<span id="'+ out1 +'" class="opacity00">subject = Java , marks = 80</span><br/>'
+					 		+ '<span id="'+ out2 +'" class="opacity00">subject = C , marks = 85</span> ');
+			$(".panel-body").scrollTo("#"+ out1, 500);
+			$("#" + out1).removeClass("opacity00").effect( "highlight", {color: 'yellow'}, 800, function() {
+				$("#" + out2).removeClass("opacity00").effect( "highlight", {color: 'yellow'}, 800, function() {
+					$(".panel-body").scrollTo("#"+ out2, 500);
+					var text = "Program run successfully."
+					$(".introjs-tooltiptext ul li:last").append("<li></li>");
+					typing(".introjs-tooltiptext ul li:last", text, function() {
+						$(".introjs-nextbutton").show();
+					});
+				});
+			});
+		});
+	});
 }
 
 function explainWithoutFinalKeyword() {
@@ -156,21 +292,25 @@ function changeSubjectAndMarksValues() {
 function appendFinalKeyword() {
 	typing("#appendFinalKey", '<span class="fontWeight darkPink lightgreen">final</span>', function() {
 		$(".darkPink").removeClass("lightgreen");
-		
+		$("#appendFinalKey").effect( "highlight",{color: 'blue'}, 500, function() {
+			$(".introjs-nextbutton").show();
+		});
 	});
 }
 
 function displayOutputText(selector1, selector2, selector3, selector4, selector5, selector6, selector7, callBackFunction) {
 	$(selector1).addClass('z-index1000000');
-	$(selector2).effect( "highlight",{color: 'blue'}, 500, function() {
+	$(selector2).effect( "highlight",{color: 'blue'}, 800, function() {
 		zoomInEffect(selector3, function() {
-			$(selector4).effect( "highlight",{color: 'blue'}, 500, function() {
-				$(selector5).effect( "highlight",{color: 'blue'}, 500, function() {
-					$(selector6).addClass("z-index1000000").effect( "highlight",{color: 'blue'}, 500, function() {
-						fromEffectWithTweenMax(selector6, selector7, function() {
-							if (typeof callBackFunction === "function") {
-								callBackFunction();
-							}
+			$(selector3).effect( "highlight",{color: 'yellow'}, 800, function() {
+				$(selector4).effect( "highlight",{color: 'blue'}, 800, function() {	
+					$(selector5).effect( "highlight",{color: 'blue'}, 800, function() {
+						$(selector6).addClass("z-index1000000").effect( "highlight",{color: 'blue'}, 800, function() {
+							fromEffectWithTweenMax(selector6, selector7, function() {
+								if (typeof callBackFunction === "function") {
+									callBackFunction();
+								}
+							});
 						});
 					});
 				});

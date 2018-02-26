@@ -19,6 +19,7 @@
 <script type="text/javascript" src='/js/intro.js'></script>
 <script type="text/javascript" src="/js/typewriting.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-latest.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="/secure/lang/java/js/final-keyword.js"></script>
 
 <style type="text/css">
@@ -83,6 +84,14 @@ div, span {
 .green {
 	color: green;
 }
+g {
+	color: #42f445;
+}
+
+r {
+	color: red;
+	font-weight: bold;
+}
 
 .blue {
 	color: blue;
@@ -113,8 +122,9 @@ div, span {
 }
 
 .panel-body {
-	min-height: 175px;
+	height: 175px;
 	padding: 12px;
+	overflow: auto;
 }
 
 .panel {
@@ -135,9 +145,6 @@ y {
 }
 
 .blinking {
-	/* animation-name: blinker;
-	animation-duration: 1s;
-	animation-iteration-count: infinity; */
 	animation: blinker 1s linear infinite;
  }
 
@@ -145,6 +152,15 @@ y {
 	50% {
 		background:  #66a3ff;
 	}
+}
+
+@keyframes blinRed {
+	50% {
+		background:  red;
+	}
+}
+.blinkRed {
+	animation: blinRed 1s linear infinite;
 }
 
 .animated {
@@ -161,6 +177,10 @@ y {
 
 .lightgreen {
 	background-color: #3fd112;
+}
+#finalTextDiv {
+	background-color: #fffae6;
+	
 }
 
 </style>
@@ -182,12 +202,12 @@ y {
 			</div>
 		</div>
 		<div class="col-xs=12 margin-top15">
-			<div class="col-xs-6 col-xs-offset-3 box-border opacity00" id="FinalTextDiv">
+			<div class="col-xs-6 col-xs-offset-3 box-border opacity00" id="finalTextDiv">
 				<div class="col-xs-12 padding00">
 					<div class="col-xs-12 padding10">
 						The <span class="green fontWeight">final</span> keyword is used in different contexts. 
 						First of all, <span class="green fontWeight">final</span> is a non-access modifier applicable only to a <span class="green fontWeight">variable</span>,
-						a <span  class="green fontWeight">method</span> or a <span class="green fontWeight">class</span>.
+						a <span  class="green fontWeight">method</span> or a <span class="green fontWeight">class</span>.<span id="btnDiv"></span>
 					</div>
 				</div>
 			</div>
@@ -218,6 +238,11 @@ y {
 					</div>
 				</div>
 			</div>
+		</div>
+		<div id="restartDiv" class="col-xs-12 margin-top-20 text-center hide opacity00">
+				<span id='restart' class='btn btn-warning btn-sm'> <i
+					class='fa fa-refresh'></i>&nbsp;Restart
+				</span>
 		</div>
 	</div>
 </body>
